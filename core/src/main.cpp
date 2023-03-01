@@ -1,16 +1,20 @@
 #include <iostream>
 #include <string>
 #include <omp.h>
-#include <boost/program_options.hpp>
+#include "CLI/App.hpp"
+#include "CLI/Formatter.hpp"
+#include "CLI/Config.hpp"
 #include "geom.hpp"
 #include "loader.hpp"
 #include "simulator.hpp"
 
 int main(int argc, char* argv[]) {
 
+/*
     namespace po = boost::program_options;
 
-    po::options_description desc("---Cube Gamma Scan Simulator---");
+
+     po::options_description desc("---Cube Gamma Scan Simulator---");
     desc.add_options()
         ("help,h", "print help message")
         ("thread_count,t", po::value<int>()->default_value(omp_get_max_threads()), "Max threads to use")
@@ -26,7 +30,7 @@ int main(int argc, char* argv[]) {
         std::cout << desc << std::endl;
         return EXIT_SUCCESS;
     }
-    po::notify(vm);
+    po::notify(vm); */
 
     std::cout << "---Cube Gamma Scan Simulator---" << std::endl;
     std::cout << "Loading config:" << vm["input_file"].as<std::string>() << std::endl;
