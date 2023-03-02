@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(app, argc, argv);
 
 
-    std::cout << "---Cube Gamma Scan Simulator---" << std::endl;
+    std::cout << "<<-- Projector Core -->>" << std::endl;
     std::cout << "Loading config:" << config_path << std::endl;
     auto config_json = load_file(config_path);
     if (!config_json) {

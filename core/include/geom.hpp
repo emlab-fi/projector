@@ -3,27 +3,11 @@
 #include <cmath>
 #include <optional>
 #include <nlohmann/json.hpp>
+#include <Eigen/Dense>
 
 namespace geom {
 
-struct point {
-    double x;
-    double y;
-    double z;
-
-    const double& operator[](int index) const;
-    double& operator[](int index);
-};
-
-point operator+(const point& a, const point& b);
-
-point operator-(const point& a, const point& b);
-
-point operator*(const double& a, const point& b);
-
-point operator*(const point& a, const double& b);
-
-point operator/(const point& a, const double& b);
+using point = Eigen::Vector3d;
 
 double dot(const point& a, const point& b);
 

@@ -62,8 +62,8 @@ bool evalute_ray(const geom::ray& r, const geom::z_cylinder& target, const std::
 
 std::unique_ptr<double[]> run_simulation(simulation_context& env, int thread_count) {
 
-    size_t x_steps = (env.stop.x - env.start.x) / env.resolution;
-    size_t y_steps = (env.stop.y - env.start.y) / env.resolution;
+    size_t x_steps = (env.stop[0] - env.start[0]) / env.resolution;
+    size_t y_steps = (env.stop[1] - env.start[1]) / env.resolution;
     size_t total_steps = x_steps * y_steps;
 
     auto sphere_points = geom::sphere_fibonnaci(env.source_activity);
@@ -118,10 +118,10 @@ std::unique_ptr<double[]> run_simulation(simulation_context& env, int thread_cou
                         ray_start = env.source;
                         break;
                     case scan_type::sensor_source_shift:
-                        ray_start = {env.start.x + x * env.resolution, env.start.y + y * env.resolution, env.source.z};
+                        ray_start = {env.start[0] + x * env.resolution, env.start[1] + y * env.resolution, env.source[2]};
                         break;
                     default:
-                        ray_start = {0};
+                        ray_start = Eigen::Vector3d(0);
                 }
 
                 const geom::ray r = {
@@ -130,7 +130,7 @@ std::unique_ptr<double[]> run_simulation(simulation_context& env, int thread_cou
                 };
 
                 const geom::z_cylinder c = {
-                    {env.start.x + x * env.resolution, env.start.y + y * env.resolution, env.start.z},
+                    {env.start[0] + x * env.resolution, env.start[1] + y * env.resolution, env.start[2]},
                     env.scintillator_size.first,
                     env.scintillator_size.second
                 };
@@ -168,12 +168,12 @@ void from_json(const nlohmann::json& j, simulation_context& env) {
     else if (j.at("type") == "target_shift") env.type = scan_type::sensor_source_shift;
     else throw std::invalid_argument("JSON scan type is not supported.");
 
-    j.at("start_pos").get_to(env.start);
-    j.at("end_pos").get_to(env.stop);
+    geom::from_json(j.at("start_pos"), env.start);
+    geom::from_json(j.at("end_pos"), env.stop);
     j.at("resolution").get_to(env.resolution);
     j.at("noise_coefficients").at(0).get_to(env.noise_coefficients.first);
     j.at("noise_coefficients").at(1).get_to(env.noise_coefficients.second);
-    j.at("source").get_to(env.source);
+    geom::from_json(j.at("source"), env.source);
     j.at("source_activity").get_to(env.source_activity);
     j.at("scintilator_size").at(0).get_to(env.scintillator_size.first);
     j.at("scintilator_size").at(1).get_to(env.scintillator_size.second);

@@ -43,14 +43,14 @@ bool save_data(std::unique_ptr<double[]> data, const simulation_context& sim_env
         return false;
     }
 
-    size_t x_steps = (sim_env.stop.x - sim_env.start.x) / sim_env.resolution;
-    size_t y_steps = (sim_env.stop.y - sim_env.start.y) / sim_env.resolution;
+    size_t x_steps = (sim_env.stop[0] - sim_env.start[0]) / sim_env.resolution;
+    size_t y_steps = (sim_env.stop[1] - sim_env.start[1]) / sim_env.resolution;
 
     for (size_t y = 0; y < y_steps; ++y) {
         for (size_t x = 0; x < x_steps; ++x) {
             size_t index = y * x_steps + x;
-            double x_pos = sim_env.start.x + x * sim_env.resolution;
-            double y_pos = sim_env.start.y + y * sim_env.resolution;
+            double x_pos = sim_env.start[0] + x * sim_env.resolution;
+            double y_pos = sim_env.start[1] + y * sim_env.resolution;
             output << x_pos << "," << y_pos << "," << data[index] << std::endl;
         }
     }
