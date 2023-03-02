@@ -5,22 +5,31 @@ project(projector_core C CXX)
 
 #get json lib
 include(FetchContent)
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_Declare(json 
+	URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
 #get progress bar lib
 FetchContent_Declare(indicators
 	GIT_REPOSITORY https://github.com/p-ranav/indicators.git
-	GIT_TAG 6432875ef4c866d25e324c19a787b5bb90b0ab12)
+	GIT_TAG v2.3
+	GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(indicators)
 
 #get command line parsing lib
-include(FetchContent)
 FetchContent_Declare(cli11
 	GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-	GIT_TAG 291c58789c031208f08f4f261a858b5b7083e8e2)
+	GIT_TAG  v2.3.2
+	GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(cli11)
 
+#get Eigen lib (to remove system dependency)
+FetchContent_Declare(Eigen
+	URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz)
+set(EIGEN_BUILD_DOC OFF)
+set(EIGEN_BUILD_PKGCONFIG OFF)
+set(EIGEN_BUILD_TESTING OFF)
+FetchContent_MakeAvailable(Eigen)
 
 set(SOURCES
 	src/main.cpp
@@ -38,6 +47,12 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE -fopenmp -Wall -Wextra -Wpedantic -O3)
+
 target_link_options(${PROJECT_NAME} PRIVATE -fopenmp)
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json indicators::indicators CLI11::CLI11)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	nlohmann_json::nlohmann_json
+	indicators::indicators
+	CLI11::CLI11
+	Eigen3::Eigen)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ./include)
