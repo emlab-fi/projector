@@ -17,3 +17,6 @@
 
 - input data defined in JSON
 - tooling for visualization of input geometry
+
+- calculates all the rays first, then scans
+    - speeds up calculation, no need to redo the whole simulation for each point sampled
