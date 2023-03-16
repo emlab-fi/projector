@@ -3,6 +3,10 @@
 
 namespace projector {
 
+//
+//AA_box
+//
+
 std::pair<vec3, vec3> AA_box::bounding_box() const {
     return {min_point, max_point};
 }
@@ -27,6 +31,10 @@ std::optional<segment> AA_box::intersection(const segment& previous) const {
     return {};
 }
 
+//
+//AA_cylinder
+//
+
 std::pair<vec3, vec3> AA_cylinder::bounding_box() const {
 }
 
@@ -42,9 +50,16 @@ std::optional<segment> AA_cylinder::intersection(const segment& previous) const 
     return {};
 }
 
-std::pair<vec3, vec3> AA_ellipsoid::bounding_box() const {
+//
+// AA_ellipsoid
+//
 
+std::pair<vec3, vec3> AA_ellipsoid::bounding_box() const {
+    vec3 min_point = center - radius;
+    vec3 max_point = center - radius;
+    return {min_point, max_point};
 }
+
 vec3 AA_ellipsoid::size() const {
     return radius * 2;
 }
