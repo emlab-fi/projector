@@ -3,6 +3,7 @@
 #include <omp.h>
 #include "CLI/CLI.hpp"
 #include "geom.hpp"
+#include "volume.hpp"
 #include "loader.hpp"
 #include "simulator.hpp"
 
