@@ -5,7 +5,7 @@ project(projector_core C CXX)
 
 #get json lib
 include(FetchContent)
-FetchContent_Declare(json 
+FetchContent_Declare(json
 	URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
@@ -34,6 +34,7 @@ FetchContent_MakeAvailable(Eigen)
 set(SOURCES
 	src/main.cpp
 	src/geom.cpp
+	src/volume.cpp
 	src/simulator.cpp
 	src/loader.cpp
 )
