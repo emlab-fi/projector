@@ -15,7 +15,7 @@ struct generic_volume {
     virtual std::pair<vec3, vec3> bounding_box() const = 0;
     virtual vec3 size() const = 0;
     virtual vec3 map_sampling(const vec3& point) const = 0;
-    virtual std::optional<segment> intersection(const segment& previous) const = 0;
+    virtual std::optional<segment> intersection(const segment& seg) const = 0;
 
 };
 
@@ -26,7 +26,7 @@ struct AA_box final : generic_volume {
     std::pair<vec3, vec3> bounding_box() const;
     vec3 size() const;
     vec3 map_sampling(const vec3& point) const;
-    std::optional<segment> intersection(const segment& previous) const;
+    std::optional<segment> intersection(const segment& seg) const;
 };
 
 struct AA_cylinder final : generic_volume {
@@ -37,7 +37,7 @@ struct AA_cylinder final : generic_volume {
     std::pair<vec3, vec3> bounding_box() const;
     vec3 size() const;
     vec3 map_sampling(const vec3& point) const;
-    std::optional<segment> intersection(const segment& previous) const;
+    std::optional<segment> intersection(const segment& seg) const;
 };
 
 struct AA_ellipsoid final : generic_volume {
@@ -47,7 +47,7 @@ struct AA_ellipsoid final : generic_volume {
     std::pair<vec3, vec3> bounding_box() const;
     vec3 size() const;
     vec3 map_sampling(const vec3& point) const;
-    std::optional<segment> intersection(const segment& previous) const;
+    std::optional<segment> intersection(const segment& seg) const;
 };
 
 bool bounding_box_check(const std::pair<vec3, vec3>& bb, const segment& line);
