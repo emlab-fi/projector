@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include "volume.hpp"
 
 namespace {
@@ -54,7 +55,7 @@ double intersect_bb(const std::pair<projector::vec3, projector::vec3>& bb, const
     else if (code & z_min_flag) {
         new_t = ((bb.first - seg.start).dot(projector::vec3{0, 0, 1})) / bb.first.dot(seg.dir);
     }
-    else { //z_max_flag
+    else if (code & z_max_flag) {
         new_t = ((bb.second - seg.start).dot(projector::vec3{0, 0, 1})) / bb.second.dot(seg.dir);
     }
 
@@ -107,11 +108,13 @@ std::optional<segment> AA_box::intersection(const segment& seg) const {
         double new_t = intersect_bb({min_point, max_point}, current_code, new_segment);
 
         if (current_code == start_outcode) {
+            std::cout << "start shift" << std::endl;
             new_segment.start = new_segment.point_at(new_t);
             new_segment.t_max -= new_t;
         } else {
             new_segment.t_max = new_t;
         }
+
     }
 
     if (accept) {
