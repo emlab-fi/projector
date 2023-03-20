@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(projector_core C CXX)
+project(projector C CXX)
 
 #get json lib
 include(FetchContent)
@@ -31,29 +31,69 @@ set(EIGEN_BUILD_PKGCONFIG OFF)
 set(EIGEN_BUILD_TESTING OFF)
 FetchContent_MakeAvailable(Eigen)
 
-set(SOURCES
-	src/main.cpp
+#get Catch2 for tests
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.3.2
+)
+FetchContent_MakeAvailable(Catch2)
+
+
+set(PROJECTOR_LIB_SRC
 	src/geom.cpp
 	src/volume.cpp
 	src/simulator.cpp
 	src/loader.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(PROJECTOR_TESTS_SRC
+	tests/aa_box_tests.cpp
+)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+#
+# PROJECTOR CORE
+#
+add_executable(projector_core ${PROJECTOR_LIB_SRC} src/main.cpp)
+
+set_target_properties(projector_core PROPERTIES
 	C_STANDARD 99
 	CXX_STANDARD 20
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -fopenmp -Wall -Wextra -Wpedantic -O3)
+target_compile_options(projector_core PRIVATE -fopenmp -Wall -Wextra -Wpedantic -O3)
 
-target_link_options(${PROJECT_NAME} PRIVATE -fopenmp)
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_options(projector_core PRIVATE -fopenmp)
+
+target_link_libraries(projector_core PRIVATE
 	nlohmann_json::nlohmann_json
 	indicators::indicators
 	CLI11::CLI11
 	Eigen3::Eigen)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ./include)
+target_include_directories(projector_core PRIVATE ./include)
+
+#
+# TESTS
+#
+add_executable(projector_tests ${PROJECTOR_LIB_SRC} ${PROJECTOR_TESTS_SRC})
+
+set_target_properties(projector_tests PROPERTIES
+	C_STANDARD 99
+	CXX_STANDARD 20
+	CXX_EXTENSIONS OFF
+)
+
+target_compile_options(projector_tests PRIVATE -fopenmp -Wall -Wextra -Wpedantic -g -gdwarf)
+
+target_link_options(projector_tests PRIVATE -fopenmp)
+
+target_link_libraries(projector_tests PRIVATE
+	nlohmann_json::nlohmann_json
+	indicators::indicators
+	CLI11::CLI11
+	Eigen3::Eigen
+	Catch2::Catch2WithMain)
+
+target_include_directories(projector_tests PRIVATE ./include)
