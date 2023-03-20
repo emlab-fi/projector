@@ -18,13 +18,19 @@ struct segment {
     inline vec3 end_point() const {
         return point_at(t_max);
     }
+
+    inline double length() const {
+        return (dir * t_max).norm();
+    }
 };
 
-struct particle_path {
+struct path {
     std::vector<segment> segments;
 
     segment& segment_at(const double t) const;
     vec3 point_at(const double t) const;
+    double total_length() const;
+
 };
 
 

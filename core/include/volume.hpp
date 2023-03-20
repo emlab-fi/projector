@@ -9,17 +9,7 @@ namespace projector {
 using vec3 = Eigen::Vector3d;
 
 
-struct generic_volume {
-    virtual ~generic_volume() = default;
-
-    virtual std::pair<vec3, vec3> bounding_box() const = 0;
-    virtual vec3 size() const = 0;
-    virtual vec3 map_sampling(const vec3& point) const = 0;
-    virtual std::optional<segment> intersection(const segment& seg) const = 0;
-
-};
-
-struct AA_box final : generic_volume {
+struct AA_box {
     vec3 min_point;
     vec3 max_point;
 
@@ -29,7 +19,7 @@ struct AA_box final : generic_volume {
     std::optional<segment> intersection(const segment& seg) const;
 };
 
-struct AA_cylinder final : generic_volume {
+struct AA_cylinder{
     vec3 start_point;
     vec3 end_point;
     double radius;
@@ -40,7 +30,7 @@ struct AA_cylinder final : generic_volume {
     std::optional<segment> intersection(const segment& seg) const;
 };
 
-struct AA_ellipsoid final : generic_volume {
+struct AA_ellipsoid {
     vec3 center;
     vec3 radius;
 
