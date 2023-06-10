@@ -9,13 +9,14 @@
     "description": "Description of the experiment",
     "output": "./output/dir/path",
     "save_particle_paths": true,
+    "seed": -1,
     "objects": [
         {
             "id": "object id",
             "properties": {
-                "absorption": 0.123,
-                "activity": 100,
-                "energy": 500000
+                "material": [["H", 2], ["O", 1]],
+                "activity_photons": 100,
+                "energy_photons": 500000
             },
             "shape": "aa_box",
             "shape_properties": {

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_GENERATOR Ninja CACHE INTERNAL "" FORCE)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 project(projector C CXX)
 
@@ -41,15 +43,12 @@ FetchContent_MakeAvailable(Catch2)
 
 
 set(PROJECTOR_LIB_SRC
-	src/geom.cpp
-	src/volume.cpp
-	src/simulator.cpp
-	src/loader.cpp
+	src/xcom_loader.cpp
 )
 
 set(PROJECTOR_TESTS_SRC
-	tests/aa_box_tests.cpp
 )
+
 
 #
 # PROJECTOR CORE
@@ -62,17 +61,18 @@ set_target_properties(projector_core PROPERTIES
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(projector_core PRIVATE -fopenmp -Wall -Wextra -Wpedantic -O3)
+target_compile_options(projector_core PRIVATE -Wall -Wextra -pedantic -O0)
 
-target_link_options(projector_core PRIVATE -fopenmp)
+target_link_options(projector_core PRIVATE)
 
 target_link_libraries(projector_core PRIVATE
 	nlohmann_json::nlohmann_json
-	indicators::indicators
+	#indicators::indicators
 	CLI11::CLI11
 	Eigen3::Eigen)
 
 target_include_directories(projector_core PRIVATE ./include)
+
 
 #
 # TESTS
@@ -85,7 +85,7 @@ set_target_properties(projector_tests PROPERTIES
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(projector_tests PRIVATE -fopenmp -Wall -Wextra -Wpedantic -g -gdwarf)
+target_compile_options(projector_tests PRIVATE -fopenmp -Wall -Wextra -pedantic -g -gdwarf)
 
 target_link_options(projector_tests PRIVATE -fopenmp)
 

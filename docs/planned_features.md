@@ -1,12 +1,12 @@
+- purely photon transport simulator (does not calculate secondary photons for now)
 - axis aligned boxes for geometry
 - also axis aligned cylinders, spheroids
 - point and volume sources
 - collects data by running a "scanning head" through predetermined scanning grid
-- throws data to a CSV file
+- throws data to a CSV file (or HDF5?)
+- interaction data pulled from ACE data
 
-- geometry properties:
-    - sources: activity, energy, later type?
-    - blockers: blocking ratio per unit length (later also energy dependent)
+- geometry - defined by material, combined with calculations from XCOM database
 
 - scanning head:
     - a scanning volume

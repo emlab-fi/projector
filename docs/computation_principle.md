@@ -6,7 +6,7 @@
 
 ## Calculate closest object
 - can be inside of an object
-- accelerated using axis aligned bounding boxes in bounding volume hiearchy (later)
+- accelerated using axis aligned bounding boxes
 - only unidirectional - particle only goes forward
 
 ## Calculate resulting interaction segment with object
@@ -18,3 +18,17 @@
 - sample PRNG and determine interaction type (dependent on material and energy)
 - do the calculations for interaction, if it is scattering, modify direction
 - if the resulting interaction is absorbent, terminate the computation of the particle
+
+## Interactions calculation
+
+## Photoeletric Absorption
+- as we do not care about resulting particles, the photon just gets stopped
+
+## Coherent Scattering (Rayleigh)
+-
+
+## Incoherent Scattering (Compton)
+-
+
+## Pair Production
+- as we do not care about resulting particles, the photon just gets stopped
