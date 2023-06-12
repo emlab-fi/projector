@@ -2,8 +2,8 @@
 #include <string_view>
 #include <optional>
 #include <cstdint>
-#include <memory>
 #include <array>
+#include <vector>
 #include <optional>
 
 namespace projector {
@@ -23,9 +23,9 @@ struct element_entry {
 uint32_t atomic_number;
 double atomic_weight;
 
-std::size_t energy_counts;
+std::size_t energy_count;
 
-std::array<std::unique_ptr<double*>, 6> data;
+std::array<std::vector<double>, 6> data;
 
 double retrieve_cross_section(double energy, cross_section xs_type);
 
