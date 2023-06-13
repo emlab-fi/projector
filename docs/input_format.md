@@ -1,4 +1,4 @@
-# reactor imput format
+# projector input format
 
 - json format - somewhat human readable
 
@@ -10,7 +10,7 @@
     "output": "./output/dir/path",
     "save_particle_paths": true,
     "seed": -1,
-    "objects": [
+    "geometry": [
         {
             "id": "object id",
             "properties": {
@@ -18,29 +18,17 @@
                 "activity_photons": 100,
                 "energy_photons": 500000
             },
-            "shape": "aa_box",
+            "shape": "aa-box",
             "shape_properties": {
-                "min_point": [3, 1, 2],
-                "max_point": [4, 2, 3]
+                "coeffs": [ [3, 1, 2], [4, 2, 3] ],
+                "union/intersect/cut": {
+                    "shape": "z-cylinder",
+                    "coeffs": [ [], [], [] ],
+                    "cut": ...
+                }
             }
-        }
-    ],
-    "fixture": {
-        "type": "scintillator",
-        "properties": {
-            "absorption": 0.314,
         },
-        "scan_grid": {
-            "start": [0, 0, 0],
-            "stop": [2, 2, 2],
-            "steps": [10, 10, 1]
-        },
-        "shape": "aa_cyl",
-        "shape_properties" {
-            "start": [0, 0, 0],
-            "axis": [1, 0, 0],
-            "dimensions": [1, 2, 3]
-        }
-    }
+        ...
+    ]
 }
 ```
