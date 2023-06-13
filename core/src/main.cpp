@@ -2,6 +2,7 @@
 #include <string_view>
 #include "CLI/CLI.hpp"
 #include "cross_sections.hpp"
+#include "utils.hpp"
 
 int main(int argc, char* argv[]) {
 
@@ -21,9 +22,12 @@ int main(int argc, char* argv[]) {
     std::cout << "<<-- Projector Core -->>" << std::endl;
 
     std::cout << "Loading XCOM data from: " << xcom_path << std::endl;
-    auto XCOM_database = projector::load_xcom_data(xcom_path);
-    if (!XCOM_database) {
-        std::cout << "Failed to load database!" << std::endl;
+
+    projector::data_library XCOM_database;
+    try {
+        XCOM_database = projector::load_xcom_data(xcom_path);
+    } catch (const std::exception& e) {
+        print_nested_exception(e);
         return EXIT_FAILURE;
     }
     std::cout << "Loaded XCOM data successfully" << std::endl;

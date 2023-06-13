@@ -1,6 +1,7 @@
 #include <fstream>
 #include <filesystem>
 #include <cstdio>
+#include <stdexcept>
 #include "cross_sections.hpp"
 
 
@@ -21,7 +22,7 @@ bool read_file_header(std::ifstream& stream, projector::element_entry& data) {
     stream >> edge_count;
     stream >> data.energy_count;
 
-    //ignore the absorbtion edge data
+    //ignore the absorption edge data
     ignore_read(stream, 3 * edge_count);
 
     return stream.good();
@@ -37,22 +38,22 @@ bool read_data_segment(std::ifstream& stream, projector::element_entry& data, st
     return stream.good();
 }
 
-std::optional<projector::element_entry> load_file(std::filesystem::path file) {
+projector::element_entry load_file(std::filesystem::path file) {
 
     auto filestream = std::ifstream(file);
     if (!filestream.is_open()) {
-        return {};
+        throw std::runtime_error("Can't open file");
     }
 
     projector::element_entry data;
 
     if (!read_file_header(filestream, data)) {
-        return {};
+        throw std::runtime_error("Can't read data header");
     }
 
     for (std::size_t i; i < 6; ++i) {
         if (!read_data_segment(filestream, data, i)) {
-            return {};
+            throw std::runtime_error("Can't read data segments");
         }
     }
 
@@ -65,7 +66,7 @@ std::optional<projector::element_entry> load_file(std::filesystem::path file) {
 
 namespace projector {
 
-std::optional<data_library> load_xcom_data(std::string_view path) {
+data_library load_xcom_data(std::string_view path) {
     auto xcom_path = std::filesystem::path(path);
 
     constexpr char* fmt_string = "MDATX3.%03zu";
@@ -77,13 +78,12 @@ std::optional<data_library> load_xcom_data(std::string_view path) {
         char file_path[11] = {0};
         std::sprintf(file_path, fmt_string, i);
 
-        auto element_data = load_file(xcom_path / file_path);
-
-        if (!element_data) {
-            return {};
+        try {
+            auto element_data = load_file(xcom_path / file_path);
+            library.elements[i - 1] = element_data;
+        } catch (...) {
+            std::throw_with_nested(std::runtime_error("Error while reading XCOM file: " + (xcom_path/file_path).string()));
         }
-
-        library.elements[i - 1] = *element_data;
     }
 
     return library;
