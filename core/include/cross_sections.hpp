@@ -52,11 +52,13 @@ public:
 
     std::array<double, 6> sample_cross_sections(const material_data& elements, double energy, double sample) const;
 
+    material_data preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data) const;
+
 };
 
 
 data_library load_xcom_data(std::string_view path);
 
-material_data preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data);
+
 
 } //namespace projector

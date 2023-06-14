@@ -1,6 +1,33 @@
 #include <utility>
 #include "cross_sections.hpp"
 
+namespace {
+
+std::size_t symbol_to_index(const std::string_view& symbol) {
+    constexpr std::array<std::string_view, 100> symbols = {
+        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al",
+        "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe",
+        "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr",
+        "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn",
+        "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm",
+        "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W",
+        "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn",
+        "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf",
+        "Es", "Fm"
+    };
+
+    for (std::size_t i = 0; i < 100; ++i) {
+        if (symbols[i] == symbol) {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
+} //annonymous namespace
+
+
 namespace projector {
 
 std::pair<int, double> element_entry::calculate_interpolation_values(double energy) const {
@@ -64,8 +91,25 @@ std::array<double, 6> data_library::sample_cross_sections(const material_data& m
 }
 
 
-material_data preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data) {
+material_data data_library::preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data) const {
 
+    double total_weight = 0.0;
+
+    material_data converted{};
+
+    for (const auto& [element_symbol, count] : input_data) {
+        std::size_t index = symbol_to_index(element_symbol);
+        double weight = elements[index].atomic_weight * count;
+        total_weight += weight;
+
+        converted.emplace_back(index + 1, weight);
+    }
+
+    for (auto& item : converted) {
+        item.second /= total_weight;
+    }
+
+    return converted;
 }
 
 
