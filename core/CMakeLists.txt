@@ -46,6 +46,7 @@ set(PROJECTOR_LIB_SRC
 	src/xcom_loader.cpp
 	src/utils.cpp
 	src/cross_sections.cpp
+	src/geometry.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

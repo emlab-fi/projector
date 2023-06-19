@@ -3,6 +3,8 @@
 #include "CLI/CLI.hpp"
 #include "cross_sections.hpp"
 #include "utils.hpp"
+#include "geometry.hpp"
+
 
 int main(int argc, char* argv[]) {
 
