@@ -36,7 +36,7 @@ struct environment {
     std::string_view name;
     std::string_view description;
     std::filesystem::path output_path;
-    uint64_t seed;
+    int64_t seed;
     bool save_particle_paths;
 
     std::vector<object> objects;

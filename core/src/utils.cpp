@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <variant>
 #include "utils.hpp"
 
@@ -63,4 +64,28 @@ void print_operation(const projector::operation& op, int level) {
 
     std::cout << prefix << "right:" << std::endl;
     print_geometry(*op.right, level + 1);
+}
+
+nlohmann::json load_json_file(std::filesystem::path filepath) {
+    std::ifstream input_file(filepath);
+
+    if (!input_file.is_open()) {
+        throw std::runtime_error("Can't open file: " + filepath.string());
+    }
+
+    nlohmann::json parsed;
+    
+    try {
+        parsed = nlohmann::json::parse(input_file, nullptr, false, false);
+    } catch (std::exception& e) {
+        std::throw_with_nested("Can't parse JSON");
+    }
+
+    input_file.close();
+
+    //if (parsed.is_discarded()) {
+    //    throw std::runtime_error("Can't parse JSON");
+    //}
+
+    return parsed;
 }

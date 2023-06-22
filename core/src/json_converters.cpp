@@ -1,1 +1,138 @@
+#include <stdexcept>
 #include "json_converters.hpp"
+
+using json = nlohmann::json;
+
+namespace projector {
+
+void from_json(json& j, environment& env) {
+    if (!j.is_object()) {
+        throw std::runtime_error("environment is not JSON object");
+    }
+
+    if (!j.at("objects").is_array()) {
+        throw std::runtime_error("objects is not JSON array");
+    }
+
+    if (!j.at("tallies").is_array()) {
+        throw std::runtime_error("tallies is not JSON array");
+    }
+
+    j.at("name").get_to(env.name);
+    j.at("description").get_to(env.description);
+    j.at("output").get_to(env.output_path);
+    j.at("save_particle_paths").get_to(env.save_particle_paths);
+    j.at("seed").get_to(env.seed);
+
+    for (std::size_t i = 0; i < j.at("objects").size(); ++i) {
+        object obj;
+        from_json(j.at("objects").at(i), obj);
+        env.objects.emplace_back(std::move(obj));
+    }
+
+    for (std::size_t i = 0; i < j.at("tallies").size(); ++i) {
+        tally ta;
+        from_json(j.at("tallies").at(i), ta);
+        env.tallies.emplace_back(ta);
+    }
+}
+
+
+void from_json(json& j, tally& ta) {
+    if (!j.is_object()) {
+        throw std::runtime_error("tally is not JSON object");
+    }
+
+    j.at("type").get_to(ta.tally);
+
+    from_json(j.at("cell_size"), ta.cell_size);
+    from_json(j.at("start"), ta.start);
+
+    if (!j.at("cell_count").is_array()) {
+        throw std::runtime_error("cell count is not JSON array");
+    }
+
+    j.at("cell_count").at(0).get_to(ta.x_count);
+    j.at("cell_count").at(1).get_to(ta.y_count);
+    j.at("cell_count").at(2).get_to(ta.z_count);
+}
+
+
+void from_json(json& j, object& obj) {
+    if (!j.is_object()) {
+        throw std::runtime_error("geom object is not JSON object");
+    }
+
+    j.at("id").get_to(obj.id);
+    j.at("properties").at("material").get_to(obj.material_string);
+    j.at("properties").at("photons_activity").get_to(obj.photons_activity);
+    j.at("properties").at("photons_energy").get_to(obj.photons_energy);
+    from_json(j.at("geometry"), (obj.geom));
+}
+
+
+void from_json(json& j, geometry& geom) {
+    if (!j.is_object()) {
+        throw std::runtime_error("geometry is not JSON object");
+    }
+
+    if (j.at("type") == "primitive") {
+        geom_primitive prim;
+        from_json(j.at("properties"), prim);
+        geom.definition = prim;
+    }
+
+    else if (j.at("type") == "operation") {
+        operation op;
+        from_json(j.at("properties"), op);
+        geom.definition = std::move(op);
+    }
+
+    else {
+        throw std::runtime_error("Unknown geometry type in JSON");
+    }
+}
+
+
+void from_json(json& j, geom_primitive& shape) {
+    if (!j.is_object()) {
+        throw std::runtime_error("geom primitive properties is not JSON object");
+    }
+
+    if (!j.at("parameters").is_array()) {
+        throw std::runtime_error("parameters is not JSON array");
+    }
+
+    j.at("type").get_to(shape.type);
+    from_json(j.at("parameters").at(0), shape.param1);
+    from_json(j.at("parameters").at(1), shape.param2);
+}
+
+
+void from_json(json& j, operation& op) {
+    if (!j.is_object()) {
+        throw std::runtime_error("operation properties is not JSON object");
+    }
+
+    from_json(j.at("left"), *op.left);
+    from_json(j.at("left"), *op.right);
+}
+
+
+void from_json(json& j, vec3& vec) {
+    if (!j.is_array()) {
+        throw std::runtime_error("3d vector is not JSON array");
+    }
+
+    double x,y,z;
+
+    j.at(0).get_to(x);
+    j.at(1).get_to(y);
+    j.at(2).get_to(z);
+
+    vec[0] = x;
+    vec[1] = x;
+    vec[2] = x;
+}
+
+}

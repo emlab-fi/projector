@@ -40,9 +40,13 @@ struct operation {
 struct geometry {
     std::variant<geom_primitive, operation> definition;
 
+    geometry() = default;
+
+    geometry(geometry&& geom) : definition(std::move(geom.definition)) {}
+
     geometry(const geom_primitive& prim) : definition(prim) {}
 
-    geometry(operation& op) : definition(std::move(op)) {}
+    geometry(operation&& op) : definition(std::move(op)) {}
 
     bool point_is_inside(const vec3& point) const;
 
