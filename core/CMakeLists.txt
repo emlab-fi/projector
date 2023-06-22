@@ -47,9 +47,11 @@ set(PROJECTOR_LIB_SRC
 	src/utils.cpp
 	src/cross_sections.cpp
 	src/geometry.cpp
+	src/json_converters.cpp
 )
 
 set(PROJECTOR_TESTS_SRC
+	tests/geometry_tests.cpp
 )
 
 
@@ -88,9 +90,9 @@ set_target_properties(projector_tests PROPERTIES
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(projector_tests PRIVATE -fopenmp -Wall -Wextra -pedantic -g -gdwarf)
+target_compile_options(projector_tests PRIVATE -Wall -Wextra -pedantic -g -gdwarf)
 
-target_link_options(projector_tests PRIVATE -fopenmp)
+target_link_options(projector_tests PRIVATE)
 
 target_link_libraries(projector_tests PRIVATE
 	nlohmann_json::nlohmann_json
