@@ -114,8 +114,16 @@ void from_json(json& j, operation& op) {
         throw std::runtime_error("operation properties is not JSON object");
     }
 
-    from_json(j.at("left"), *op.left);
-    from_json(j.at("left"), *op.right);
+    j.at("type").get_to(op.op);
+
+    std::unique_ptr<geometry> left = std::make_unique<geometry>();
+    std::unique_ptr<geometry> right = std::make_unique<geometry>();
+
+    from_json(j.at("left"), *left);
+    from_json(j.at("left"), *right);
+
+    op.left = std::move(left);
+    op.right = std::move(right);
 }
 
 

@@ -49,8 +49,8 @@ void print_primitive(const projector::geom_primitive& prim, int level) {
     std::string prefix = std::string(level * 2, ' ');
 
     std::cout << prefix << "primitive: " << shape_map[static_cast<int>(prim.type)] << std::endl;
-    std::cout << prefix << "param1: " << prim.param1 << std::endl;
-    std::cout << prefix << "param2: " << prim.param2 << std::endl;
+    std::cout << prefix << "param1: " << prim.param1.transpose() << std::endl;
+    std::cout << prefix << "param2: " << prim.param2.transpose() << std::endl;
 }
 
 
@@ -74,7 +74,7 @@ nlohmann::json load_json_file(std::filesystem::path filepath) {
     }
 
     nlohmann::json parsed;
-    
+
     try {
         parsed = nlohmann::json::parse(input_file, nullptr, false, false);
     } catch (std::exception& e) {
@@ -82,10 +82,6 @@ nlohmann::json load_json_file(std::filesystem::path filepath) {
     }
 
     input_file.close();
-
-    //if (parsed.is_discarded()) {
-    //    throw std::runtime_error("Can't parse JSON");
-    //}
 
     return parsed;
 }

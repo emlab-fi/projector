@@ -25,8 +25,8 @@ struct geom_primitive {
 struct geometry;
 
 struct operation {
-    enum class type {
-        nop, join, intersect, cut
+    enum class type : std::size_t {
+        nop = 0, join, intersect, cut
     };
 
     type op;

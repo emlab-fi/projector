@@ -15,13 +15,13 @@
             "id": "object id",
             "properties": {
                 "material": "H20" | "CO2" | [["H", 2.11], ["He", 3.28]],
-                "activity_photons": 100,
-                "energy_photons": 500000
+                "photons_activity": 100,
+                "photons_energy": 500000
             },
             "geometry": {
-                "type" : "primitive|union|intersect|cut",
+                "type" : "primitive|operation",
                 "properties": {
-                    "shape": "aa_box",
+                    "type": "aa_box|union|intersect|cut",
                     "parameters": [[100, 100], [20, 30]],
                     "left": { ... another geom},
                     "right": { ... another geom}
@@ -29,6 +29,13 @@
             }
         },
         ...
-    ]
+    ],
+    "tallies": {
+        "type": "..."
+        "cell_size": [10.2, 10.3, 10.4],
+        "start": [0.0, 0.0, 1.0],
+        "cell_count": [1, 2, 3]
+    },
+    ...
 }
 ```
