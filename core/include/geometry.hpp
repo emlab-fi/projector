@@ -19,9 +19,10 @@ struct geom_primitive {
     vec3 param2;
 
     bool point_is_inside(const vec3& point) const;
+
 };
 
-class geometry;
+struct geometry;
 
 struct operation {
     enum class type {
@@ -36,19 +37,17 @@ struct operation {
 };
 
 
-class geometry {
+struct geometry {
     std::variant<geom_primitive, operation> definition;
 
-public:
-
-    geometry(const geom_primitive prim) : definition(prim) {}
     geometry(const geom_primitive& prim) : definition(prim) {}
 
-    geometry(operation op) : definition(std::move(op)) {}
     geometry(operation& op) : definition(std::move(op)) {}
 
     bool point_is_inside(const vec3& point) const;
 
 };
+
+
 
 } //namespace projector

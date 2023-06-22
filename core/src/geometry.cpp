@@ -37,15 +37,17 @@ namespace projector {
 
 
 bool operation::point_is_inside(const vec3& point) const {
+    bool left_result = left->point_is_inside(point);
+    bool right_result = right ->point_is_inside(point);
     switch(op) {
         case type::nop:
             return false;
         case type::join:
-            return left->point_is_inside(point) || right->point_is_inside(point);
+            return left_result || right_result;
         case type::intersect:
-            return left->point_is_inside(point) && right->point_is_inside(point);
+            return left_result && right_result;
         case type::cut:
-            return left->point_is_inside(point) && !right->point_is_inside(point);
+            return left_result && !right_result;
         default:
             return false;
     }
