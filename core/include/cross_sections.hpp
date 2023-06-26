@@ -23,6 +23,8 @@ vector containing normalized material data, pair for each present element
 */
 using material_data = std::vector<std::pair<std::size_t, double>>;
 
+using parsed_material = std::vector<std::pair<std::string_view, int>>;
+
 
 struct element_entry {
 
@@ -53,12 +55,14 @@ public:
 
     std::array<double, 6> sample_cross_sections(const material_data& elements, double energy, double sample) const;
 
-    material_data preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data) const;
+    material_data preprocess_cross_sections(const parsed_material& input_data) const;
 
 };
 
 
 data_library load_xcom_data(std::string_view path);
+
+parsed_material parse_material_string(std::string_view material);
 
 
 

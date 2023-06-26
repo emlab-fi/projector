@@ -1,4 +1,6 @@
 #include <utility>
+#include <string>
+#include <cctype>
 #include "cross_sections.hpp"
 
 namespace {
@@ -23,6 +25,40 @@ std::size_t symbol_to_index(const std::string_view& symbol) {
     }
 
     return 0;
+}
+
+std::string parse_name(const std::string_view& material, std::string_view::iterator& pos) {
+    if (!std::isupper(*pos) && pos != material.end()) {
+        return "";
+    }
+
+    std::string out;
+
+    out += *pos;
+
+    ++pos;
+
+    if (std::islower(*pos) && pos != material.end()) {
+        out += *pos;
+        ++pos;
+    }
+
+    return out;
+}
+
+int parse_amount(const std::string_view& material, std::string_view::iterator& pos) {
+    if (!std::isdigit(*pos) && pos != material.end()) {
+        return 1;
+    }
+
+    std::string read;
+
+    while (std::isdigit(*pos) && pos != material.end()) {
+        read += *pos;
+        ++pos;
+    }
+
+    return std::stoi(read);
 }
 
 } //annonymous namespace
@@ -110,6 +146,22 @@ material_data data_library::preprocess_cross_sections(const std::vector<std::pai
     }
 
     return converted;
+}
+
+parsed_material parse_material_string(const std::string_view& material) {
+
+    parsed_material parsed;
+
+    auto pos = material.begin();
+
+    while (pos != material.end()) {
+        std::string parsed_name = parse_name(material, pos);
+        int amount = parse_amount(material, pos);
+
+        parsed.emplace_back(parsed_name, amount);
+    }
+
+    return parsed;
 }
 
 
