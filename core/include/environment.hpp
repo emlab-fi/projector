@@ -17,6 +17,7 @@ struct object {
     geometry geom;
 };
 
+
 struct tally {
     enum class type {
         photon_flux,
@@ -30,13 +31,34 @@ struct tally {
     std::size_t x_count, y_count, z_count;
 
     type tally;
+
 };
+
+
+struct particle_history {
+    std::vector<vec3> points;
+    std::vector<double> energies;
+    std::vector<cross_section> interactions;
+};
+
+
+struct particle {
+    enum class type {
+        photon,
+        neutron,
+        electron
+    };
+
+    type particle_type;
+    particle_history history;
+};
+
 
 struct environment {
     std::string_view name;
     std::string_view description;
     std::filesystem::path output_path;
-    int64_t seed;
+    uint64_t seed;
     bool save_particle_paths;
 
     std::vector<object> objects;

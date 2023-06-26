@@ -7,6 +7,7 @@
 namespace projector {
 
 enum class cross_section {
+    no_interaction = 0,
     coherent = 1,
     incoherent = 2,
     photoelectric = 3,
