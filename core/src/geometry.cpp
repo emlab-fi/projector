@@ -36,6 +36,21 @@ bool point_inside_ellipsoid(const pvec3& point, const pvec3& center, const pvec3
 namespace projector {
 
 
+bool geom_primitive::point_is_inside(const vec3& point) const {
+    switch (type) {
+        case shape::plane:
+            return point_inside_plane(point, param1, param2);
+        case shape::aa_box:
+            return point_inside_box(point, param1, param2);
+        case shape::aa_ellipsoid:
+            return point_inside_ellipsoid(point, param1, param2);
+        default:
+            return false;
+    }
+    return false;
+}
+
+
 bool operation::point_is_inside(const vec3& point) const {
     bool left_result = left->point_is_inside(point);
     bool right_result = right ->point_is_inside(point);
@@ -48,21 +63,6 @@ bool operation::point_is_inside(const vec3& point) const {
             return left_result && right_result;
         case type::cut:
             return left_result && !right_result;
-        default:
-            return false;
-    }
-    return false;
-}
-
-
-bool geom_primitive::point_is_inside(const vec3& point) const {
-    switch (type) {
-        case shape::plane:
-            return point_inside_plane(point, param1, param2);
-        case shape::aa_box:
-            return point_inside_box(point, param1, param2);
-        case shape::aa_ellipsoid:
-            return point_inside_ellipsoid(point, param1, param2);
         default:
             return false;
     }
@@ -84,5 +84,6 @@ bool geometry::point_is_inside(const vec3& point) const {
         return false;
     }, definition);
 }
+
 
 }

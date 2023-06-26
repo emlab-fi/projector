@@ -48,6 +48,7 @@ set(PROJECTOR_LIB_SRC
 	src/cross_sections.cpp
 	src/geometry.cpp
 	src/json_converters.cpp
+	src/random_numbers.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

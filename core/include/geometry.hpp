@@ -53,5 +53,4 @@ struct geometry {
 };
 
 
-
 } //namespace projector

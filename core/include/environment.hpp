@@ -28,10 +28,13 @@ struct tally {
     vec3 cell_size;
     vec3 start;
 
-    std::size_t x_count, y_count, z_count;
+    std::size_t x_count;
+    std::size_t y_count;
+    std::size_t z_count;
 
     type tally;
 
+    std::vector<double> results;
 };
 
 
