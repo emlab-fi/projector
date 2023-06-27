@@ -35,6 +35,9 @@ struct tally {
     type tally;
 
     std::vector<double> results;
+    std::size_t stride;
+
+    void save_tally(const std::filesystem::path path) const;
 };
 
 
@@ -54,6 +57,8 @@ struct particle {
 
     type particle_type;
     particle_history history;
+
+    void save_particle(const std::filesystem::path path) const;
 };
 
 
@@ -67,6 +72,8 @@ struct environment {
     std::vector<object> objects;
 
     std::vector<tally> tallies;
+
+    data_library cross_section_data;
 };
 
 } //namespace projector
