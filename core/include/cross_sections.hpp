@@ -25,6 +25,8 @@ using material_data = std::vector<std::pair<std::size_t, double>>;
 
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
+using sampled_cross_sections = std::array<double, 6>;
+
 
 struct element_entry {
 
@@ -53,7 +55,7 @@ class data_library {
 
 public:
 
-    std::array<double, 6> sample_cross_sections(const material_data& elements, double energy, double sample) const;
+    sampled_cros_sections sample_cross_sections(const material_data& elements, double energy, double sample) const;
 
     material_data preprocess_cross_sections(const parsed_material& input_data) const;
 

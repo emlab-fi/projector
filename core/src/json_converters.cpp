@@ -23,6 +23,8 @@ void from_json(json& j, environment& env) {
     j.at("output").get_to(env.output_path);
     j.at("save_particle_paths").get_to(env.save_particle_paths);
     j.at("seed").get_to(env.seed);
+    j.at("energy_cutoff").get_to(env.energy_cutoff);
+    j.at("stack_size").get_to(env.stack_size);
 
     for (std::size_t i = 0; i < j.at("objects").size(); ++i) {
         object obj;

@@ -56,6 +56,11 @@ struct particle {
     };
 
     type particle_type;
+
+    vec3 current_direction;
+
+    uint64_t prng_state;
+
     particle_history history;
 
     void save_particle(const std::filesystem::path path) const;
@@ -68,6 +73,9 @@ struct environment {
     std::filesystem::path output_path;
     uint64_t seed;
     bool save_particle_paths;
+
+    double energy_cutoff;
+    std::size_t stack_size;
 
     std::vector<object> objects;
 
