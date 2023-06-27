@@ -50,6 +50,7 @@ set(PROJECTOR_LIB_SRC
 	src/json_converters.cpp
 	src/random_numbers.cpp
 	src/environment.cpp
+	src/physics.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

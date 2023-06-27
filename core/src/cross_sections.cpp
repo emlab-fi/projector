@@ -98,7 +98,7 @@ double element_entry::interpolate_cross_section(double energy, cross_section xs_
 }
 
 
-std::array<double, 6> data_library::sample_cross_sections(const material_data& material, double energy, double sample) const {
+cross_section_sample data_library::sample_cross_sections(const material_data& material, double energy, double sample) const {
     std::size_t selected_element;
     double curr_percentage = 0.0;
 
@@ -114,14 +114,17 @@ std::array<double, 6> data_library::sample_cross_sections(const material_data& m
 
     auto [index, t] = element.calculate_interpolation_values(energy);
 
-    std::array<double, 6> data = {
+    cross_section_sample data = {
         energy,
         element.retrieve_cross_section(t, index, cross_section::coherent),
         element.retrieve_cross_section(t, index, cross_section::incoherent),
         element.retrieve_cross_section(t, index, cross_section::photoelectric),
         element.retrieve_cross_section(t, index, cross_section::pair_nuclear),
-        element.retrieve_cross_section(t, index, cross_section::pair_electron)
+        element.retrieve_cross_section(t, index, cross_section::pair_electron),
+        0.0
     };
+
+    data.total = data.coherent + data.incoherent + data.photoelectric + data.pair_electron + data.pair_nuclear;
 
     return data;
 }
