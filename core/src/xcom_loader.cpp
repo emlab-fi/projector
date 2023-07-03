@@ -1,5 +1,4 @@
 #include <fstream>
-#include <filesystem>
 #include <cstdio>
 #include <stdexcept>
 #include "cross_sections.hpp"
@@ -14,13 +13,13 @@ void ignore_read(std::ifstream& stream, std::size_t count) {
     }
 }
 
-bool read_file_header(std::ifstream& stream, projector::element_entry& data) {
+bool read_file_header(std::ifstream& stream, uint32_t& atomic_number, double& atomic_weight, std::size_t& energy_count) {
     std::size_t edge_count;
 
-    stream >> data.atomic_number;
-    stream >> data.atomic_weight;
+    stream >> atomic_number;
+    stream >> atomic_weight;
     stream >> edge_count;
-    stream >> data.energy_count;
+    stream >> energy_count;
 
     //ignore the absorption edge data
     ignore_read(stream, 3 * edge_count);
@@ -28,17 +27,22 @@ bool read_file_header(std::ifstream& stream, projector::element_entry& data) {
     return stream.good();
 }
 
-bool read_data_segment(std::ifstream& stream, projector::element_entry& data, std::size_t segment) {
-    data.data[segment] = std::vector<double>(data.energy_count);
+bool read_data_segment(std::ifstream& stream, std::vector<double>& data, std::size_t count) {
+    data = std::vector<double>(count);
 
-    for (std::size_t i = 0; i < data.energy_count; ++i) {
-        stream >> data.data[segment][i];
+    for (std::size_t i = 0; i < count; ++i) {
+        stream >> data[i];
     }
 
     return stream.good();
 }
 
-projector::element_entry load_file(std::filesystem::path file) {
+} //anonymous namespace
+
+namespace projector {
+
+
+element_entry element_entry::load_xcom_file(std::filesystem::path file) {
 
     auto filestream = std::ifstream(file);
     if (!filestream.is_open()) {
@@ -47,12 +51,12 @@ projector::element_entry load_file(std::filesystem::path file) {
 
     projector::element_entry data;
 
-    if (!read_file_header(filestream, data)) {
+    if (!read_file_header(filestream, data.atomic_number, data.atomic_weight, data.energy_count)) {
         throw std::runtime_error("Can't read data header");
     }
 
     for (std::size_t i; i < 6; ++i) {
-        if (!read_data_segment(filestream, data, i)) {
+        if (!read_data_segment(filestream, data.xs_data[i], data.energy_count)) {
             throw std::runtime_error("Can't read data segments");
         }
     }
@@ -62,12 +66,8 @@ projector::element_entry load_file(std::filesystem::path file) {
     return data;
 }
 
-} //anonymous namespace
 
-namespace projector {
-
-data_library load_xcom_data(std::string_view path) {
-    auto xcom_path = std::filesystem::path(path);
+data_library data_library::load_xcom_data(std::filesystem::path path) {
 
     constexpr char* fmt_string = "MDATX3.%03zu";
 
@@ -79,10 +79,10 @@ data_library load_xcom_data(std::string_view path) {
         std::sprintf(file_path, fmt_string, i);
 
         try {
-            auto element_data = load_file(xcom_path / file_path);
+            auto element_data = element_entry::load_xcom_file(path / file_path);
             library.elements[i - 1] = element_data;
         } catch (...) {
-            std::throw_with_nested(std::runtime_error("Error while reading XCOM file: " + (xcom_path/file_path).string()));
+            std::throw_with_nested(std::runtime_error("Error while reading XCOM file: " + (path/file_path).string()));
         }
     }
 
