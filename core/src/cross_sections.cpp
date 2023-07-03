@@ -47,6 +47,10 @@ std::string parse_name(const std::string_view& material, std::string_view::itera
 }
 
 int parse_amount(const std::string_view& material, std::string_view::iterator& pos) {
+    if (pos == material.end()) {
+        return 1;
+    }
+
     if (!std::isdigit(*pos) && pos != material.end()) {
         return 1;
     }
@@ -67,70 +71,38 @@ int parse_amount(const std::string_view& material, std::string_view::iterator& p
 namespace projector {
 
 std::pair<int, double> element_entry::calculate_interpolation_values(double energy) const {
-    if (energy <= data[0][0]) {
+    if (energy <= xs_data[0][0]) {
         return {0, 0.0};
     }
 
-    if (energy >= data[0][energy_count - 1]) {
+    if (energy >= xs_data[0][energy_count - 1]) {
         return {energy_count - 1, 1.0};
     }
 
     int index = 0;
 
-    while (data[0][index] < energy) {
+    while (xs_data[0][index] < energy) {
         ++index;
     }
 
-    double t = (energy - data[0][index]) /  (data[0][index + 1] - data[0][index]);
+    double t = (energy - xs_data[0][index]) /  (xs_data[0][index + 1] - xs_data[0][index]);
 
     return {index, t};
 }
 
 
 double element_entry::retrieve_cross_section(double t, std::size_t index, cross_section xs_type) const {
-    return (1.0 - t) * data[static_cast<int>(xs_type)][index] + t * data[static_cast<int>(xs_type)][index + 1];
+    return (1.0 - t) * xs_data[static_cast<int>(xs_type)][index] + t * xs_data[static_cast<int>(xs_type)][index + 1];
 }
 
 
-double element_entry::interpolate_cross_section(double energy, cross_section xs_type) const {
+double element_entry::get_cross_section(double energy, cross_section xs_type) const {
     auto [index, t] = calculate_interpolation_values(energy);
     return retrieve_cross_section(t, index, xs_type);
 }
 
 
-cross_section_sample data_library::sample_cross_sections(const material_data& material, double energy, double sample) const {
-    std::size_t selected_element;
-    double curr_percentage = 0.0;
-
-    for (auto& [element, percentage] : material) {
-        curr_percentage += percentage;
-        selected_element = element - 1;
-        if (curr_percentage <= sample) {
-            break;
-        }
-    }
-
-    const element_entry& element = elements[selected_element];
-
-    auto [index, t] = element.calculate_interpolation_values(energy);
-
-    cross_section_sample data = {
-        energy,
-        element.retrieve_cross_section(t, index, cross_section::coherent),
-        element.retrieve_cross_section(t, index, cross_section::incoherent),
-        element.retrieve_cross_section(t, index, cross_section::photoelectric),
-        element.retrieve_cross_section(t, index, cross_section::pair_nuclear),
-        element.retrieve_cross_section(t, index, cross_section::pair_electron),
-        0.0
-    };
-
-    data.total = data.coherent + data.incoherent + data.photoelectric + data.pair_electron + data.pair_nuclear;
-
-    return data;
-}
-
-
-material_data data_library::preprocess_cross_sections(const std::vector<std::pair<std::string_view, int>>& input_data) const {
+material_data data_library::preprocess_cross_sections(const parsed_material& input_data) const {
 
     double total_weight = 0.0;
 
