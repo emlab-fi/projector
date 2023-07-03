@@ -141,8 +141,8 @@ void from_json(json& j, vec3& vec) {
     j.at(2).get_to(z);
 
     vec[0] = x;
-    vec[1] = x;
-    vec[2] = x;
+    vec[1] = y;
+    vec[2] = z;
 }
 
 }
