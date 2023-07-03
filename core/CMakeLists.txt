@@ -55,6 +55,7 @@ set(PROJECTOR_LIB_SRC
 
 set(PROJECTOR_TESTS_SRC
 	tests/geometry_tests.cpp
+	tests/cross_sections_tests.cpp
 )
 
 

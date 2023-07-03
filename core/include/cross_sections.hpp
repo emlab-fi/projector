@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <filesystem>
+
+
 namespace projector {
 
 enum class cross_section {
@@ -12,44 +15,46 @@ enum class cross_section {
     incoherent = 2,
     photoelectric = 3,
     pair_nuclear = 4,
-    pair_electron = 5
+    pair_electron = 5,
+    total = 6
 };
 
+enum class form_factor {
+    no_form_factor = 0,
+    coherent = 1,
+    incoherent = 2
+};
 
-/*
-vector containing normalized material data, pair for each present element
-    first - atomic number
-    second - percentage, normalized to 0 - 1
-*/
+//vector containing normalized material data, pair for each present element
+//    first - atomic number
+//    second - percentage, normalized to 0 - 1
+
 using material_data = std::vector<std::pair<std::size_t, double>>;
 
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
-struct cross_section_sample {
-    double energy;
-    double coherent;
-    double incoherent;
-    double photoelectric;
-    double pair_nuclear;
-    double pair_electron;
-    double total;
-};
 
-struct element_entry {
+class element_entry {
+
+    std::size_t energy_count;
+
+    std::array<std::vector<double>, 7> xs_data;
+    std::array<std::vector<double>, 3> form_factor_data;
+
+    std::pair<int, double> calculate_interpolation_values(double energy) const;
+
+    double retrieve_cross_section(double t, std::size_t index, cross_section xs_type) const;
+
+public:
 
     uint32_t atomic_number;
     double atomic_weight;
 
-    std::size_t energy_count;
+    double get_cross_section(double energy, cross_section xs_type) const;
 
-    std::array<std::vector<double>, 6> data;
+    double get_form_factor(double x, form_factor ff_type) const;
 
-
-    std::pair<int, double> calculate_interpolation_values(double energy) const;
-
-    double interpolate_cross_section(double energy, cross_section xs_type) const;
-
-    double retrieve_cross_section(double t, std::size_t index, cross_section xs_type) const;
+    static element_entry load_xcom_file(std::filesystem::path path);
 
 };
 
@@ -58,20 +63,20 @@ class data_library {
 
     std::array<element_entry, 100> elements;
 
-    friend data_library load_xcom_data(std::string_view path);
-
 public:
 
-    cross_section_sample sample_cross_sections(const material_data& elements, double energy, double sample) const;
+    element_entry& sample_element(const material_data& elements, double sample) const;
 
     material_data preprocess_cross_sections(const parsed_material& input_data) const;
+
+    static data_library load_xcom_data(std::filesystem::path path);
+
+    static data_library load_endf_data(std::filesystem::path path);
 
 };
 
 
-data_library load_xcom_data(std::string_view path);
-
-parsed_material parse_material_string(std::string_view material);
+parsed_material parse_material_string(const std::string_view& material);
 
 
 
