@@ -61,14 +61,6 @@ element_entry element_entry::load_xcom_file(std::filesystem::path file) {
         }
     }
 
-    for (std::size_t i = 0; i < data.energy_count; ++i) {
-        double total = 0.0;
-        for (std::size_t s = 0; i < 6; ++i) {
-            total += data.xs_data[s][i];
-        }
-        data.xs_data[6][i] = total;
-    }
-
     filestream.close();
 
     return data;

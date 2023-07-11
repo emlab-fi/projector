@@ -15,8 +15,7 @@ enum class cross_section {
     incoherent = 2,
     photoelectric = 3,
     pair_nuclear = 4,
-    pair_electron = 5,
-    total = 6
+    pair_electron = 5
 };
 
 enum class form_factor {
@@ -28,7 +27,6 @@ enum class form_factor {
 //vector containing normalized material data, pair for each present element
 //    first - atomic number
 //    second - percentage, normalized to 0 - 1
-
 using material_data = std::vector<std::pair<std::size_t, double>>;
 
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
@@ -38,7 +36,7 @@ class element_entry {
 
     std::size_t energy_count;
 
-    std::array<std::vector<double>, 7> xs_data;
+    std::array<std::vector<double>, 6> xs_data;
     std::array<std::vector<double>, 3> form_factor_data;
 
     std::pair<int, double> calculate_interpolation_values(double energy) const;
@@ -55,6 +53,8 @@ public:
     double get_form_factor(double x, form_factor ff_type) const;
 
     static element_entry load_xcom_file(std::filesystem::path path);
+
+    static element_entry load_endf_file(std::filesystem::path path);
 
 };
 
