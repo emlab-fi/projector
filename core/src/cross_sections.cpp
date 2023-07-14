@@ -1,6 +1,7 @@
 #include <utility>
 #include <string>
 #include <cctype>
+#include <cmath>
 #include "cross_sections.hpp"
 
 namespace {
@@ -65,41 +66,85 @@ int parse_amount(const std::string_view& material, std::string_view::iterator& p
     return std::stoi(read);
 }
 
+std::pair<std::size_t, double> calculate_interpolation_values(double x, const std::vector<double>& values) {
+    std::size_t index = 0;
+
+    //currently a simple linear search, will perform badly!
+    while (values[index] > x) {
+        ++index;
+    }
+
+    double t = (x - values[index]) / (values[index+1] - values[index]);
+
+    return {index, t};
+}
+
+double interpolate(const std::vector<double>& x_vals, const std::vector<double>& y_vals, double x) {
+
+    if (x <= x_vals.front()) {
+        return y_vals.front();
+    }
+
+    if (x >= x_vals.back()) {
+        return y_vals.back();
+    }
+
+    auto [index, t] = calculate_interpolation_values(x, x_vals);
+
+    return std::lerp(y_vals[index], y_vals[index+1], t);
+}
+
 } //annonymous namespace
 
 
 namespace projector {
 
-std::pair<int, double> element_entry::calculate_interpolation_values(double energy) const {
-    if (energy <= xs_data[0][0]) {
-        return {0, 0.0};
-    }
-
-    if (energy >= xs_data[0][energy_count - 1]) {
-        return {energy_count - 1, 1.0};
-    }
-
-    int index = 0;
-
-    while (xs_data[0][index] < energy) {
-        ++index;
-    }
-
-    double t = (energy - xs_data[0][index]) /  (xs_data[0][index + 1] - xs_data[0][index]);
-
-    return {index, t};
-}
-
-
-double element_entry::retrieve_cross_section(double t, std::size_t index, cross_section xs_type) const {
-    return (1.0 - t) * xs_data[static_cast<int>(xs_type)][index] + t * xs_data[static_cast<int>(xs_type)][index + 1];
-}
-
 
 double element_entry::get_cross_section(double energy, cross_section xs_type) const {
-    auto [index, t] = calculate_interpolation_values(energy);
-    return retrieve_cross_section(t, index, xs_type);
+
+    std::size_t xs = static_cast<std::size_t>(xs_type);
+
+    return interpolate(xs_data[0], xs_data[xs], energy);
 }
+
+
+double element_entry::get_form_factor(double x, form_factor ff_type) const {
+
+    switch(ff_type) {
+    case form_factor::incoherent:
+        return interpolate(ff_data[0], ff_data[1], x);
+    case form_factor::cumulative_coherent:
+        return interpolate(ff_data[2], ff_data[3], x);
+    case form_factor::differential_coherent:
+        return interpolate(ff_data[2], ff_data[4], x);
+    default:
+        throw std::runtime_error("invalid form factor request!");
+    }
+
+    return 0.0;
+}
+
+
+const element_entry& data_library::get_element(std::size_t atomic_number) const {
+    return elements[atomic_number - 1];
+}
+
+
+const element_entry& data_library::sample_element(const material_data& material, double sample) const {
+
+    double cumulative = 0.0;
+
+    for (auto [atomic_number, amount] : material) {
+        cumulative += amount;
+        if (cumulative >= sample) {
+            return get_element(atomic_number);
+        }
+    }
+
+    throw std::runtime_error("Couldn't sample element");
+}
+
+
 
 
 material_data data_library::preprocess_cross_sections(const parsed_material& input_data) const {

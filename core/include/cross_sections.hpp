@@ -14,14 +14,14 @@ enum class cross_section {
     coherent = 1,
     incoherent = 2,
     photoelectric = 3,
-    pair_nuclear = 4,
-    pair_electron = 5
+    pair_production = 4
 };
 
 enum class form_factor {
     no_form_factor = 0,
-    coherent = 1,
-    incoherent = 2
+    incoherent = 1,
+    differential_coherent = 2,
+    cumulative_coherent = 3
 };
 
 //vector containing normalized material data, pair for each present element
@@ -29,19 +29,14 @@ enum class form_factor {
 //    second - percentage, normalized to 0 - 1
 using material_data = std::vector<std::pair<std::size_t, double>>;
 
+//parsed chemical formula, pair of symbol and count
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
 
 class element_entry {
 
-    std::size_t energy_count;
-
-    std::array<std::vector<double>, 6> xs_data;
-    std::array<std::vector<double>, 3> form_factor_data;
-
-    std::pair<int, double> calculate_interpolation_values(double energy) const;
-
-    double retrieve_cross_section(double t, std::size_t index, cross_section xs_type) const;
+    std::array<std::vector<double>, 5> xs_data;
+    std::array<std::vector<double>, 5> ff_data;
 
 public:
 
@@ -52,9 +47,10 @@ public:
 
     double get_form_factor(double x, form_factor ff_type) const;
 
+    // deprecated! use endf
     static element_entry load_xcom_file(std::filesystem::path path);
 
-    static element_entry load_endf_file(std::filesystem::path path);
+    static element_entry load_from_ace_file(std::filesystem::path path);
 
 };
 
@@ -65,13 +61,16 @@ class data_library {
 
 public:
 
-    element_entry& sample_element(const material_data& elements, double sample) const;
+    const element_entry& get_element(std::size_t atomic_number) const;
+
+    const element_entry& sample_element(const material_data& elements, double sample) const;
 
     material_data preprocess_cross_sections(const parsed_material& input_data) const;
 
+    // deprecated! use endf
     static data_library load_xcom_data(std::filesystem::path path);
 
-    static data_library load_endf_data(std::filesystem::path path);
+    static data_library load_ace_data(std::filesystem::path path);
 
 };
 

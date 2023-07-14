@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "cross_sections.hpp"
 
+// THIS IS DEPRECATED!
 
 namespace {
 
@@ -55,7 +56,9 @@ element_entry element_entry::load_xcom_file(std::filesystem::path file) {
         throw std::runtime_error("Can't read data header");
     }
 
-    for (std::size_t i; i < 6; ++i) {
+    // this currently loads the file wrong!
+    // reads only electron pair production to total pair production
+    for (std::size_t i; i < 5; ++i) {
         if (!read_data_segment(filestream, data.xs_data[i], data.energy_count)) {
             throw std::runtime_error("Can't read data segments");
         }
