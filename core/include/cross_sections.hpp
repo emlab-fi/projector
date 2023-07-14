@@ -50,7 +50,7 @@ public:
     // deprecated! use endf
     static element_entry load_xcom_file(std::filesystem::path path);
 
-    static element_entry load_from_ace_file(std::filesystem::path path);
+    static element_entry load_from_ace_file(std::filesystem::path path, std::size_t line);
 
 };
 

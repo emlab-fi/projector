@@ -11,13 +11,15 @@
 
 int main(int argc, char* argv[]) {
 
-    CLI::App app{"Simple particle simulator"};
+    CLI::App app{"Projector - photon transport simulator"};
 
     std::string_view config_path;
     std::string_view xcom_path;
+    std::string_view xsdir_path;
     int thread_count = 1;
 
-    app.add_option("--xcom, -x, xcom_path", xcom_path, "XCOM database path")->required()->check(CLI::ExistingPath);
+    app.add_option("--xcom, -x", xcom_path, "XCOM database path (deprecated)")->check(CLI::ExistingPath);
+    app.add_option("--ace_xsdir, -a", xsdir_path, "xsdir file path for ACE (eprdata14)")->required()->check(CLI::ExistingFile);
     app.add_option("--input_file, -i, input_file", config_path, "Input json file")->required()->check(CLI::ExistingFile);
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
 
@@ -48,14 +50,14 @@ int main(int argc, char* argv[]) {
     std::cout << "Loaded config file successfully" << std::endl;
 
 
-    std::cout << "Loading XCOM data from: " << xcom_path << std::endl;
+    std::cout << "Loading cross section data from: " << xsdir_path << std::endl;
     try {
-        sim_env.cross_section_data = projector::data_library::load_xcom_data(xcom_path);
+        sim_env.cross_section_data = projector::data_library::load_ace_data(xsdir_path);
     } catch (const std::exception& e) {
         print_nested_exception(e);
         return EXIT_FAILURE;
     }
-    std::cout << "Loaded XCOM data successfully" << std::endl;
+    std::cout << "Loaded cross section data successfully" << std::endl;
 
     return EXIT_SUCCESS;
 }
