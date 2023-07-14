@@ -52,14 +52,16 @@ element_entry element_entry::load_xcom_file(std::filesystem::path file) {
 
     projector::element_entry data;
 
-    if (!read_file_header(filestream, data.atomic_number, data.atomic_weight, data.energy_count)) {
+    std::size_t energy_count;
+
+    if (!read_file_header(filestream, data.atomic_number, data.atomic_weight, energy_count)) {
         throw std::runtime_error("Can't read data header");
     }
 
     // this currently loads the file wrong!
     // reads only electron pair production to total pair production
     for (std::size_t i; i < 5; ++i) {
-        if (!read_data_segment(filestream, data.xs_data[i], data.energy_count)) {
+        if (!read_data_segment(filestream, data.xs_data[i], energy_count)) {
             throw std::runtime_error("Can't read data segments");
         }
     }
