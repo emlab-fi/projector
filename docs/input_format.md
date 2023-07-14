@@ -1,6 +1,7 @@
 # projector input format
 
 - json format - somewhat human readable
+- later split to multiple files?
 
 ## Example of the json
 ```json
@@ -9,7 +10,9 @@
     "description": "Description of the experiment",
     "output": "./output/dir/path",
     "save_particle_paths": true,
-    "seed": -1,
+    "seed": 1,
+    "energy_cutoff": 100,
+    "stack_size": 200,
     "objects": [
         {
             "id": "object id",
