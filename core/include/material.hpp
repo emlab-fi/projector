@@ -49,6 +49,8 @@ public:
 
     std::array<double, 5> get_all_cross_sections(double energy) const;
 
+    double rayleigh(double energy, uint64_t& prng_state) const;
+
     // deprecated! use endf
     static element load_xcom_file(std::filesystem::path path);
 

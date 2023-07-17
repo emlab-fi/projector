@@ -46,7 +46,7 @@ set(PROJECTOR_LIB_SRC
 #	src/xcom_loader.cpp
 	src/ace_loader.cpp
 	src/utils.cpp
-	src/cross_sections.cpp
+	src/material.cpp
 	src/geometry.cpp
 	src/json_converters.cpp
 	src/random_numbers.cpp

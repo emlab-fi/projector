@@ -1,4 +1,4 @@
-#include "cross_sections.hpp"
+#include "material.hpp"
 #include <fstream>
 #include <stdexcept>
 #include <cstdio>

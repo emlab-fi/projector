@@ -2,7 +2,9 @@
 #include <string>
 #include <cctype>
 #include <cmath>
-#include "cross_sections.hpp"
+#include "material.hpp"
+#include "random_numbers.hpp"
+#include "constants.hpp"
 
 namespace {
 
@@ -137,6 +139,32 @@ std::array<double, 5> element::get_all_cross_sections(double energy) const {
     }
 
     return xs;
+}
+
+
+double element::rayleigh(double energy, uint64_t& prng_state) const {
+
+    double mu = 0.0;
+
+    double k = energy / constants::electron_mass_ev;
+
+    double x2_max = (constants::electron_mass_ev / constants::planck_c) * k;
+
+    double f_max = get_form_factor(x2_max, form_factor::cumulative_coherent);
+
+    while (true) {
+        double f = prng_double(prng_state) * f_max;
+
+        double x2 = interpolate(ff_data[3], ff_data[2], f);
+
+        mu = 1.0 - 2.0 * x2 / x2_max;
+
+        if (prng_double(prng_state) < (0.5 * (1.0 + mu * mu))) {
+            break;
+        }
+    }
+
+    return mu;
 }
 
 

@@ -3,7 +3,7 @@
 #include <string_view>
 #include <filesystem>
 #include "geometry.hpp"
-#include "cross_sections.hpp"
+#include "material.hpp"
 
 namespace projector {
 

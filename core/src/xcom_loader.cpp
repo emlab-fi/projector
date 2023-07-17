@@ -1,7 +1,7 @@
 #include <fstream>
 #include <cstdio>
 #include <stdexcept>
-#include "cross_sections.hpp"
+#include "material.hpp"
 
 // THIS IS DEPRECATED!
 
