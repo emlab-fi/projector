@@ -96,6 +96,58 @@ double interpolate(const std::vector<double>& x_vals, const std::vector<double>&
     return std::lerp(y_vals[index], y_vals[index+1], t);
 }
 
+
+std::pair<double, double> klein_nishina(double k, uint64_t prng_state) {
+    using projector::prng_double;
+
+    //standard sampling using Kahn for k < 3, Koblinger for other
+    double k_out = 0.0;
+    double mu = 0.0;
+
+    double beta = 1.0 + 2.0 * k;
+
+    if (k < 3.0) {
+        double x;
+        double t = beta / (beta + 8.0);
+        while (true) {
+            if (prng_double(prng_state) <= t) {
+                double r = prng_double(prng_state) * 2.0;
+                x = 1.0 + k * r;
+                if (prng_double(prng_state) < 4.0 / x * (1.0 - 1.0 / x)) {
+                    k_out = k / x;
+                    mu = 1 - r;
+                }
+            } else {
+                x = beta / (1.0 + 2.0 * k * prng_double(prng_state));
+                mu = 1.0 + (1.0 - x) / k;
+                if (prng_double(prng_state) < 0.5 * (mu * mu + 1.0 / x)) {
+                    k_out = k / x;
+                }
+            }
+        }
+
+    } else {
+        double g = 1.0 - std::pow(beta, -2);
+
+        double t = prng_double(prng_state) *
+            (4.0 / k + 0.5 * g + (1.0 - (1.0 + beta) / (k * k)) * std::log(beta));
+
+        if (t <= 2.0 / k) {
+            k_out = k / (1.0 + 2.0 * k * prng_double(prng_state));
+        } else if (t <= 4.0 / k) {
+            k_out = k * (1.0 + 2.0 * k * prng_double(prng_state)) / beta;
+        } else if (t <= 4.0 / k + 0.5 * g) {
+            k_out = k * std::sqrt( 1.0 - g * prng_double(prng_state));
+        } else {
+            k_out = k / std::pow(beta, prng_double(prng_state));
+        }
+
+        mu = 1.0 + 1.0 / k - 1.0 / k_out;
+    }
+
+    return {k_out, mu};
+};
+
 } //annonymous namespace
 
 
@@ -165,6 +217,33 @@ double element::rayleigh(double energy, uint64_t& prng_state) const {
     }
 
     return mu;
+}
+
+std::pair<double, double> element::compton(double energy, uint64_t& prng_state) const {
+
+    double k = energy / constants::electron_mass_ev;
+
+    double x_max = (constants::electron_mass_ev / constants::planck_c) * k;
+    double f_max = get_form_factor(x_max, form_factor::incoherent);
+
+    double k_out = 0.0;
+    double mu = 0.0;
+
+    while (true) {
+        auto [k_sample, mu_sample] = klein_nishina(k, prng_state);
+
+        double x = constants::electron_mass_ev / constants::planck_c * k_sample * std::sqrt(0.5 * (1 - mu_sample));
+
+        double f = get_form_factor(x, form_factor::incoherent);
+
+        if (prng_double(prng_state) < (f / f_max)) {
+            k_out = k_sample;
+            mu = mu_sample;
+            break;
+        }
+    }
+
+    return {k_out * constants::electron_mass_ev, mu};
 }
 
 

@@ -49,6 +49,14 @@ void photon_interaction(particle& p, const element& element) {
     prob += get_xs(xs_data, cross_section::incoherent);
     if (sample < prob) {
 
+        auto [new_energy, mu] = element.compton(p.history.energies.back(), p.prng_state);
+
+        p.history.energies.back() = new_energy;
+
+        double phi = 2.0 * constants::pi * prng_double(p.prng_state);
+
+        p.current_direction = rotate_direction(p.current_direction, mu, phi);
+
         p.history.interactions.back() = cross_section::incoherent;
         return;
     }

@@ -51,6 +51,8 @@ public:
 
     double rayleigh(double energy, uint64_t& prng_state) const;
 
+    std::pair<double, double> compton(double energy, uint64_t& prng_state) const;
+
     // deprecated! use endf
     static element load_xcom_file(std::filesystem::path path);
 
