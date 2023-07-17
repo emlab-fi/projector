@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "environment.hpp"
 #include "json_converters.hpp"
+#include "runtime.hpp"
 
 
 int main(int argc, char* argv[]) {
@@ -56,6 +57,18 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
     std::cout << "Loaded cross section data successfully" << std::endl;
+
+    std::cout << "Initializing runtime" << std::endl;
+
+    std::cout << "Initialization ok" << std::endl;
+
+
+    std::cout << "Running particle simulation" << std::endl;
+
+
+    std::cout << "Processing tallies" << std::endl;
+
+    std::cout << "Saving data" << std::endl;
 
     return EXIT_SUCCESS;
 }

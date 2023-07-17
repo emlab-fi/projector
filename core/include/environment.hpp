@@ -82,6 +82,8 @@ struct environment {
     std::vector<tally> tallies;
 
     data_library cross_section_data;
+
+    std::vector<particle> particles;
 };
 
 } //namespace projector

@@ -91,6 +91,11 @@ bool geometry::point_is_inside(const vec3& point) const {
     }, definition);
 }
 
+vec3 geometry::sample_point(uint64_t& prng_seed) const {
+    
+}
+
+
 vec3 rotate_direction(vec3 dir, double mu, double phi) {
     // done according to PENELOPE 2018 docs and OpenMC source code
     // should be simple axis-angle rotation where axis is the original direction

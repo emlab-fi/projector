@@ -97,7 +97,7 @@ double interpolate(const std::vector<double>& x_vals, const std::vector<double>&
 }
 
 
-std::pair<double, double> klein_nishina(double k, uint64_t prng_state) {
+std::pair<double, double> klein_nishina(double k, uint64_t& prng_state) {
     using projector::prng_double;
 
     //standard sampling using Kahn for k < 3, Koblinger for other
