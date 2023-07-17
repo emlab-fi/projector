@@ -31,6 +31,12 @@ bool point_inside_ellipsoid(const pvec3& point, const pvec3& center, const pvec3
     return (a + b + c) < 1;
 }
 
+constexpr double signum(const double d) {
+    if (d > 0.0) return 1;
+    if (d == 0.0) return 0;
+    return -1;
+}
+
 } //annonymous namespace
 
 namespace projector {
@@ -85,5 +91,34 @@ bool geometry::point_is_inside(const vec3& point) const {
     }, definition);
 }
 
+vec3 rotate_direction(vec3 dir, double mu, double phi) {
+    // done according to PENELOPE 2018 docs and OpenMC source code
+    // should be simple axis-angle rotation where axis is the original direction
+    // mu is the cosine of angle deflected from the axis
+    // phi is angle in radians to rotate around the axis
+
+    //precalculate
+    double sin_phi = std::sin(phi);
+    double cos_phi = std::cos(phi);
+    double sin_mu = std::sqrt(1 - mu * mu); //get absolute sine from cosine
+    double a = std::sqrt(1 - dir[2] * dir[2]);
+
+    double u, v, w;
+    // need to take care of special case when a is close to zero, as then it is parallel to z-axis
+    // we can use simpler functions when it is
+    // TODO: check whether this is enough or we need OpenMC approach
+    if (a > 1e-10) {
+        u = dir[0] * mu + (sin_mu / a) * (dir[0] * dir[2] * cos_phi - dir[1] * sin_phi);
+        v = dir[1] * mu + (sin_mu / a) * (dir[1] * dir[2] * cos_phi + dir[0] * sin_phi);
+        w = dir[2] * mu - a * sin_mu * cos_phi;
+    } else {
+        double sign = signum(dir[2]);
+        u = sign * sin_mu * cos_phi;
+        v = sign * sin_mu * sin_phi;
+        w = sign * mu;
+    }
+
+    return {u, v, w};
+}
 
 }

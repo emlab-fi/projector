@@ -52,5 +52,6 @@ struct geometry {
 
 };
 
+vec3 rotate_direction(vec3 dir, double mu, double phi);
 
 } //namespace projector

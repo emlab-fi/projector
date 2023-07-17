@@ -34,8 +34,14 @@ void photon_interaction(particle& p, const element& element) {
 
     prob += get_xs(xs_data, cross_section::coherent);
     if (sample < prob) {
+
         double mu = element.rayleigh(p.history.energies.back(), p.prng_state);
-        p.current_direction = sample_new_direction(p.current_direction, mu, p.prng_state);
+
+        //sample phi for direction rotation
+        double phi = 2.0 * constants::pi * prng_double(p.prng_state);
+
+        p.current_direction = rotate_direction(p.current_direction, mu, phi);
+
         p.history.interactions.back() = cross_section::coherent;
         return;
     }
@@ -60,11 +66,6 @@ void photon_interaction(particle& p, const element& element) {
         p.history.interactions.back() = cross_section::pair_production;
         return;
     }
-}
-
-
-projector::vec3 sample_new_direction(projector::vec3 direction, double mu, uint64_t& prng_state) {
-    return {0, 0, 0};
 }
 
 } // namespace projector
