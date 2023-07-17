@@ -41,7 +41,7 @@ void read_map_insert(std::ifstream& src, std::vector<double>& dest, std::size_t 
 
 namespace projector {
 
-element_entry element_entry::load_from_ace_file(std::filesystem::path input_file, std::size_t line) {
+element element::load_from_ace_file(std::filesystem::path input_file, std::size_t line) {
     auto file_stream = std::ifstream(input_file);
     if (!file_stream.is_open()) {
         throw std::runtime_error("Failed opening " + input_file.string());
@@ -69,7 +69,7 @@ element_entry element_entry::load_from_ace_file(std::filesystem::path input_file
     std::size_t N_inc = (JXS[2] - JXS[1]) / 2;
     std::size_t N_coh = (JXS[3] - JXS[2]) / 3;
 
-    element_entry elem;
+    element elem;
     elem.atomic_number = NXS[1];
 
     auto unlog = [](double val){
@@ -126,12 +126,12 @@ data_library data_library::load_ace_data(std::filesystem::path xsdir_file) {
         }
 
 
-        element_entry elem;
+        element elem;
         std::filesystem::path ace_path(ace_path_str);
         ace_path = xsdir_file.parent_path() / ace_path;
 
         try {
-            elem = element_entry::load_from_ace_file(ace_path, start_line - 1);
+            elem = element::load_from_ace_file(ace_path, start_line - 1);
         } catch (...) {
             std::throw_with_nested(std::runtime_error("Error while reading ACE file: " + ace_path.string()));
         }

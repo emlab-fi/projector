@@ -33,7 +33,7 @@ using material_data = std::vector<std::pair<std::size_t, double>>;
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
 
-class element_entry {
+class element {
 
     std::array<std::vector<double>, 5> xs_data;
     std::array<std::vector<double>, 5> ff_data;
@@ -47,23 +47,25 @@ public:
 
     double get_form_factor(double x, form_factor ff_type) const;
 
-    // deprecated! use endf
-    static element_entry load_xcom_file(std::filesystem::path path);
+    std::array<double, 5> get_all_cross_sections(double energy) const;
 
-    static element_entry load_from_ace_file(std::filesystem::path path, std::size_t line);
+    // deprecated! use endf
+    static element load_xcom_file(std::filesystem::path path);
+
+    static element load_from_ace_file(std::filesystem::path path, std::size_t line);
 
 };
 
 
 class data_library {
 
-    std::array<element_entry, 100> elements;
+    std::array<element, 100> elements;
 
 public:
 
-    const element_entry& get_element(std::size_t atomic_number) const;
+    const element& get_element(std::size_t atomic_number) const;
 
-    const element_entry& sample_element(const material_data& elements, double sample) const;
+    const element& sample_element(const material_data& elements, double sample) const;
 
     material_data preprocess_cross_sections(const parsed_material& input_data) const;
 

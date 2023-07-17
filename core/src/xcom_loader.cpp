@@ -43,14 +43,14 @@ bool read_data_segment(std::ifstream& stream, std::vector<double>& data, std::si
 namespace projector {
 
 
-element_entry element_entry::load_xcom_file(std::filesystem::path file) {
+element element::load_xcom_file(std::filesystem::path file) {
 
     auto filestream = std::ifstream(file);
     if (!filestream.is_open()) {
         throw std::runtime_error("Can't open file");
     }
 
-    projector::element_entry data;
+    projector::element data;
 
     std::size_t energy_count;
 
@@ -84,7 +84,7 @@ data_library data_library::load_xcom_data(std::filesystem::path path) {
         std::sprintf(file_path, fmt_string, i);
 
         try {
-            auto element_data = element_entry::load_xcom_file(path / file_path);
+            auto element_data = element::load_xcom_file(path / file_path);
             library.elements[i - 1] = element_data;
         } catch (...) {
             std::throw_with_nested(std::runtime_error("Error while reading XCOM file: " + (path/file_path).string()));

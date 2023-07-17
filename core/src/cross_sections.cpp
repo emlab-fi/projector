@@ -100,7 +100,7 @@ double interpolate(const std::vector<double>& x_vals, const std::vector<double>&
 namespace projector {
 
 
-double element_entry::get_cross_section(double energy, cross_section xs_type) const {
+double element::get_cross_section(double energy, cross_section xs_type) const {
 
     std::size_t xs = static_cast<std::size_t>(xs_type);
 
@@ -108,7 +108,7 @@ double element_entry::get_cross_section(double energy, cross_section xs_type) co
 }
 
 
-double element_entry::get_form_factor(double x, form_factor ff_type) const {
+double element::get_form_factor(double x, form_factor ff_type) const {
 
     switch(ff_type) {
     case form_factor::incoherent:
@@ -125,12 +125,27 @@ double element_entry::get_form_factor(double x, form_factor ff_type) const {
 }
 
 
-const element_entry& data_library::get_element(std::size_t atomic_number) const {
+std::array<double, 5> element::get_all_cross_sections(double energy) const {
+
+    auto [index, t] = calculate_interpolation_values(energy, xs_data[0]);
+
+    std::array<double, 5> xs;
+    xs[0] = energy;
+
+    for (std::size_t i = 1; i < 5; ++i) {
+        xs[i] = std::lerp(xs_data[i][index], xs_data[i][index+1], t);
+    }
+
+    return xs;
+}
+
+
+const element& data_library::get_element(std::size_t atomic_number) const {
     return elements[atomic_number - 1];
 }
 
 
-const element_entry& data_library::sample_element(const material_data& material, double sample) const {
+const element& data_library::sample_element(const material_data& material, double sample) const {
 
     double cumulative = 0.0;
 
