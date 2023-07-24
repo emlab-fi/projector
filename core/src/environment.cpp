@@ -3,7 +3,7 @@
 
 
 constexpr std::string_view interaction_map[] = {
-    "no_interaction", "coherent", "incoherent", "photoelectric", "pair_nuclear", "pair_electron"
+    "no_interaction", "coherent", "incoherent", "photoelectric", "pair_production"
 };
 
 

@@ -3,6 +3,7 @@
 #include <string_view>
 #include <filesystem>
 #include "geometry.hpp"
+#include "particle.hpp"
 #include "material.hpp"
 
 namespace projector {
@@ -23,6 +24,7 @@ struct tally {
         photon_flux,
         photon_energy_average,
         photon_interaction_counts,
+        interaction_distance_average,
     };
 
     vec3 cell_size;
@@ -38,32 +40,6 @@ struct tally {
     std::size_t stride;
 
     void save_tally(const std::filesystem::path path) const;
-};
-
-
-struct particle_history {
-    std::vector<vec3> points;
-    std::vector<double> energies;
-    std::vector<cross_section> interactions;
-};
-
-
-struct particle {
-    enum class type {
-        photon,
-        neutron,
-        electron
-    };
-
-    type particle_type;
-
-    vec3 current_direction;
-
-    uint64_t prng_state;
-
-    particle_history history;
-
-    void save_particle(const std::filesystem::path path) const;
 };
 
 
