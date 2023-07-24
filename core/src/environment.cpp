@@ -54,7 +54,7 @@ void particle::save_particle(const std::filesystem::path path) const {
         throw std::runtime_error("failed to open file: " + path.string());
     }
 
-    output_file << "x,y,z,energy,interaction" << '\n';
+    output_file << "x,y,z,energy,interaction, element" << '\n';
 
     std::size_t length = history.points.size();
 
@@ -63,7 +63,8 @@ void particle::save_particle(const std::filesystem::path path) const {
                     << history.points[i][1] << ","
                     << history.points[i][2] << ","
                     << history.energies[i] << ","
-                    << interaction_map[static_cast<std::size_t>(history.interactions[i])] << "\n";
+                    << interaction_map[static_cast<std::size_t>(history.interactions[i])] << ","
+                    << history.elements[i] << "\n";
     }
 
     output_file.close();

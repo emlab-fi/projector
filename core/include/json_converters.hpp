@@ -20,7 +20,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(operation::type, {
 NLOHMANN_JSON_SERIALIZE_ENUM(tally::type, {
     {tally::type::photon_energy_average, "photon_energy_average"},
     {tally::type::photon_flux, "photon_flux"},
-    {tally::type::photon_interaction_counts, "photon_interaction_counts"}
+    {tally::type::photon_interaction_counts, "photon_interaction_counts"},
+    {tally::type::interaction_distance_average, "interaction_distance_average"},
 })
 
 void from_json(nlohmann::json& j, environment& env);
@@ -28,6 +29,8 @@ void from_json(nlohmann::json& j, environment& env);
 void from_json(nlohmann::json& j, tally& ta);
 
 void from_json(nlohmann::json& j, object& obj);
+
+void from_json(nlohmann::json&j, material_data& mat);
 
 void from_json(nlohmann::json& j, geometry& geom);
 

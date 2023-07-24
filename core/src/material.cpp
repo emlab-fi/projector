@@ -8,27 +8,7 @@
 
 namespace {
 
-std::size_t symbol_to_index(const std::string_view& symbol) {
-    constexpr std::array<std::string_view, 100> symbols = {
-        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al",
-        "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe",
-        "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr",
-        "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn",
-        "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm",
-        "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W",
-        "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn",
-        "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf",
-        "Es", "Fm"
-    };
 
-    for (std::size_t i = 0; i < 100; ++i) {
-        if (symbols[i] == symbol) {
-            return i;
-        }
-    }
-
-    return 0;
-}
 
 std::string parse_name(const std::string_view& material, std::string_view::iterator& pos) {
     if (!std::isupper(*pos) && pos != material.end()) {
@@ -250,7 +230,7 @@ std::pair<double, double> element::compton(double energy, uint64_t& prng_state) 
 }
 
 
-sampled_xs data_library::material_macro_xs(const material& mat, double energy) const {
+sampled_xs data_library::material_macro_xs(const material_data& mat, double energy) const {
 
     sampled_xs output = {0, 0, 0, 0, 0, 0};
     output.energy = energy;
@@ -274,7 +254,7 @@ const element& data_library::get_element(std::size_t atomic_number) const {
 }
 
 
-const element& data_library::sample_element(const material& material, double energy, uint64_t& prng_state) const {
+const element& data_library::sample_element(const material_data& material, double energy, uint64_t& prng_state) const {
 
     double total_macro_xs = material_macro_xs(material, energy).total;
 

@@ -24,11 +24,6 @@ enum class form_factor {
     cumulative_coherent = 3
 };
 
-//vector containing normalized material data, pair for each present element
-//    first - atomic number
-//    second - percentage, normalized to 0 - 1
-using material_data = std::vector<std::pair<std::size_t, double>>;
-
 //parsed chemical formula, pair of symbol and count
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
@@ -69,12 +64,15 @@ public:
 };
 
 
-struct material {
+struct material_data {
     double density;
 
     std::vector<std::size_t> elements;
-    std::vector<double> percentage;
+    std::vector<double> atomic_percentage;
+    std::vector<double> weight_percentage;
     std::vector<double> atom_density;
+
+    void preprocess_values(void);
 };
 
 
@@ -86,9 +84,9 @@ public:
 
     const element& get_element(std::size_t atomic_number) const;
 
-    sampled_xs material_macro_xs(const material& mat, double energy) const;
+    sampled_xs material_macro_xs(const material_data& mat, double energy) const;
 
-    const element& sample_element(const material& mat, double energy, uint64_t& prng_state) const;
+    const element& sample_element(const material_data& mat, double energy, uint64_t& prng_state) const;
 
     // deprecated! use endf
     static data_library load_xcom_data(std::filesystem::path path);

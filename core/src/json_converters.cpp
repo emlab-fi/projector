@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "json_converters.hpp"
+#include "utils.hpp"
 
 using json = nlohmann::json;
 
@@ -66,10 +67,43 @@ void from_json(json& j, object& obj) {
     }
 
     j.at("id").get_to(obj.id);
+    from_json(j.at("material"), obj.material);
     j.at("properties").at("material").get_to(obj.material_string);
     j.at("properties").at("photons_activity").get_to(obj.photons_activity);
     j.at("properties").at("photons_energy").get_to(obj.photons_energy);
     from_json(j.at("geometry"), (obj.geom));
+}
+
+
+void from_json(nlohmann::json&j, material_data& mat) {
+    if (!j.is_object()) {
+        throw std::runtime_error("material object is not JSON object");
+    }
+
+    j.at("density").get_to(mat.density);
+
+    std::vector<std::string_view> elems;
+
+    j.at("elements").get_to(elems);
+    if (j.contains("atomic_percentage")) {
+        j.at("atomic_percentage").get_to(mat.atomic_percentage);
+    }
+    if (j.contains("weight_percentage")) {
+        j.at("weight_percentage").get_to(mat.weight_percentage);
+    }
+
+    for (auto& elem : elems) {
+
+        std::size_t elem_number = symbol_to_atomic_number(elem);
+
+        if (elem_number == 0) {
+            std::string error = "Not a valid symbol: ";
+            throw std::runtime_error(error.append(elem));
+        }
+
+        mat.elements.push_back(elem_number);
+    }
+
 }
 
 
