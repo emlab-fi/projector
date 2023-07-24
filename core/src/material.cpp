@@ -179,16 +179,19 @@ double element::get_form_factor(double x, form_factor ff_type) const {
 }
 
 
-std::array<double, 5> element::get_all_cross_sections(double energy) const {
+sampled_xs element::get_all_cross_sections(double energy) const {
 
     auto [index, t] = calculate_interpolation_values(energy, xs_data[0]);
 
-    std::array<double, 5> xs;
-    xs[0] = energy;
+    sampled_xs xs;
+    xs.energy = energy;
 
-    for (std::size_t i = 1; i < 5; ++i) {
-        xs[i] = std::lerp(xs_data[i][index], xs_data[i][index+1], t);
-    }
+    xs.coherent = std::lerp(xs_data[1][index], xs_data[1][index+1], t);
+    xs.incoherent = std::lerp(xs_data[2][index], xs_data[2][index+1], t);
+    xs.photoelectric = std::lerp(xs_data[3][index], xs_data[3][index+1], t);
+    xs.pair_production = std::lerp(xs_data[4][index], xs_data[4][index+1], t);
+
+    xs.total = xs.coherent + xs.incoherent + xs.photoelectric + xs.pair_production;
 
     return xs;
 }
@@ -247,48 +250,50 @@ std::pair<double, double> element::compton(double energy, uint64_t& prng_state) 
 }
 
 
+sampled_xs data_library::material_macro_xs(const material& mat, double energy) const {
+
+    sampled_xs output = {0, 0, 0, 0, 0, 0};
+    output.energy = energy;
+
+    for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+        double atomic_density = mat.atom_density[i];
+        sampled_xs elem_xs = get_element(mat.elements[i]).get_all_cross_sections(energy);
+        output.coherent += atomic_density * elem_xs.coherent;
+        output.incoherent += atomic_density * elem_xs.incoherent;
+        output.photoelectric += atomic_density * elem_xs.photoelectric;
+        output.pair_production += atomic_density * elem_xs.pair_production;
+        output.total += atomic_density * elem_xs.total;
+    }
+
+    return output;
+};
+
+
 const element& data_library::get_element(std::size_t atomic_number) const {
     return elements[atomic_number - 1];
 }
 
 
-const element& data_library::sample_element(const material_data& material, double sample) const {
+const element& data_library::sample_element(const material& material, double energy, uint64_t& prng_state) const {
 
-    double cumulative = 0.0;
+    double total_macro_xs = material_macro_xs(material, energy).total;
 
-    for (auto [atomic_number, amount] : material) {
-        cumulative += amount;
-        if (cumulative >= sample) {
-            return get_element(atomic_number);
+    double sample = prng_double(prng_state) * total_macro_xs;
+
+    double prob = 0.0;
+    for (std::size_t i = 0; i < material.elements.size(); ++i) {
+        double total_xs = get_element(material.elements[i]).get_all_cross_sections(energy).total;
+
+        prob += total_xs * material.atom_density[i];
+
+        if (sample < prob) {
+            return get_element(material.elements[i]);
         }
     }
 
     throw std::runtime_error("Couldn't sample element");
 }
 
-
-
-
-material_data data_library::preprocess_cross_sections(const parsed_material& input_data) const {
-
-    double total_weight = 0.0;
-
-    material_data converted{};
-
-    for (const auto& [element_symbol, count] : input_data) {
-        std::size_t index = symbol_to_index(element_symbol);
-        double weight = elements[index].atomic_weight * count;
-        total_weight += weight;
-
-        converted.emplace_back(index + 1, weight);
-    }
-
-    for (auto& item : converted) {
-        item.second /= total_weight;
-    }
-
-    return converted;
-}
 
 parsed_material parse_material_string(const std::string_view& material) {
 

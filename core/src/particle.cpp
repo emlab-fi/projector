@@ -4,18 +4,6 @@
 
 namespace {
 
-double calculate_total_xs(const std::array<double, 5>& xs) {
-    double total = 0.0;
-    for (std::size_t i = 1; i < 5; ++i) {
-        total += xs[i];
-    }
-    return total;
-}
-
-double get_xs(const std::array<double, 5>& data, projector::cross_section xs) {
-    return data[static_cast<std::size_t>(xs)];
-}
-
 } // annonymous namespace
 
 
@@ -34,14 +22,14 @@ vec3& particle::current_position() {
 
 void particle::photon_interaction(const element& element) {
 
-    std::array<double, 5> xs_data = element.get_all_cross_sections(current_energy());
-
-    double total_xs = calculate_total_xs(xs_data);
+    sampled_xs xs_data = element.get_all_cross_sections(current_energy());
 
     double prob = 0.0;
-    double sample =  prng_double(prng_state) * total_xs;
+    double sample =  prng_double(prng_state) * xs_data.total;
 
-    prob += get_xs(xs_data, cross_section::coherent);
+    history.elements.back() = element.atomic_number;
+
+    prob += xs_data.coherent;
     if (sample < prob) {
 
         double mu = element.rayleigh(current_energy(), prng_state);
@@ -55,7 +43,7 @@ void particle::photon_interaction(const element& element) {
         return;
     }
 
-    prob += get_xs(xs_data, cross_section::incoherent);
+    prob += xs_data.incoherent;
     if (sample < prob) {
 
         auto [new_energy, mu] = element.compton(current_energy(), prng_state);
@@ -70,14 +58,14 @@ void particle::photon_interaction(const element& element) {
         return;
     }
 
-    prob += get_xs(xs_data, cross_section::photoelectric);
+    prob += xs_data.photoelectric;
     if (sample < prob) {
         current_energy() = 0.0;
         history.interactions.back() = cross_section::photoelectric;
         return;
     }
 
-    prob += get_xs(xs_data, cross_section::pair_production);
+    prob += xs_data.pair_production;
     if (sample < prob) {
         current_energy() = 0.0;
         history.interactions.back() = cross_section::pair_production;
@@ -92,6 +80,7 @@ void particle::advance(double macro_xs) {
     history.energies.push_back(current_energy());
     history.interactions.push_back(cross_section::no_interaction);
     history.points.push_back(current_position());
+    history.elements.push_back(history.elements.back());
 
     current_position() += distance * current_direction;
 

@@ -32,6 +32,14 @@ using material_data = std::vector<std::pair<std::size_t, double>>;
 //parsed chemical formula, pair of symbol and count
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
+struct sampled_xs {
+    double energy;
+    double coherent;
+    double incoherent;
+    double photoelectric;
+    double pair_production;
+    double total;
+};
 
 class element {
 
@@ -47,7 +55,7 @@ public:
 
     double get_form_factor(double x, form_factor ff_type) const;
 
-    std::array<double, 5> get_all_cross_sections(double energy) const;
+    sampled_xs get_all_cross_sections(double energy) const;
 
     double rayleigh(double energy, uint64_t& prng_state) const;
 
@@ -61,6 +69,15 @@ public:
 };
 
 
+struct material {
+    double density;
+
+    std::vector<std::size_t> elements;
+    std::vector<double> percentage;
+    std::vector<double> atom_density;
+};
+
+
 class data_library {
 
     std::array<element, 100> elements;
@@ -69,9 +86,9 @@ public:
 
     const element& get_element(std::size_t atomic_number) const;
 
-    const element& sample_element(const material_data& elements, double sample) const;
+    sampled_xs material_macro_xs(const material& mat, double energy) const;
 
-    material_data preprocess_cross_sections(const parsed_material& input_data) const;
+    const element& sample_element(const material& mat, double energy, uint64_t& prng_state) const;
 
     // deprecated! use endf
     static data_library load_xcom_data(std::filesystem::path path);

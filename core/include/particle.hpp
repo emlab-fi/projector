@@ -9,6 +9,7 @@ struct particle_history {
     std::vector<vec3> points;
     std::vector<double> energies;
     std::vector<cross_section> interactions;
+    std::vector<std::size_t> elements;
 };
 
 
