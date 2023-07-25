@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(app, argc, argv);
 
 
-    std::cout << "<<-- Projector Core -->>" << std::endl;
+    std::cout << "<<-- Projector -->>" << std::endl;
 
     projector::environment sim_env;
 
@@ -47,6 +47,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Loaded config file successfully" << std::endl;
+    std::cout << "Experiment: " << sim_env.name << std::endl;
 
 
     std::cout << "Loading cross section data from: " << xsdir_path << std::endl;
@@ -58,17 +59,22 @@ int main(int argc, char* argv[]) {
     }
     std::cout << "Loaded cross section data successfully" << std::endl;
 
+    std::cout << "Processing material data" << std::endl;
+    for (auto& obj : sim_env.objects) {
+        sim_env.cross_section_data.material_calculate_missing_values(obj.material);
+    }
+
     std::cout << "Initializing runtime" << std::endl;
-
-    std::cout << "Initialization ok" << std::endl;
-
+    projector::initialize_runtime(sim_env, thread_count);
 
     std::cout << "Running particle simulation" << std::endl;
-
+    projector::calculate_particle_histories(sim_env);
 
     std::cout << "Processing tallies" << std::endl;
+    projector::process_tallies(sim_env);
 
-    std::cout << "Saving data" << std::endl;
+    std::cout << "Saving data to: " << sim_env.output_path << std::endl;
+    projector::save_data(sim_env);
 
     return EXIT_SUCCESS;
 }

@@ -1,4 +1,7 @@
 #include "geometry.hpp"
+#include "random_numbers.hpp"
+#include "constants.hpp"
+#include <cmath>
 
 namespace {
 
@@ -37,6 +40,48 @@ constexpr double signum(const double d) {
     return -1;
 }
 
+pvec3 plane_random_sample( const pvec3& plane_p, const pvec3& normal, uint64_t& prng_state) {
+    // very hacky way, sample from large sphere around the plane
+    // and check whether it is "in" the plane
+    while (true) {
+        pvec3 output = ellipsoid_random_sample(plane_p, {100.0, 100.0, 100.0}, prng_state);
+        if (point_inside_plane(output, plane_p, normal)) {
+            return output;
+        }
+    }
+}
+
+pvec3 box_random_sample(const pvec3& min, const pvec3& max, uint64_t& prng_state) {
+    pvec3 output = {0.0, 0.0, 0.0};
+
+    for (std::size_t i = 0; i < 3; ++i) {
+        output[i] = min[i] + projector::prng_double(prng_state) * (max[i] - min[i]);
+    }
+
+    return output;
+}
+
+pvec3 ellipsoid_random_sample(const pvec3& center, const pvec3& radii, uint64_t& prng_state) {
+    double u = projector::prng_double(prng_state);
+    double v = projector::prng_double(prng_state);
+
+    double theta = 2.0 * projector::constants::pi * u;
+    double phi = std::acos(2.0 * v - 1);
+    double r = std::cbrt(projector::prng_double(prng_state));
+    double sin_theta = std::sin(theta);
+    double cos_theta = std::cos(theta);
+    double sin_phi = std::sin(phi);
+    double cos_phi = std::cos(phi);
+
+    pvec3 output = {
+        radii[0] * r * sin_phi * cos_theta,
+        radii[1] * r * sin_phi * sin_theta,
+        radii[2] * r * cos_phi
+    };
+
+    return output * center;
+}
+
 } //annonymous namespace
 
 namespace projector {
@@ -54,6 +99,21 @@ bool geom_primitive::point_is_inside(const vec3& point) const {
             return false;
     }
     return false;
+}
+
+
+vec3 geom_primitive::sample_point(uint64_t& prng_state) const {
+    switch (type) {
+        case shape::plane:
+            return plane_random_sample(param1, param2, prng_state);
+        case shape::aa_box:
+            return box_random_sample(param1, param2, prng_state);
+        case shape::aa_ellipsoid:
+            return ellipsoid_random_sample(param1, param2, prng_state);
+        default:
+            return vec3::Zero();
+    }
+    return vec3::Zero();
 }
 
 
@@ -76,8 +136,27 @@ bool operation::point_is_inside(const vec3& point) const {
 }
 
 
+vec3 operation::sample_point(uint64_t& prng_state) const {
+
+    if (op == type::join || op == type::intersect) {
+        double sample = prng_double(prng_state);
+        if (sample < 0.5) {
+            return left->sample_point(prng_state);
+        }
+        return right->sample_point(prng_state);
+    }
+
+    //we dont need to sample right operand as we cut it out
+    else if (op == type::cut) {
+        return left->sample_point(prng_state);
+    }
+    return vec3::Zero();
+}
+
+
+
 bool geometry::point_is_inside(const vec3& point) const {
-    return std::visit([point](auto&& arg) {
+    return std::visit([&point](auto&& arg) {
 
         using T = std::decay_t<decltype(arg)>;
 
@@ -91,8 +170,31 @@ bool geometry::point_is_inside(const vec3& point) const {
     }, definition);
 }
 
-vec3 geometry::sample_point(uint64_t& prng_seed) const {
-    
+vec3 geometry::sample_point(uint64_t& prng_state) const {
+
+    // basic rejection sampling method:
+    // - descend until a primitive, sample point in primitive
+    // - check whether point is inside our geometry (due to intersections and such)
+    // this can be quite long, as a small intersection will take long time to sample
+    while (true) {
+        vec3 sampled_point = std::visit([&prng_state](auto&& arg) {
+
+            using T = std::decay_t<decltype(arg)>;
+
+            if constexpr (std::is_same_v<T, operation>) {
+                return arg.sample_point(prng_state);
+            } else if constexpr (std::is_same_v<T, geom_primitive>) {
+                return arg.sample_point(prng_state);
+            }
+
+        }, definition);
+
+        if (point_is_inside(sampled_point)) {
+            return sampled_point;
+        }
+    }
+
+    return {0.0, 0.0, 0.0};
 }
 
 

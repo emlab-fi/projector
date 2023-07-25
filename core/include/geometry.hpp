@@ -20,6 +20,7 @@ struct geom_primitive {
 
     bool point_is_inside(const vec3& point) const;
 
+    vec3 sample_point(uint64_t& prng_state) const;
 };
 
 struct geometry;
@@ -34,6 +35,8 @@ struct operation {
     std::unique_ptr<geometry> right;
 
     bool point_is_inside(const vec3& point) const;
+
+    vec3 sample_point(uint64_t& prng_state) const;
 };
 
 
