@@ -71,8 +71,6 @@ struct material_data {
     std::vector<double> atomic_percentage;
     std::vector<double> weight_percentage;
     std::vector<double> atom_density;
-
-    void preprocess_values(void);
 };
 
 
@@ -87,6 +85,8 @@ public:
     sampled_xs material_macro_xs(const material_data& mat, double energy) const;
 
     const element& sample_element(const material_data& mat, double energy, uint64_t& prng_state) const;
+
+    void material_calculate_missing_values(material_data& mat) const;
 
     // deprecated! use endf
     static data_library load_xcom_data(std::filesystem::path path);

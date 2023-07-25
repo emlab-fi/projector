@@ -2,6 +2,7 @@
 #include <string>
 #include <cctype>
 #include <cmath>
+#include <algorithm>
 #include "material.hpp"
 #include "random_numbers.hpp"
 #include "constants.hpp"
@@ -48,6 +49,16 @@ int parse_amount(const std::string_view& material, std::string_view::iterator& p
     return std::stoi(read);
 }
 
+void normalize_vector(std::vector<double> vec) {
+    double sum = 0.0;
+    for (double val : vec) {
+        sum += val;
+    }
+    for (double& item :vec) {
+        item /= sum;
+    }
+}
+
 std::pair<std::size_t, double> calculate_interpolation_values(double x, const std::vector<double>& values) {
     std::size_t index = 0;
 
@@ -60,6 +71,7 @@ std::pair<std::size_t, double> calculate_interpolation_values(double x, const st
 
     return {index, t};
 }
+
 
 double interpolate(const std::vector<double>& x_vals, const std::vector<double>& y_vals, double x) {
 
@@ -272,6 +284,53 @@ const element& data_library::sample_element(const material_data& material, doubl
     }
 
     throw std::runtime_error("Couldn't sample element");
+}
+
+
+void data_library::material_calculate_missing_values(material_data& mat) const {
+
+    if (mat.atomic_percentage.size() != 0) {
+
+        normalize_vector(mat.atomic_percentage);
+
+        double total = 0.0;
+
+        for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+            total += mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight;
+        }
+
+        for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+            double weight_percent = (mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight) / total;
+            mat.weight_percentage.push_back(weight_percent);
+        }
+
+    }
+
+    else if (mat.weight_percentage.size() != 0) {
+
+        normalize_vector(mat.weight_percentage);
+
+        double total = 0.0;
+
+        for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+            total += mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight;
+        }
+
+        for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+            double atom_percent = (mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight) / total;
+            mat.atomic_percentage.push_back(atom_percent);
+        }
+    }
+
+    double min_value = *std::min_element(mat.atomic_percentage.begin(), mat.atomic_percentage.end());
+
+    for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+        double molar_mass = (mat.atomic_percentage[i] / min_value) * get_element(mat.elements[i]).atomic_weight;
+        double atom_density = (mat.weight_percentage[i] * mat.density * constants::avogadro) / molar_mass;
+        mat.atom_density.push_back(atom_density);
+    }
+
+    throw std::runtime_error("Couldn't properly load material data");
 }
 
 

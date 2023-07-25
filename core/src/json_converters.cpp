@@ -88,8 +88,11 @@ void from_json(nlohmann::json&j, material_data& mat) {
     if (j.contains("atomic_percentage")) {
         j.at("atomic_percentage").get_to(mat.atomic_percentage);
     }
-    if (j.contains("weight_percentage")) {
+    else if (j.contains("weight_percentage")) {
         j.at("weight_percentage").get_to(mat.weight_percentage);
+    }
+    else {
+        throw std::runtime_error("No percentages for material definition");
     }
 
     for (auto& elem : elems) {
