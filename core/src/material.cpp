@@ -329,8 +329,6 @@ void data_library::material_calculate_missing_values(material_data& mat) const {
         double atom_density = (mat.weight_percentage[i] * mat.density * constants::avogadro) / molar_mass;
         mat.atom_density.push_back(atom_density);
     }
-
-    throw std::runtime_error("Couldn't properly load material data");
 }
 
 

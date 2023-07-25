@@ -46,4 +46,10 @@ double prng_double(uint64_t& state) {
     return std::ldexp(output, -64);
 };
 
+double prng_double() {
+    uint64_t output = advance_prng(master_seed);
+
+    return std::ldexp(output, -64);
+}
+
 } // namespace projector

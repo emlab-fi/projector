@@ -59,4 +59,6 @@ struct geometry {
 
 vec3 rotate_direction(vec3 dir, double mu, double phi);
 
+vec3 random_unit_vector(uint64_t& prng_state);
+
 } //namespace projector

@@ -40,17 +40,6 @@ constexpr double signum(const double d) {
     return -1;
 }
 
-pvec3 plane_random_sample( const pvec3& plane_p, const pvec3& normal, uint64_t& prng_state) {
-    // very hacky way, sample from large sphere around the plane
-    // and check whether it is "in" the plane
-    while (true) {
-        pvec3 output = ellipsoid_random_sample(plane_p, {100.0, 100.0, 100.0}, prng_state);
-        if (point_inside_plane(output, plane_p, normal)) {
-            return output;
-        }
-    }
-}
-
 pvec3 box_random_sample(const pvec3& min, const pvec3& max, uint64_t& prng_state) {
     pvec3 output = {0.0, 0.0, 0.0};
 
@@ -79,7 +68,18 @@ pvec3 ellipsoid_random_sample(const pvec3& center, const pvec3& radii, uint64_t&
         radii[2] * r * cos_phi
     };
 
-    return output * center;
+    return output + center;
+}
+
+pvec3 plane_random_sample( const pvec3& plane_p, const pvec3& normal, uint64_t& prng_state) {
+    // very hacky way, sample from large sphere around the plane
+    // and check whether it is "in" the plane
+    while (true) {
+        pvec3 output = ellipsoid_random_sample(plane_p, {100.0, 100.0, 100.0}, prng_state);
+        if (point_inside_plane(output, plane_p, normal)) {
+            return output;
+        }
+    }
 }
 
 } //annonymous namespace
@@ -226,6 +226,20 @@ vec3 rotate_direction(vec3 dir, double mu, double phi) {
     }
 
     return {u, v, w};
+}
+
+vec3 random_unit_vector(uint64_t& prng_state) {
+    double u = projector::prng_double(prng_state);
+    double v = projector::prng_double(prng_state);
+
+    double theta = 2.0 * projector::constants::pi * u;
+    double phi = std::acos(2.0 * v - 1);
+
+    return {
+        std::sin(theta) * std::cos(phi),
+        std::sin(theta) * std::sin(phi),
+        std::cos(theta)
+    };
 }
 
 }

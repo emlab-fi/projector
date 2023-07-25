@@ -68,9 +68,8 @@ void from_json(json& j, object& obj) {
 
     j.at("id").get_to(obj.id);
     from_json(j.at("material"), obj.material);
-    j.at("properties").at("material").get_to(obj.material_string);
-    j.at("properties").at("photons_activity").get_to(obj.photons_activity);
-    j.at("properties").at("photons_energy").get_to(obj.photons_energy);
+    j.at("photons_activity").get_to(obj.photons_activity);
+    j.at("photons_energy").get_to(obj.photons_energy);
     from_json(j.at("geometry"), (obj.geom));
 }
 

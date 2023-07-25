@@ -3,7 +3,7 @@
 
 namespace projector {
 
-void initialize_runtime(environment& env);
+void initialize_runtime(environment& env, int thread_count);
 
 void calculate_particle_histories(environment& env);
 
