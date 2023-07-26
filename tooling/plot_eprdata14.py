@@ -46,6 +46,8 @@ def read_form_factors(data, JXS_2, N_inc, JXS_3, N_coh):
     coh_ff_cum = data[JXS_3 - 1 + N_coh : JXS_3 - 1 + 2 * N_coh]
     coh_ff_diff = data[JXS_3 - 1 + 2 * N_coh : JXS_3 - 1 + 3 * N_coh]
 
+    print(coh_ff_cum)
+
     return inc_ff_var, inc_ff, coh_ff_var, coh_ff_cum, coh_ff_diff
 
 def parse_data(header, data):
@@ -124,7 +126,7 @@ def main(xsdir_path, elem):
     data_file = os.path.join(base_path, element_data[2])
 
     print("atomic number:", elem)
-    print("atomic weight ration:", element_data[1])
+    print("atomic weight ratio:", element_data[1])
     print("data file:", data_file)
     print("data start:", element_data[5])
     print("data count:", element_data[6])
