@@ -79,10 +79,11 @@ void particle::advance(double macro_xs) {
 
     history.energies.push_back(current_energy());
     history.interactions.push_back(cross_section::no_interaction);
-    history.points.push_back(current_position());
     history.elements.push_back(history.elements.back());
 
-    current_position() += distance * current_direction;
+    vec3 new_position = current_position() + distance * current_direction;
+
+    history.points.push_back(new_position);
 
 }
 

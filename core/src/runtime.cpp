@@ -2,6 +2,7 @@
 #include "random_numbers.hpp"
 #include <filesystem>
 #include <stdio.h>
+#include <iostream>
 
 int thread_count = 1;
 
@@ -15,6 +16,7 @@ projector::object* get_current_obj(std::vector<projector::object>& objs, project
     for (int i = objs.size() - 1; i >= 0; --i) {
         if (objs[i].geom.point_is_inside(current_pos)) {
             found = &objs[i];
+            break;
         }
     }
 
@@ -55,10 +57,10 @@ void initialize_runtime(environment& env, int max_threads) {
 
     // allocate memory for particle histories (max stack size)
     for (particle& p : env.particles) {
-        p.history.elements.resize(env.stack_size);
-        p.history.energies.resize(env.stack_size);
-        p.history.interactions.resize(env.stack_size);
-        p.history.points.resize(env.stack_size);
+        p.history.elements.reserve(env.stack_size);
+        p.history.energies.reserve(env.stack_size);
+        p.history.interactions.reserve(env.stack_size);
+        p.history.points.reserve(env.stack_size);
     }
 
 }
@@ -77,9 +79,15 @@ void calculate_particle_histories(environment& env) {
                 break;
             }
 
+            // check if we ran out of bounds
+            if (current_obj == nullptr) {
+                break;
+            }
+
             sampled_xs macro_xs = env.cross_section_data.material_macro_xs(current_obj->material, p.current_energy());
 
-            p.advance(macro_xs.total);
+            //multiply by 10e-24 to convert barns to cm2
+            p.advance(macro_xs.total * 10.0e-24);
 
             current_obj = get_current_obj(env.objects, p.current_position());
 
@@ -111,7 +119,7 @@ void save_data(environment& env) {
     for (std::size_t i = 0; i < env.particles.size(); ++i) {
         char file_path[256] = {0};
 
-        snprintf(file_path, 256, "particle_track_%09zu.csv", i);
+        snprintf(file_path, 256, "photon_%09zu.csv", i);
 
         std::filesystem::create_directories(env.output_path / "tracks");
 

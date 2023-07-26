@@ -63,7 +63,7 @@ std::pair<std::size_t, double> calculate_interpolation_values(double x, const st
     std::size_t index = 0;
 
     //currently a simple linear search, will perform badly!
-    while (values[index] > x) {
+    while (values[index] < x) {
         ++index;
     }
 
@@ -108,12 +108,14 @@ std::pair<double, double> klein_nishina(double k, uint64_t& prng_state) {
                 if (prng_double(prng_state) < 4.0 / x * (1.0 - 1.0 / x)) {
                     k_out = k / x;
                     mu = 1 - r;
+                    break;
                 }
             } else {
                 x = beta / (1.0 + 2.0 * k * prng_double(prng_state));
                 mu = 1.0 + (1.0 - x) / k;
                 if (prng_double(prng_state) < 0.5 * (mu * mu + 1.0 / x)) {
                     k_out = k / x;
+                    break;
                 }
             }
         }
@@ -250,6 +252,7 @@ sampled_xs data_library::material_macro_xs(const material_data& mat, double ener
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
         double atomic_density = mat.atom_density[i];
         sampled_xs elem_xs = get_element(mat.elements[i]).get_all_cross_sections(energy);
+
         output.coherent += atomic_density * elem_xs.coherent;
         output.incoherent += atomic_density * elem_xs.incoherent;
         output.photoelectric += atomic_density * elem_xs.photoelectric;
