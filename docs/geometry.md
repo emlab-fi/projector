@@ -1,21 +1,16 @@
-## Geometric objects
+# Geometry
 
-### blocker/generic interaction volume
-- contructed from primitive volumes using boolean operators
-- parameters
-    - volume type/definition
-    - material
+- uses combination of computational solid geometry and bounday representation
+- why boundary: easy to calculate distances and projects
+- why csg: easy to combine surface to form volumes
+- "helper" objects: box, capped cylinder
+- other surface: generic plane, ellipsoid, elliptic paraboloid, elliptic cone, elliptic cone, general quadric
 
-## volume types
+- surfaces form trees to define a volume, basic operations: intersect, join, substract (, inverse)
 
-### axis aligned box
-- defined by min and max point
+- top level object (universe/environment) is a bounding box
 
-### axis aligned cylinder
-- center of first point, height, radius
+- sampling random points:
+    - hmm, idk?
 
-### axis aligned ellipsoid
-- center + xyz radius
-
-### planes
-- normal, point
+- latter add support for normal meshes (STL?)

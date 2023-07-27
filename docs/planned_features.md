@@ -1,11 +1,10 @@
 - purely photon transport simulator (does not calculate secondary photons for now)
-- geometry based on computational solid geometry
+- geometry based on computational solid geometry and boundary representation
 
 - input data defined in JSON
 - tooling for visualization of input geometry
 
 - calculates all the rays first, then tallies
-    - speeds up calculation, no need to redo the whole simulation for each point sampled
 
 
 # Cross section and form factor data

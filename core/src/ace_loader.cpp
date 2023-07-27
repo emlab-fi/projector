@@ -120,7 +120,7 @@ data_library data_library::load_ace_data(std::filesystem::path xsdir_file) {
         double weight;
         std::size_t start_line;
 
-        int read = sscanf(line.c_str(), "%*ld.14p %lf %s 0 1 %zu %*ld %*ld %*ld %*lf", &weight, &ace_path_str, &start_line);
+        int read = sscanf(line.c_str(), "%*d.14p %lf %s 0 1 %zu %*d %*d %*d %*f", &weight, ace_path_str, &start_line);
         if (read != 3) {
             throw std::runtime_error("Error while parsing xsdir line: " + line);
         }

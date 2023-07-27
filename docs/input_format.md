@@ -16,11 +16,14 @@
     "objects": [
         {
             "id": "object id",
-            "properties": {
-                "material": "H20" | "CO2" | [["H", 2.11], ["He", 3.28]],
-                "photons_activity": 100,
-                "photons_energy": 500000
+            "material": {
+                "density": 1.23,
+                "elements": ["He", "O", "U"],
+                "atomic_percentage": [1, 2, 3],
+                "weight_percentage": [80, 23.3, 11.2]
             },
+            "photons_activity": 100,
+            "photons_energy": 500000,
             "geometry": {
                 "type" : "primitive|operation",
                 "properties": {
