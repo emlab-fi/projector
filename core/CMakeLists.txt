@@ -72,7 +72,7 @@ set_target_properties(projector_core PROPERTIES
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(projector_core PRIVATE -Wall -Wextra -pedantic -O0)
+target_compile_options(projector_core PRIVATE -Wall -Wextra -pedantic -O2 -g -gdwarf)
 
 target_link_options(projector_core PRIVATE)
 

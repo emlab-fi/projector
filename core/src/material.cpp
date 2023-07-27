@@ -60,14 +60,15 @@ void normalize_vector(std::vector<double> vec) {
 }
 
 std::pair<std::size_t, double> calculate_interpolation_values(double x, const std::vector<double>& values) {
-    std::size_t index = 0;
 
-    //currently a simple linear search, will perform badly!
-    while (values[index] < x) {
-        ++index;
-    }
+    auto index_iter = std::lower_bound(values.begin(), values.end(), x);
 
-    double t = (x - values[index]) / (values[index+1] - values[index]);
+    double left_val = *index_iter;
+    double right_val = *std::next(index_iter);
+
+    std::size_t index = std::distance(values.begin(), index_iter);
+
+    double t = (x - left_val) / (right_val - left_val);
 
     return {index, t};
 }

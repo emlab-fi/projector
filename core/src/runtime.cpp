@@ -45,7 +45,7 @@ void initialize_runtime(environment& env, int max_threads) {
                 .current_direction = random_unit_vector(prng_local),
                 .prng_state = generate_prng_seed(),
             };
-            p.history.elements.push_back(1);
+            p.history.elements.push_back(0);
             p.history.energies.push_back(obj.photons_energy);
             p.history.interactions.push_back(cross_section::no_interaction);
             p.history.points.push_back(obj.geom.sample_point(prng_local));
