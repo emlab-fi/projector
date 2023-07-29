@@ -1,17 +1,19 @@
-#include <utility>
-#include <string>
+#include "material.hpp"
+
+#include "constants.hpp"
+#include "random_numbers.hpp"
+
+#include <algorithm>
 #include <cctype>
 #include <cmath>
-#include <algorithm>
-#include "material.hpp"
-#include "random_numbers.hpp"
-#include "constants.hpp"
+#include <string>
+#include <utility>
 
 namespace {
 
 
-
-std::string parse_name(const std::string_view& material, std::string_view::iterator& pos) {
+std::string parse_name(const std::string_view &material,
+                       std::string_view::iterator &pos) {
     if (!std::isupper(*pos) && pos != material.end()) {
         return "";
     }
@@ -30,7 +32,8 @@ std::string parse_name(const std::string_view& material, std::string_view::itera
     return out;
 }
 
-int parse_amount(const std::string_view& material, std::string_view::iterator& pos) {
+int parse_amount(const std::string_view &material,
+                 std::string_view::iterator &pos) {
     if (pos == material.end()) {
         return 1;
     }
@@ -54,12 +57,13 @@ void normalize_vector(std::vector<double> vec) {
     for (double val : vec) {
         sum += val;
     }
-    for (double& item :vec) {
+    for (double &item : vec) {
         item /= sum;
     }
 }
 
-std::pair<std::size_t, double> calculate_interpolation_values(double x, const std::vector<double>& values) {
+std::pair<std::size_t, double>
+calculate_interpolation_values(double x, const std::vector<double> &values) {
 
     auto index_iter = std::lower_bound(values.begin(), values.end(), x);
 
@@ -73,8 +77,8 @@ std::pair<std::size_t, double> calculate_interpolation_values(double x, const st
     return {index, t};
 }
 
-
-double interpolate(const std::vector<double>& x_vals, const std::vector<double>& y_vals, double x) {
+double interpolate(const std::vector<double> &x_vals,
+                   const std::vector<double> &y_vals, double x) {
 
     if (x <= x_vals.front()) {
         return y_vals.front();
@@ -86,14 +90,13 @@ double interpolate(const std::vector<double>& x_vals, const std::vector<double>&
 
     auto [index, t] = calculate_interpolation_values(x, x_vals);
 
-    return std::lerp(y_vals[index], y_vals[index+1], t);
+    return std::lerp(y_vals[index], y_vals[index + 1], t);
 }
 
-
-std::pair<double, double> klein_nishina(double k, uint64_t& prng_state) {
+std::pair<double, double> klein_nishina(double k, uint64_t &prng_state) {
     using projector::prng_double;
 
-    //standard sampling using Kahn for k < 3, Koblinger for other
+    // standard sampling using Kahn for k < 3, Koblinger for other
     double k_out = 0.0;
     double mu = 0.0;
 
@@ -125,14 +128,15 @@ std::pair<double, double> klein_nishina(double k, uint64_t& prng_state) {
         double g = 1.0 - std::pow(beta, -2);
 
         double t = prng_double(prng_state) *
-            (4.0 / k + 0.5 * g + (1.0 - (1.0 + beta) / (k * k)) * std::log(beta));
+                   (4.0 / k + 0.5 * g +
+                    (1.0 - (1.0 + beta) / (k * k)) * std::log(beta));
 
         if (t <= 2.0 / k) {
             k_out = k / (1.0 + 2.0 * k * prng_double(prng_state));
         } else if (t <= 4.0 / k) {
             k_out = k * (1.0 + 2.0 * k * prng_double(prng_state)) / beta;
         } else if (t <= 4.0 / k + 0.5 * g) {
-            k_out = k * std::sqrt( 1.0 - g * prng_double(prng_state));
+            k_out = k * std::sqrt(1.0 - g * prng_double(prng_state));
         } else {
             k_out = k / std::pow(beta, prng_double(prng_state));
         }
@@ -143,8 +147,7 @@ std::pair<double, double> klein_nishina(double k, uint64_t& prng_state) {
     return {k_out, mu};
 };
 
-} //annonymous namespace
-
+} // namespace
 
 namespace projector {
 
@@ -156,10 +159,9 @@ double element::get_cross_section(double energy, cross_section xs_type) const {
     return interpolate(xs_data[0], xs_data[xs], energy);
 }
 
-
 double element::get_form_factor(double x, form_factor ff_type) const {
 
-    switch(ff_type) {
+    switch (ff_type) {
     case form_factor::incoherent:
         return interpolate(ff_data[0], ff_data[1], x);
     case form_factor::cumulative_coherent:
@@ -173,7 +175,6 @@ double element::get_form_factor(double x, form_factor ff_type) const {
     return 0.0;
 }
 
-
 sampled_xs element::get_all_cross_sections(double energy) const {
 
     auto [index, t] = calculate_interpolation_values(energy, xs_data[0]);
@@ -181,18 +182,18 @@ sampled_xs element::get_all_cross_sections(double energy) const {
     sampled_xs xs;
     xs.energy = energy;
 
-    xs.coherent = std::lerp(xs_data[1][index], xs_data[1][index+1], t);
-    xs.incoherent = std::lerp(xs_data[2][index], xs_data[2][index+1], t);
-    xs.photoelectric = std::lerp(xs_data[3][index], xs_data[3][index+1], t);
-    xs.pair_production = std::lerp(xs_data[4][index], xs_data[4][index+1], t);
+    xs.coherent = std::lerp(xs_data[1][index], xs_data[1][index + 1], t);
+    xs.incoherent = std::lerp(xs_data[2][index], xs_data[2][index + 1], t);
+    xs.photoelectric = std::lerp(xs_data[3][index], xs_data[3][index + 1], t);
+    xs.pair_production = std::lerp(xs_data[4][index], xs_data[4][index + 1], t);
 
-    xs.total = xs.coherent + xs.incoherent + xs.photoelectric + xs.pair_production;
+    xs.total =
+        xs.coherent + xs.incoherent + xs.photoelectric + xs.pair_production;
 
     return xs;
 }
 
-
-double element::rayleigh(double energy, uint64_t& prng_state) const {
+double element::rayleigh(double energy, uint64_t &prng_state) const {
 
     double mu = 0.0;
 
@@ -217,7 +218,8 @@ double element::rayleigh(double energy, uint64_t& prng_state) const {
     return mu;
 }
 
-std::pair<double, double> element::compton(double energy, uint64_t& prng_state) const {
+std::pair<double, double> element::compton(double energy,
+                                           uint64_t &prng_state) const {
 
     double k = energy / constants::electron_mass_ev;
 
@@ -230,7 +232,8 @@ std::pair<double, double> element::compton(double energy, uint64_t& prng_state) 
     while (true) {
         auto [k_sample, mu_sample] = klein_nishina(k, prng_state);
 
-        double x = constants::electron_mass_ev / constants::planck_c * k_sample * std::sqrt(0.5 * (1 - mu_sample));
+        double x = constants::electron_mass_ev / constants::planck_c *
+                   k_sample * std::sqrt(0.5 * (1 - mu_sample));
 
         double f = get_form_factor(x, form_factor::incoherent);
 
@@ -244,15 +247,16 @@ std::pair<double, double> element::compton(double energy, uint64_t& prng_state) 
     return {k_out * constants::electron_mass_ev, mu};
 }
 
-
-sampled_xs data_library::material_macro_xs(const material_data& mat, double energy) const {
+sampled_xs data_library::material_macro_xs(const material_data &mat,
+                                           double energy) const {
 
     sampled_xs output = {0, 0, 0, 0, 0, 0};
     output.energy = energy;
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
         double atomic_density = mat.atom_density[i];
-        sampled_xs elem_xs = get_element(mat.elements[i]).get_all_cross_sections(energy);
+        sampled_xs elem_xs =
+            get_element(mat.elements[i]).get_all_cross_sections(energy);
 
         output.coherent += atomic_density * elem_xs.coherent;
         output.incoherent += atomic_density * elem_xs.incoherent;
@@ -264,13 +268,13 @@ sampled_xs data_library::material_macro_xs(const material_data& mat, double ener
     return output;
 };
 
-
-const element& data_library::get_element(std::size_t atomic_number) const {
+const element &data_library::get_element(std::size_t atomic_number) const {
     return elements[atomic_number - 1];
 }
 
-
-const element& data_library::sample_element(const material_data& material, double energy, uint64_t& prng_state) const {
+const element &data_library::sample_element(const material_data &material,
+                                            double energy,
+                                            uint64_t &prng_state) const {
 
     double total_macro_xs = material_macro_xs(material, energy).total;
 
@@ -278,7 +282,9 @@ const element& data_library::sample_element(const material_data& material, doubl
 
     double prob = 0.0;
     for (std::size_t i = 0; i < material.elements.size(); ++i) {
-        double total_xs = get_element(material.elements[i]).get_all_cross_sections(energy).total;
+        double total_xs = get_element(material.elements[i])
+                              .get_all_cross_sections(energy)
+                              .total;
 
         prob += total_xs * material.atom_density[i];
 
@@ -290,8 +296,7 @@ const element& data_library::sample_element(const material_data& material, doubl
     throw std::runtime_error("Couldn't sample element");
 }
 
-
-void data_library::material_calculate_missing_values(material_data& mat) const {
+void data_library::material_calculate_missing_values(material_data &mat) const {
 
     if (mat.atomic_percentage.size() != 0) {
 
@@ -300,11 +305,15 @@ void data_library::material_calculate_missing_values(material_data& mat) const {
         double total = 0.0;
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            total += mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight;
+            total += mat.atomic_percentage[i] *
+                     get_element(mat.elements[i]).atomic_weight;
         }
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            double weight_percent = (mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight) / total;
+            double weight_percent =
+                (mat.atomic_percentage[i] *
+                 get_element(mat.elements[i]).atomic_weight) /
+                total;
             mat.weight_percentage.push_back(weight_percent);
         }
 
@@ -317,26 +326,32 @@ void data_library::material_calculate_missing_values(material_data& mat) const {
         double total = 0.0;
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            total += mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight;
+            total += mat.weight_percentage[i] /
+                     get_element(mat.elements[i]).atomic_weight;
         }
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            double atom_percent = (mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight) / total;
+            double atom_percent = (mat.weight_percentage[i] /
+                                   get_element(mat.elements[i]).atomic_weight) /
+                                  total;
             mat.atomic_percentage.push_back(atom_percent);
         }
     }
 
-    double min_value = *std::min_element(mat.atomic_percentage.begin(), mat.atomic_percentage.end());
+    double min_value = *std::min_element(mat.atomic_percentage.begin(),
+                                         mat.atomic_percentage.end());
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-        double molar_mass = (mat.atomic_percentage[i] / min_value) * get_element(mat.elements[i]).atomic_weight;
-        double atom_density = (mat.weight_percentage[i] * mat.density * constants::avogadro) / molar_mass;
+        double molar_mass = (mat.atomic_percentage[i] / min_value) *
+                            get_element(mat.elements[i]).atomic_weight;
+        double atom_density =
+            (mat.weight_percentage[i] * mat.density * constants::avogadro) /
+            molar_mass;
         mat.atom_density.push_back(atom_density);
     }
 }
 
-
-parsed_material parse_material_string(const std::string_view& material) {
+parsed_material parse_material_string(const std::string_view &material) {
 
     parsed_material parsed;
 
@@ -353,4 +368,4 @@ parsed_material parse_material_string(const std::string_view& material) {
 }
 
 
-} //namespace projector
+} // namespace projector

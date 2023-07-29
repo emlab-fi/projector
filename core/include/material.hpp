@@ -1,11 +1,10 @@
 #pragma once
-#include <string_view>
-#include <optional>
-#include <cstdint>
 #include <array>
-#include <vector>
+#include <cstdint>
 #include <filesystem>
-
+#include <optional>
+#include <string_view>
+#include <vector>
 
 namespace projector {
 
@@ -24,7 +23,7 @@ enum class form_factor {
     cumulative_coherent = 3
 };
 
-//parsed chemical formula, pair of symbol and count
+// parsed chemical formula, pair of symbol and count
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
 struct sampled_xs {
@@ -41,8 +40,7 @@ class element {
     std::array<std::vector<double>, 5> xs_data;
     std::array<std::vector<double>, 5> ff_data;
 
-public:
-
+  public:
     uint32_t atomic_number;
     double atomic_weight;
 
@@ -52,17 +50,17 @@ public:
 
     sampled_xs get_all_cross_sections(double energy) const;
 
-    double rayleigh(double energy, uint64_t& prng_state) const;
+    double rayleigh(double energy, uint64_t &prng_state) const;
 
-    std::pair<double, double> compton(double energy, uint64_t& prng_state) const;
+    std::pair<double, double> compton(double energy,
+                                      uint64_t &prng_state) const;
 
     // deprecated! use endf
     static element load_xcom_file(std::filesystem::path path);
 
-    static element load_from_ace_file(std::filesystem::path path, std::size_t line);
-
+    static element load_from_ace_file(std::filesystem::path path,
+                                      std::size_t line);
 };
-
 
 struct material_data {
     double density;
@@ -73,31 +71,27 @@ struct material_data {
     std::vector<double> atom_density;
 };
 
-
 class data_library {
 
     std::array<element, 100> elements;
 
-public:
+  public:
+    const element &get_element(std::size_t atomic_number) const;
 
-    const element& get_element(std::size_t atomic_number) const;
+    sampled_xs material_macro_xs(const material_data &mat, double energy) const;
 
-    sampled_xs material_macro_xs(const material_data& mat, double energy) const;
+    const element &sample_element(const material_data &mat, double energy,
+                                  uint64_t &prng_state) const;
 
-    const element& sample_element(const material_data& mat, double energy, uint64_t& prng_state) const;
-
-    void material_calculate_missing_values(material_data& mat) const;
+    void material_calculate_missing_values(material_data &mat) const;
 
     // deprecated! use endf
     static data_library load_xcom_data(std::filesystem::path path);
 
     static data_library load_ace_data(std::filesystem::path path);
-
 };
 
-
-parsed_material parse_material_string(const std::string_view& material);
-
+parsed_material parse_material_string(const std::string_view &material);
 
 
-} //namespace projector
+} // namespace projector

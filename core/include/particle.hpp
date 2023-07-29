@@ -1,7 +1,8 @@
 #pragma once
-#include <vector>
 #include "geometry.hpp"
 #include "material.hpp"
+
+#include <vector>
 
 namespace projector {
 
@@ -12,13 +13,8 @@ struct particle_history {
     std::vector<std::size_t> elements;
 };
 
-
 struct particle {
-    enum class type {
-        photon,
-        neutron,
-        electron
-    };
+    enum class type { photon, neutron, electron };
 
     type particle_type;
 
@@ -28,18 +24,16 @@ struct particle {
 
     particle_history history;
 
-    double& current_energy();
+    double &current_energy();
 
-    vec3& current_position();
+    vec3 &current_position();
 
     void save_particle(const std::filesystem::path path) const;
 
-    void photon_interaction(const element& elem);
+    void photon_interaction(const element &elem);
 
     void advance(double macro_xs);
-
 };
-
 
 
 } // namespace projector

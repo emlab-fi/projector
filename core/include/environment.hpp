@@ -1,10 +1,11 @@
 #pragma once
-#include <vector>
-#include <string_view>
 #include "geometry.hpp"
+#include "material.hpp"
 #include "particle.hpp"
 #include "tally.hpp"
-#include "material.hpp"
+
+#include <string_view>
+#include <vector>
 
 namespace projector {
 
@@ -12,12 +13,11 @@ struct object {
     std::string_view id;
     std::string_view material_string;
     std::size_t photons_activity;
-    double  photons_energy;
+    double photons_energy;
 
     material_data material;
     geometry geom;
 };
-
 
 struct environment {
     std::string_view name;
@@ -38,4 +38,4 @@ struct environment {
     std::vector<particle> particles;
 };
 
-} //namespace projector
+} // namespace projector

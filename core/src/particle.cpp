@@ -1,31 +1,23 @@
 #include "particle.hpp"
-#include "random_numbers.hpp"
+
 #include "constants.hpp"
+#include "random_numbers.hpp"
 
-namespace {
-
-} // annonymous namespace
-
+namespace {} // namespace
 
 namespace projector {
 
 
-double& particle::current_energy() {
-    return history.energies.back();
-}
+double &particle::current_energy() { return history.energies.back(); }
 
+vec3 &particle::current_position() { return history.points.back(); }
 
-vec3& particle::current_position() {
-    return history.points.back();
-}
-
-
-void particle::photon_interaction(const element& element) {
+void particle::photon_interaction(const element &element) {
 
     sampled_xs xs_data = element.get_all_cross_sections(current_energy());
 
     double prob = 0.0;
-    double sample =  prng_double(prng_state) * xs_data.total;
+    double sample = prng_double(prng_state) * xs_data.total;
 
     history.elements.back() = element.atomic_number;
 
@@ -34,7 +26,7 @@ void particle::photon_interaction(const element& element) {
 
         double mu = element.rayleigh(current_energy(), prng_state);
 
-        //sample phi for direction rotation
+        // sample phi for direction rotation
         double phi = 2.0 * constants::pi * prng_double(prng_state);
 
         current_direction = rotate_direction(current_direction, mu, phi);
@@ -84,7 +76,6 @@ void particle::advance(double macro_xs) {
     vec3 new_position = current_position() + distance * current_direction;
 
     history.points.push_back(new_position);
-
 }
 
 } // namespace projector

@@ -1,6 +1,7 @@
 #pragma once
-#include <filesystem>
 #include "particle.hpp"
+
+#include <filesystem>
 
 namespace projector {
 
@@ -28,7 +29,7 @@ struct tally {
 
     void init_tally();
 
-    void add_particle(const particle& p);
+    void add_particle(const particle &p);
 
     void process_data();
 };

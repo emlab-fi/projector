@@ -1,12 +1,14 @@
-#include <stdexcept>
 #include "json_converters.hpp"
+
 #include "utils.hpp"
+
+#include <stdexcept>
 
 using json = nlohmann::json;
 
 namespace projector {
 
-void from_json(json& j, environment& env) {
+void from_json(json &j, environment &env) {
     if (!j.is_object()) {
         throw std::runtime_error("environment is not JSON object");
     }
@@ -40,8 +42,7 @@ void from_json(json& j, environment& env) {
     }
 }
 
-
-void from_json(json& j, tally& ta) {
+void from_json(json &j, tally &ta) {
     if (!j.is_object()) {
         throw std::runtime_error("tally is not JSON object");
     }
@@ -60,8 +61,7 @@ void from_json(json& j, tally& ta) {
     j.at("cell_count").at(2).get_to(ta.z_count);
 }
 
-
-void from_json(json& j, object& obj) {
+void from_json(json &j, object &obj) {
     if (!j.is_object()) {
         throw std::runtime_error("geom object is not JSON object");
     }
@@ -73,8 +73,7 @@ void from_json(json& j, object& obj) {
     from_json(j.at("geometry"), (obj.geom));
 }
 
-
-void from_json(nlohmann::json&j, material_data& mat) {
+void from_json(nlohmann::json &j, material_data &mat) {
     if (!j.is_object()) {
         throw std::runtime_error("material object is not JSON object");
     }
@@ -86,15 +85,13 @@ void from_json(nlohmann::json&j, material_data& mat) {
     j.at("elements").get_to(elems);
     if (j.contains("atomic_percentage")) {
         j.at("atomic_percentage").get_to(mat.atomic_percentage);
-    }
-    else if (j.contains("weight_percentage")) {
+    } else if (j.contains("weight_percentage")) {
         j.at("weight_percentage").get_to(mat.weight_percentage);
-    }
-    else {
+    } else {
         throw std::runtime_error("No percentages for material definition");
     }
 
-    for (auto& elem : elems) {
+    for (auto &elem : elems) {
 
         std::size_t elem_number = symbol_to_atomic_number(elem);
 
@@ -105,11 +102,9 @@ void from_json(nlohmann::json&j, material_data& mat) {
 
         mat.elements.push_back(elem_number);
     }
-
 }
 
-
-void from_json(json& j, geometry& geom) {
+void from_json(json &j, geometry &geom) {
     if (!j.is_object()) {
         throw std::runtime_error("geometry is not JSON object");
     }
@@ -131,10 +126,10 @@ void from_json(json& j, geometry& geom) {
     }
 }
 
-
-void from_json(json& j, geom_primitive& shape) {
+void from_json(json &j, geom_primitive &shape) {
     if (!j.is_object()) {
-        throw std::runtime_error("geom primitive properties is not JSON object");
+        throw std::runtime_error(
+            "geom primitive properties is not JSON object");
     }
 
     if (!j.at("parameters").is_array()) {
@@ -146,8 +141,7 @@ void from_json(json& j, geom_primitive& shape) {
     from_json(j.at("parameters").at(1), shape.param2);
 }
 
-
-void from_json(json& j, operation& op) {
+void from_json(json &j, operation &op) {
     if (!j.is_object()) {
         throw std::runtime_error("operation properties is not JSON object");
     }
@@ -164,13 +158,12 @@ void from_json(json& j, operation& op) {
     op.right = std::move(right);
 }
 
-
-void from_json(json& j, vec3& vec) {
+void from_json(json &j, vec3 &vec) {
     if (!j.is_array()) {
         throw std::runtime_error("3d vector is not JSON array");
     }
 
-    double x,y,z;
+    double x, y, z;
 
     j.at(0).get_to(x);
     j.at(1).get_to(y);
@@ -181,4 +174,4 @@ void from_json(json& j, vec3& vec) {
     vec[2] = z;
 }
 
-}
+} // namespace projector

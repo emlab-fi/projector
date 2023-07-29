@@ -1,16 +1,18 @@
 #include "runtime.hpp"
+
 #include "random_numbers.hpp"
+
 #include <filesystem>
-#include <stdio.h>
 #include <iostream>
+#include <stdio.h>
 
 int thread_count = 1;
 
-
 namespace {
 
-projector::object* get_current_obj(std::vector<projector::object>& objs, projector::vec3 current_pos) {
-    projector::object* found = nullptr;
+projector::object *get_current_obj(std::vector<projector::object> &objs,
+                                   projector::vec3 current_pos) {
+    projector::object *found = nullptr;
 
     // go backwards in search, the first object is a global bounding box
     for (int i = objs.size() - 1; i >= 0; --i) {
@@ -23,18 +25,18 @@ projector::object* get_current_obj(std::vector<projector::object>& objs, project
     return found;
 }
 
-} // annonymous namespace
-
+} // namespace
 
 namespace projector {
 
-void initialize_runtime(environment& env, int max_threads) {
+
+void initialize_runtime(environment &env, int max_threads) {
     thread_count = max_threads;
 
     seed_master_prng(env.seed);
 
     // sample objects and create particles
-    for (object& obj : env.objects) {
+    for (object &obj : env.objects) {
 
         uint64_t prng_local = generate_prng_seed();
 
@@ -54,24 +56,22 @@ void initialize_runtime(environment& env, int max_threads) {
         }
     }
 
-
     // allocate memory for particle histories (max stack size)
-    for (particle& p : env.particles) {
+    for (particle &p : env.particles) {
         p.history.elements.reserve(env.stack_size);
         p.history.energies.reserve(env.stack_size);
         p.history.interactions.reserve(env.stack_size);
         p.history.points.reserve(env.stack_size);
     }
-
 }
 
-
-void calculate_particle_histories(environment& env) {
+void calculate_particle_histories(environment &env) {
 
     // simulate each particle separately
-    for (particle& p : env.particles) {
+    for (particle &p : env.particles) {
 
-        object* current_obj = get_current_obj(env.objects, p.current_position());
+        object *current_obj =
+            get_current_obj(env.objects, p.current_position());
 
         for (std::size_t i = 0; i < env.stack_size; ++i) {
             // check for energy cutoff
@@ -84,9 +84,10 @@ void calculate_particle_histories(environment& env) {
                 break;
             }
 
-            sampled_xs macro_xs = env.cross_section_data.material_macro_xs(current_obj->material, p.current_energy());
+            sampled_xs macro_xs = env.cross_section_data.material_macro_xs(
+                current_obj->material, p.current_energy());
 
-            //multiply by 10e-24 to convert barns to cm2
+            // multiply by 10e-24 to convert barns to cm2
             p.advance(macro_xs.total * 10.0e-24);
 
             current_obj = get_current_obj(env.objects, p.current_position());
@@ -96,20 +97,17 @@ void calculate_particle_histories(environment& env) {
                 break;
             }
 
-            const element& elem = env.cross_section_data.sample_element(current_obj->material, p.current_energy(), p.prng_state);
+            const element &elem = env.cross_section_data.sample_element(
+                current_obj->material, p.current_energy(), p.prng_state);
 
             p.photon_interaction(elem);
         }
     }
 }
 
+void process_tallies(environment &env) {}
 
-void process_tallies(environment& env) {
-
-}
-
-
-void save_data(environment& env) {
+void save_data(environment &env) {
 
     // check if we can skip saving particle data
     if (!env.save_particle_paths) {
