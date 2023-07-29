@@ -53,6 +53,7 @@ set(PROJECTOR_LIB_SRC
 	src/environment.cpp
 	src/particle.cpp
 	src/runtime.cpp
+	src/tally.cpp
 )
 
 set(PROJECTOR_TESTS_SRC
