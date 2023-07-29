@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+Language: Cpp
+SeparateDefinitionBlocks: Always
+IncludeBlocks: Regroup
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
+MaxEmptyLinesToKeep: 2
