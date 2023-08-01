@@ -14,7 +14,7 @@ struct particle_history {
 };
 
 struct particle {
-    enum class type { photon, neutron, electron };
+    enum class type { photon, positron, electron };
 
     type particle_type;
 

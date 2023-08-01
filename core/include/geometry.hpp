@@ -1,5 +1,7 @@
 #pragma once
 
+#include "surface.hpp"
+
 #include <Eigen/Dense>
 #include <memory>
 #include <variant>
@@ -8,46 +10,33 @@ namespace projector {
 
 using vec3 = Eigen::Vector3d;
 
-struct geom_primitive {
-    enum class shape { plane, aa_box, aa_ellipsoid };
-
-    shape type;
-    vec3 param1;
-    vec3 param2;
-
-    bool point_is_inside(const vec3 &point) const;
-
-    vec3 sample_point(uint64_t &prng_state) const;
+enum class csg_operation {
+    no_op,
+    join,
+    intersect,
+    substract
 };
 
-struct geometry;
+class geometry {
 
-struct operation {
-    enum class type : std::size_t { nop = 0, join, intersect, cut };
+    using geom_element = std::pair<csg_operation, std::variant<geometry, surface>>;
 
-    type op;
-    std::unique_ptr<geometry> left;
-    std::unique_ptr<geometry> right;
+    std::vector<geom_element> surfaces;
 
-    bool point_is_inside(const vec3 &point) const;
+    std::pair<vec3, vec3> bounding_box;
 
-    vec3 sample_point(uint64_t &prng_state) const;
-};
+public:
 
-struct geometry {
-    std::variant<geom_primitive, operation> definition;
+    void add_element(geom_element elem);
 
-    geometry() = default;
-
-    geometry(geometry &&geom) : definition(std::move(geom.definition)) {}
-
-    geometry(const geom_primitive &prim) : definition(prim) {}
-
-    geometry(operation &&op) : definition(std::move(op)) {}
+    double distance_along_line(const vec3 &point, const vec3& dir) const;
 
     bool point_is_inside(const vec3 &point) const;
 
     vec3 sample_point(uint64_t &prng_state) const;
+
+    void update_bounding_box(vec3 min, vec3 max);
+
 };
 
 vec3 rotate_direction(vec3 dir, double mu, double phi);
