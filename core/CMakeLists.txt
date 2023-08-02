@@ -54,6 +54,7 @@ set(PROJECTOR_LIB_SRC
 	src/particle.cpp
 	src/runtime.cpp
 	src/tally.cpp
+	src/surface.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

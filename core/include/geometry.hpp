@@ -19,15 +19,15 @@ enum class csg_operation {
 
 class geometry {
 
-    using geom_element = std::pair<csg_operation, std::variant<geometry, surface>>;
+    using surface_item = std::pair<csg_operation, std::variant<geometry, surface>>;
 
-    std::vector<geom_element> surfaces;
+    std::vector<surface_item> surfaces;
 
     std::pair<vec3, vec3> bounding_box;
 
 public:
 
-    void add_element(geom_element elem);
+    void add_element(std::variant<geometry, surface>, csg_operation op);
 
     double distance_along_line(const vec3 &point, const vec3& dir) const;
 

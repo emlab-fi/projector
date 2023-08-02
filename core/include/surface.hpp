@@ -17,7 +17,7 @@ struct surface {
 
     virtual ~surface() = default;
 
-    /// @brief Calculate distance from point to the surface along a line.
+    /// Calculate distance from point to the surface along a line.
     ///
     /// @param p The point from which to calculate distance
     /// @param dir The vector defining the direction of the line, normalized
@@ -28,14 +28,14 @@ struct surface {
     virtual double distance_along_line(const vec3 &p,
                                        const vec3 &dir) const = 0;
 
-    /// @brief Determine whether a point is inside a surface.
+    /// Determine whether a point is inside a surface.
     ///
     /// @param p The point to determine.
     /// @return True if point is inside the surface, otherwise false
     ///
     virtual bool point_inside(const vec3 &p) const = 0;
 
-    /// @brief Calculate the bounding box of the surface.
+    /// Calculate the bounding box of the surface.
     ///
     /// @return pair of min and max points of the bounding box.
     ///
@@ -71,8 +71,7 @@ class ellipsoid : public surface {
     std::pair<vec3, vec3> bounding_box() const final;
 };
 
-/// X axis aligned elliptic cone, defined by center point and
-/// 3 parameters a, b, c
+/// X axis aligned elliptic cone, defined by center point and parameters a, b, c
 class x_cone : public surface {
 
     vec3 center;
@@ -89,8 +88,7 @@ class x_cone : public surface {
     std::pair<vec3, vec3> bounding_box() const final;
 };
 
-/// Y axis aligned elliptic cone, defined by center point and
-/// 3 parameters a, b, c
+/// Y axis aligned elliptic cone, defined by center point and parameters a, b, c
 class y_cone : public surface {
 
     vec3 center;
@@ -107,8 +105,7 @@ class y_cone : public surface {
     std::pair<vec3, vec3> bounding_box() const final;
 };
 
-/// Z axis aligned elliptic cone, defined by center point and
-/// 3 parameters a, b, c
+/// Z axis aligned elliptic cone, defined by center point and parameters a, b, c
 class z_cone : public surface {
 
     vec3 center;
@@ -169,5 +166,6 @@ class z_cylinder : public surface {
     bool point_inside(const vec3 &p) const final;
     std::pair<vec3, vec3> bounding_box() const final;
 };
+
 
 } // namespace projector
