@@ -10,39 +10,6 @@ namespace {
 
 using pvec3 = projector::vec3;
 
-bool point_inside_plane(const pvec3 &point, const pvec3 &plane_p,
-                        const pvec3 &normal) {
-    pvec3 temp = point - plane_p;
-    double dist = temp.dot(normal);
-    return dist < 0;
-}
-
-bool point_inside_box(const pvec3 &point, const pvec3 &min, const pvec3 &max) {
-    for (int i = 0; i < 3; ++i) {
-        if (!(point[i] > min[i] && point[i] < max[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool point_inside_ellipsoid(const pvec3 &point, const pvec3 &center,
-                            const pvec3 &radii) {
-    pvec3 shifted = point - center;
-    double a = (shifted[0] * shifted[0]) / (radii[0] * radii[0]);
-    double b = (shifted[1] * shifted[1]) / (radii[1] * radii[1]);
-    double c = (shifted[2] * shifted[2]) / (radii[2] * radii[2]);
-    return (a + b + c) < 1;
-}
-
-constexpr double signum(const double d) {
-    if (d > 0.0)
-        return 1;
-    if (d == 0.0)
-        return 0;
-    return -1;
-}
-
 pvec3 box_random_sample(const pvec3 &min, const pvec3 &max,
                         uint64_t &prng_state) {
     pvec3 output = {0.0, 0.0, 0.0};
@@ -55,141 +22,96 @@ pvec3 box_random_sample(const pvec3 &min, const pvec3 &max,
     return output;
 }
 
-pvec3 ellipsoid_random_sample(const pvec3 &center, const pvec3 &radii,
-                              uint64_t &prng_state) {
-    double u = projector::prng_double(prng_state);
-    double v = projector::prng_double(prng_state);
-
-    double theta = 2.0 * projector::constants::pi * u;
-    double phi = std::acos(2.0 * v - 1);
-    double r = std::cbrt(projector::prng_double(prng_state));
-    double sin_theta = std::sin(theta);
-    double cos_theta = std::cos(theta);
-    double sin_phi = std::sin(phi);
-    double cos_phi = std::cos(phi);
-
-    pvec3 output = {radii[0] * r * sin_phi * cos_theta,
-                    radii[1] * r * sin_phi * sin_theta, radii[2] * r * cos_phi};
-
-    return output + center;
-}
-
-pvec3 plane_random_sample(const pvec3 &plane_p, const pvec3 &normal,
-                          uint64_t &prng_state) {
-    // very hacky way, sample from large sphere around the plane
-    // and check whether it is "in" the plane
-    while (true) {
-        pvec3 output =
-            ellipsoid_random_sample(plane_p, {100.0, 100.0, 100.0}, prng_state);
-        if (point_inside_plane(output, plane_p, normal)) {
-            return output;
-        }
-    }
+constexpr double signum(const double d) {
+    if (d > 0.0)
+        return 1;
+    if (d == 0.0)
+        return 0;
+    return -1;
 }
 
 } // namespace
 
 namespace projector {
 
-
-bool geom_primitive::point_is_inside(const vec3 &point) const {
-    switch (type) {
-    case shape::plane:
-        return point_inside_plane(point, param1, param2);
-    case shape::aa_box:
-        return point_inside_box(point, param1, param2);
-    case shape::aa_ellipsoid:
-        return point_inside_ellipsoid(point, param1, param2);
-    default:
-        return false;
-    }
-    return false;
+void geometry::add_element(std::variant<geometry, surface> surface,
+                           csg_operation op) {
+    surfaces.push_back(std::make_pair(op, surface));
 }
 
-vec3 geom_primitive::sample_point(uint64_t &prng_state) const {
-    switch (type) {
-    case shape::plane:
-        return plane_random_sample(param1, param2, prng_state);
-    case shape::aa_box:
-        return box_random_sample(param1, param2, prng_state);
-    case shape::aa_ellipsoid:
-        return ellipsoid_random_sample(param1, param2, prng_state);
-    default:
-        return vec3::Zero();
-    }
-    return vec3::Zero();
-}
+double geometry::nearest_surface_distance(const vec3 &point,
+                                          const vec3 &dir) const {
 
-bool operation::point_is_inside(const vec3 &point) const {
-    bool left_result = left->point_is_inside(point);
-    bool right_result = right->point_is_inside(point);
-    switch (op) {
-    case type::nop:
-        return false;
-    case type::join:
-        return left_result || right_result;
-    case type::intersect:
-        return left_result && right_result;
-    case type::cut:
-        return left_result && !right_result;
-    default:
-        return false;
-    }
-    return false;
-}
+    auto visitor = [&point, &dir](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
 
-vec3 operation::sample_point(uint64_t &prng_state) const {
-
-    if (op == type::join || op == type::intersect) {
-        double sample = prng_double(prng_state);
-        if (sample < 0.5) {
-            return left->sample_point(prng_state);
+        if constexpr (std::is_same_v<T, surface>) {
+            return arg.distance_along_line(point, dir);
+        } else if constexpr (std::is_same_v<T, geometry>) {
+            return arg.nearest_surface_distance(point, dir);
         }
-        return right->sample_point(prng_state);
+        return constants::infinity;
+    };
+
+    double distance = constants::infinity;
+
+    for (auto &[op, geom] : surfaces) {
+        double dist_to_surface = std::visit(visitor, geom);
+        distance = std::min(distance, dist_to_surface);
     }
 
-    // we dont need to sample right operand as we cut it out
-    else if (op == type::cut) {
-        return left->sample_point(prng_state);
-    }
-    return vec3::Zero();
+    return distance;
 }
 
 bool geometry::point_is_inside(const vec3 &point) const {
-    return std::visit(
-        [&point](auto &&arg) {
-            using T = std::decay_t<decltype(arg)>;
 
-            if constexpr (std::is_same_v<T, geom_primitive>) {
-                return arg.point_is_inside(point);
-            } else if constexpr (std::is_same_v<T, operation>) {
-                return arg.point_is_inside(point);
-            }
+    auto visitor = [&point](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
 
-            return false;
-        },
-        definition);
+        if constexpr (std::is_same_v<T, surface>) {
+            return arg.point_inside(point);
+        } else if constexpr (std::is_same_v<T, geometry>) {
+            return arg.point_is_inside(point);
+        }
+        return false;
+    };
+
+    bool inside = true;
+
+    for (auto &[op, geom] : surfaces) {
+
+        bool inside_surface = std::visit(visitor, geom);
+
+        switch (op) {
+        case csg_operation::no_op:
+            inside = inside_surface;
+            break;
+        case csg_operation::join:
+            inside = inside || inside_surface;
+            break;
+        case csg_operation::intersect:
+            inside = inside && inside_surface;
+            break;
+        case csg_operation::substract:
+            inside = inside && !inside_surface;
+            break;
+        default:
+            inside = false;
+            break;
+        }
+    }
+
+    return inside;
 }
 
 vec3 geometry::sample_point(uint64_t &prng_state) const {
 
     // basic rejection sampling method:
-    // - descend until a primitive, sample point in primitive
-    // - check whether point is inside our geometry (due to intersections and
-    // such) this can be quite long, as a small intersection will take long time
-    // to sample
+    // - sample the bounding box
+    // - check whether point is inside our geometry
     while (true) {
-        vec3 sampled_point = std::visit(
-            [&prng_state](auto &&arg) {
-                using T = std::decay_t<decltype(arg)>;
-
-                if constexpr (std::is_same_v<T, operation>) {
-                    return arg.sample_point(prng_state);
-                } else if constexpr (std::is_same_v<T, geom_primitive>) {
-                    return arg.sample_point(prng_state);
-                }
-            },
-            definition);
+        vec3 sampled_point = box_random_sample(bounding_box.first,
+                                               bounding_box.second, prng_state);
 
         if (point_is_inside(sampled_point)) {
             return sampled_point;

@@ -20,12 +20,6 @@ double plane::distance_along_line(const vec3 &p, const vec3 &dir) const {
 
     double d = numer / denom;
 
-    // if the distance is negative, the particle is travelling away from the
-    // plane and will never intersect
-    if (d < 0.0) {
-        return constants::infinity;
-    }
-
     return d;
 }
 
@@ -96,17 +90,17 @@ double ellipsoid::distance_along_line(const vec3 &p, const vec3 &dir) const {
         return constants::infinity;
     }
 
-    double dist1 = (- b + std::sqrt(discriminant)) / (2 * a);
-    double dist2 = (- b - std::sqrt(discriminant)) / (2 * a);
+    double dist1 = (-b + std::sqrt(discriminant)) / (2 * a);
+    double dist2 = (-b - std::sqrt(discriminant)) / (2 * a);
 
     // if both solutions are positive, return the smaller one
     if (dist1 > 0.0 && dist2 > 0.0) {
         return std::min(dist1, dist2);
     }
 
-    // particle is going away from the ellipsoid
+    // particle is going away from the ellipsoid, return the greater value
     if (dist1 < 0.0 && dist2 < 0.0) {
-        return constants::infinity;
+        return std::max(dist1, dist2);
     }
 
     // we have one positive and one negative solution, return the positive
