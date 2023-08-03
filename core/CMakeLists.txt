@@ -48,7 +48,7 @@ set(PROJECTOR_LIB_SRC
 	src/utils.cpp
 	src/material.cpp
 	src/geometry.cpp
-	src/json_converters.cpp
+#	src/json_converters.cpp
 	src/random_numbers.cpp
 	src/environment.cpp
 	src/particle.cpp

@@ -27,7 +27,7 @@ double generic_eval(const pvec3 &p, double a, double b, double c) {
 
 template <int S_x, int S_y, int S_z, int R>
 double generic_dist(const pvec3 &p, const pvec3 &d, double a, double b,
-                         double c) {
+                    double c) {
 
     double e = S_x * std::pow(b * c * d.x(), 2) +
                S_y * std::pow(a * c * d.y(), 2) +
@@ -39,8 +39,7 @@ double generic_dist(const pvec3 &p, const pvec3 &d, double a, double b,
 
     double g = S_x * std::pow(b * c * p.x(), 2) +
                S_y * std::pow(a * c * p.y(), 2) +
-               S_z * std::pow(a * b * p.z(), 2) -
-               R * std::pow(a * b * c, 2);
+               S_z * std::pow(a * b * p.z(), 2) - R * std::pow(a * b * c, 2);
 
     // we now have e * t^2 + f * t + g = 0, solve it via discriminant
 

@@ -49,7 +49,7 @@ class plane : public surface {
     vec3 normal;
 
   public:
-    plane(vec3 center, vec3 norm) : point(center), normal(normal) {}
+    plane(vec3 center, vec3 norm) : point(center), normal(norm) {}
 
     double distance_along_line(const vec3 &p, const vec3 &dir) const final;
     bool point_inside(const vec3 &p) const final;
@@ -64,7 +64,7 @@ class ellipsoid : public surface {
 
   public:
     ellipsoid(vec3 center, double a, double b, double c)
-        : center(center), radii((a, b, c)) {}
+        : center(center), radii({a, b, c}) {}
 
     double distance_along_line(const vec3 &p, const vec3 &dir) const final;
     bool point_inside(const vec3 &p) const final;

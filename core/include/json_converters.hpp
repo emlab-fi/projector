@@ -5,20 +5,12 @@
 
 namespace projector {
 
-NLOHMANN_JSON_SERIALIZE_ENUM(geom_primitive::shape,
+NLOHMANN_JSON_SERIALIZE_ENUM(csg_operation,
                              {
-                                 {geom_primitive::shape::plane, "plane"},
-                                 {geom_primitive::shape::aa_box, "aa_box"},
-                                 {geom_primitive::shape::aa_ellipsoid,
-                                  "aa_ellipsoid"},
-                             })
-
-NLOHMANN_JSON_SERIALIZE_ENUM(operation::type,
-                             {
-                                 {operation::type::nop, "nop"},
-                                 {operation::type::join, "join"},
-                                 {operation::type::intersect, "intersect"},
-                                 {operation::type::cut, "cut"},
+                                 {csg_operation::no_op, "no_op"},
+                                 {csg_operation::join, "join"},
+                                 {csg_operation::intersect, "intersect"},
+                                 {csg_operation::substract, "substract"},
                              })
 
 NLOHMANN_JSON_SERIALIZE_ENUM(
@@ -41,9 +33,9 @@ void from_json(nlohmann::json &j, material_data &mat);
 
 void from_json(nlohmann::json &j, geometry &geom);
 
-void from_json(nlohmann::json &j, geom_primitive &shape);
+//void from_json(nlohmann::json &j, geom_primitive &shape);
 
-void from_json(nlohmann::json &j, operation &op);
+//void from_json(nlohmann::json &j, operation &op);
 
 void from_json(nlohmann::json &j, vec3 &vec);
 

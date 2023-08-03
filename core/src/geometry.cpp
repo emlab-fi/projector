@@ -34,9 +34,14 @@ constexpr double signum(const double d) {
 
 namespace projector {
 
-void geometry::add_element(std::variant<geometry, surface> surface,
-                           csg_operation op) {
-    surfaces.push_back(std::make_pair(op, surface));
+void geometry::add_surface(std::unique_ptr<surface> surface, csg_operation op) {
+    surfaces.push_back(std::move(surface));
+    ops.push_back(op);
+}
+
+void geometry::add_surface(geometry geom, csg_operation op) {
+    surfaces.push_back(std::move(geom));
+    ops.push_back(op);
 }
 
 double geometry::nearest_surface_distance(const vec3 &point,
@@ -57,8 +62,8 @@ double geometry::nearest_surface_distance(const vec3 &point,
     // and substractions, we need to solve that maybe?
     double distance = constants::infinity;
 
-    for (auto &[op, geom] : surfaces) {
-        double dist_to_surface = std::visit(visitor, geom);
+    for (std::size_t i = 0; i < surfaces.size(); ++i) {
+        double dist_to_surface = std::visit(visitor, surfaces[i]);
         distance = std::min(distance, dist_to_surface);
     }
 
@@ -80,11 +85,11 @@ bool geometry::point_inside(const vec3 &point) const {
 
     bool inside = true;
 
-    for (auto &[op, geom] : surfaces) {
+    for (std::size_t i = 0; i < surfaces.size(); ++i) {
 
-        bool inside_surface = std::visit(visitor, geom);
+        bool inside_surface = std::visit(visitor, surfaces[i]);
 
-        switch (op) {
+        switch (ops[i]) {
         case csg_operation::no_op:
             break;
         case csg_operation::join:
@@ -95,6 +100,7 @@ bool geometry::point_inside(const vec3 &point) const {
             break;
         case csg_operation::substract:
             inside = inside && !inside_surface;
+            break;
         default:
             inside = false;
             break;

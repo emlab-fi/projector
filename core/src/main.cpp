@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
 
     try {
-        from_json(config_json, sim_env);
+        //from_json(config_json, sim_env);
     } catch (const std::exception &e) {
         print_nested_exception(e);
         return EXIT_FAILURE;

@@ -16,7 +16,7 @@ projector::object *get_current_obj(std::vector<projector::object> &objs,
 
     // go backwards in search, the first object is a global bounding box
     for (int i = objs.size() - 1; i >= 0; --i) {
-        if (objs[i].geom.point_is_inside(current_pos)) {
+        if (objs[i].geom.point_inside(current_pos)) {
             found = &objs[i];
             break;
         }
