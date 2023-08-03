@@ -30,19 +30,10 @@
     - list of atomic percentages OR weight percentages
 
 ## Object file
-- list of geometries
-    - geom ID
-    - type - primitive or complex
-    - if operation:
-        - op
-        - list of sub-geometries (can be IDs here?)
-    - if primitive:
-        - primitive type
-        - list of coefficients
 
 - list of objects
-    - geometry ID
-    - geometry shift/rotation?
+    - object ID
+    - geometry definition
     - material ID
     - optional source object
         - number of particles
