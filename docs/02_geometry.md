@@ -10,12 +10,12 @@ All the geometry in projector uses cartesian coordinate system, although some ca
 
 ## Computational solid geometry
 
-CSG works by composing primitives into a binary tree structure using boolean operators. Project supports 3 basic operators - union, intersection and substraction. These operations are quite self-descriptive. There are three notations used interchangeably in Projector.
+CSG works by composing primitives into a binary tree structure using boolean operators. Project supports 3 basic operators - union, intersection and substraction. These operations are quite self-descriptive. There are two notations used interchangeably in Projector.
 
-Operation | Set notation | Algebraic notation
----------:|:------------:|:-----------------:
-Union | \f$ \cup \f$ | +
-Intersect | \f$ \cap \f$ | *
+Operation | Set notation | Algebraic notation |
+---------:|:------------:|:------------------:|
+Union | \f$ \cup \f$ | + |
+Intersect | \f$ \cap \f$ | * |
 Substract | - ||
 
 
@@ -96,14 +96,14 @@ Multiple combined surfaces can be bounded, although some solutions are hard to c
 Projector allows the user to define the bounding box manually (prefered) or it can do simple approximation of the bounding box (not tight) automatically when the bounding box is not supplied.
 
 Some surfaces have easily computable bounds, which means we can construct a bounding box with atleast one axis that is not infinite.
-Those surfaces are: axis aligned plane, ellipsoid, elliptic cylinder, elliptic cone.
+Those surfaces are: plane parallel to axis, ellipsoid, elliptic cylinder, elliptic cone.
 By traversing the tree of the geometry, calculating the bounding boxes of the elements and combining them according to following rules, we can calculate the approximation of the bounding box of the geometry. By also combining this bounding box with the bounds of the simulation, we get a bounding box that is always finite and in worst case spans the whole simulation environment.
 
-Boolean operation | bounding box rule
-------------------|------------------
-\f$ A \cup B \f$  | \f$ \max (A, B) \f$
-\f$ A \cap B \f$  | \f$ \min (A, B) \f$
-\f$ A - B \f$  | \f$ A \f$
+Operation | min bounding box rule | max bounding box rule
+------------------|---------------|----------------------
+\f$ A \cup B \f$  | \f$ \min (A, B) \f$ | \f$ \max (A, B) \f$
+\f$ A \cap B \f$  | \f$ \max (A, B) \f$ | \f$ \min (A, B) \f$
+\f$ A - B \f$  |  \f$ A \f$
 
 
 ## Sampling random points from a CSG tree
@@ -114,7 +114,12 @@ Currently the simulator takes a simple approach to sampling random poitns from a
 2. Check whether the point is in the geometry
 3. Sample again or return the sampled point
 
-## Distance to collision a particle and surface
+## Distance to collision of a particle and a surface
 
 For geometry purposes, particle is defined by it's current position \f$p\f$ and direction vector \f$d\f$ (unit vector).
 If we take a generic surface defined by function \f$ F(x) = 0 \f$, we can define the intersection point of the particle and surface: \f$F(p + t * d) = 0\f$. By solving for parameter \f$t\f$, we get the distance. As the direction vector is a unit vector, this parameter is the distance to the collision.
+
+## Determining distance to closest surface of a travelling particle
+
+TODO: determine the algorithm for this.
+Currently we just find the surface with smallest distance, which is not true when working with CSG geometries!

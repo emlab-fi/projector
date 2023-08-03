@@ -1,6 +1,10 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+EmptyLineAfterAccessModifier: Leave
+EmptyLineBeforeAccessModifier: Leave
 Language: Cpp
-SeparateDefinitionBlocks: Always
+SeparateDefinitionBlocks: Leave
 IncludeBlocks: Regroup
 MaxEmptyLinesToKeep: 2

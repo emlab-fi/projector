@@ -21,16 +21,17 @@ class geometry {
 
     std::pair<vec3, vec3> bounding_box;
 
-  public:
+public:
+
     void add_element(std::variant<geometry, surface> surface, csg_operation op);
 
     double nearest_surface_distance(const vec3 &point, const vec3 &dir) const;
 
-    bool point_is_inside(const vec3 &point) const;
+    bool point_inside(const vec3 &point) const;
 
     vec3 sample_point(uint64_t &prng_state) const;
 
-    void update_bounding_box(vec3 min, vec3 max);
+    void update_bounding_box(const vec3 &min, const vec3 &max);
 };
 
 vec3 rotate_direction(vec3 dir, double mu, double phi);

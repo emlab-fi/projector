@@ -53,6 +53,8 @@ double geometry::nearest_surface_distance(const vec3 &point,
         return constants::infinity;
     };
 
+    // this currently produces false positives when dealing with intersections
+    // and substractions, we need to solve that maybe?
     double distance = constants::infinity;
 
     for (auto &[op, geom] : surfaces) {
@@ -63,7 +65,7 @@ double geometry::nearest_surface_distance(const vec3 &point,
     return distance;
 }
 
-bool geometry::point_is_inside(const vec3 &point) const {
+bool geometry::point_inside(const vec3 &point) const {
 
     auto visitor = [&point](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
@@ -71,7 +73,7 @@ bool geometry::point_is_inside(const vec3 &point) const {
         if constexpr (std::is_same_v<T, surface>) {
             return arg.point_inside(point);
         } else if constexpr (std::is_same_v<T, geometry>) {
-            return arg.point_is_inside(point);
+            return arg.point_inside(point);
         }
         return false;
     };
@@ -84,7 +86,6 @@ bool geometry::point_is_inside(const vec3 &point) const {
 
         switch (op) {
         case csg_operation::no_op:
-            inside = inside_surface;
             break;
         case csg_operation::join:
             inside = inside || inside_surface;
@@ -94,7 +95,6 @@ bool geometry::point_is_inside(const vec3 &point) const {
             break;
         case csg_operation::substract:
             inside = inside && !inside_surface;
-            break;
         default:
             inside = false;
             break;
@@ -113,12 +113,23 @@ vec3 geometry::sample_point(uint64_t &prng_state) const {
         vec3 sampled_point = box_random_sample(bounding_box.first,
                                                bounding_box.second, prng_state);
 
-        if (point_is_inside(sampled_point)) {
+        if (point_inside(sampled_point)) {
             return sampled_point;
         }
     }
 
     return {0.0, 0.0, 0.0};
+}
+
+void geometry::update_bounding_box(const vec3 &min, const vec3 &max) {
+
+    vec3 current_min = min;
+    vec3 current_max = max;
+
+    // TODO: IMPLEMENT THIS
+
+    bounding_box = {current_min, current_max};
+
 }
 
 vec3 rotate_direction(vec3 dir, double mu, double phi) {
