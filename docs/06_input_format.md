@@ -72,19 +72,44 @@ This means you can for example use `[1, 3]` as input and it will get normalized 
 ## Object file
 
 This file defines the geometry of the simulation and links the geometry to used materials from the materials JSON file.
-It's structure is bit more involved, as the geometry definitions can be recursive and are in a separate array to the objects.
+It's structure is bit more involved, as the geometry definitions can be recursive and are in a separate JSON object, compared to the object definition.
 
-- list of objects
-    - object ID
-    - geometry definition
-    - material ID
-    - optional source object
-        - number of particles
-        - energy of particles
-        - direction - random or directed
-        - if directed, then the direction vector and max deviation
-    - optional helper bounding box, otherwise constructed automatically
+```json
+{
+    "geometries": {
+        "geom1": { /* geom definition */ },
+        "geom2": { /* geom definition */ },
+        //......
+    },
+    "objects": [
+        { /* object definition */ },
+        { /* object definition */ },
+        //......
+    ]
+}
+```
 
+### Geometry definition
+
+
+### Object definition
+
+|field|type|description|
+|:----|:--:|:----------|
+|`id`|`string`| user defined object ID, mostly for easier identification in tallies |
+|`geometry`|`string`| the name of the geometry for the object, must be a key in `geometries` |
+|`material`|`string`| the object material ID, must be a valid material in the materials JSON file |
+|`bounding_box`|`[[float]]`| optional bounding box of the object, if not present it's approximated automatically from the geometry (for an example see main file docs) |
+|`source`|`json object`| optional object defining the particle source properties of the object |
+
+When the `source` field is present, the object is considered as a source of particles.
+The fields for the `source` are the following:
+
+|field|type|description|
+|:----|:--:|:----------|
+|`photon_energy`|`float`| photon energy in kEv |
+|`photon_count`|`uint`| how many photons originate from this source |
+|`direction` |`string`| currently only `random` is supported |
 
 ## Tally file
 

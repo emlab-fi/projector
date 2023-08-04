@@ -20,6 +20,7 @@ Preliminary release: end of August / beginning of September 2023
 Preliminary release: end of 2023
 
 - ✗ lattice (geometry instantiation) support
+- ✗ non-uniform source definitions
 - ✗ simulate secondary particles from interactions (bremstrahhlung, photoelectrons, pair production)
 - ✗ basic python tooling for data visualization and data preparation
 - ✗ filters for tallies
