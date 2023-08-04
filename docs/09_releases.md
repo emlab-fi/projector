@@ -6,7 +6,6 @@ The nearest version is 0.1, and the preliminary roadmap of the versions and thei
 ## v0.1
 
 Preliminary release: end of August / beginning of September 2023
-✓
 
 - ✗ BREP and CSG geometry
 - ✗ separate input files for materials, tallies and objects
@@ -14,13 +13,23 @@ Preliminary release: end of August / beginning of September 2023
 - ✗ void material support
 - ✗ parallelization in OpenMP
 - ✗ basic real life verification tests
-- ✗ basic documentation
+- ✓ basic documentation
 
 # v0.2
 
-- ✗ .STL mesh support
+Preliminary release: end of 2023
+
+- ✗ lattice (geometry instantiation) support
 - ✗ simulate secondary particles from interactions (bremstrahhlung, photoelectrons, pair production)
 - ✗ basic python tooling for data visualization and data preparation
 - ✗ filters for tallies
 - ✗ additional tallies: pulse height, 2D detector flux
 - ✗ better interface for different runtimes (CUDA etc.)
+
+# v0.3
+
+Preliminary release:
+
+- ✗ .STL mesh support (or other format)
+- ✗ multiple runtimes (CUDA etc.)
+- ✗ benchmarks
