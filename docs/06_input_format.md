@@ -89,10 +89,17 @@ It's structure is bit more involved, as the geometry definitions can be recursiv
 }
 ```
 
-### Geometry definition
+### Geometry fields
 
+|field|type|description|
+|:----|:--:|:----------|
 
-### Object definition
+- ops
+- elements
+    - element: either a type or name of other geometry
+    - type also has required params field
+
+### Object fields
 
 |field|type|description|
 |:----|:--:|:----------|
