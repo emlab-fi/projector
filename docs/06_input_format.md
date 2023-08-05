@@ -93,11 +93,32 @@ It's structure is bit more involved, as the geometry definitions can be recursiv
 
 |field|type|description|
 |:----|:--:|:----------|
+|`operators`|`[string]`| What operators to apply to the surfaces/geometries. Valid operations are `join`, `intersect`, `substract` |
+|`surfaces`|`[string / object]`| The surfaces defining the geometry. It can also refer to another existing geometry. Surfaces are defined by two arguments, more on that below. |
 
-- ops
-- elements
-    - element: either a type or name of other geometry
-    - type also has required params field
+When defining a surface, there are two arguments: `type` and `parameters`.
+Below is table of possible surfaces and their parameters.
+The parameters should be identical to the ones in [geometry docs](02_geometry.md) and are written as  they are accepted by a parser.
+
+|surface|parameters|
+|-------|----------|
+|`plane`|`[x0, y0, z0], [a, b, c]`|
+|`ellipsoid`|`[x0, y0, z0], a, b, c`|
+|`x_cylinder`|`[x0, y0, z0], a, b`|
+|`y_cylinder`|`[x0, y0, z0], a, b`|
+|`z_cylinder`|`[x0, y0, z0], a, b`|
+|`x_cone`|`[x0, y0, z0], a, b, c`|
+|`y_cone`|`[x0, y0, z0], a, b, c`|
+|`z_cone`|`[x0, y0, z0], a, b, c`|
+
+There should be no cyclic or self references when using geometries in place of surfaces, as this will not parse.
+
+The operations array should be the same length as the surfaces array.
+The surfaces and their operators are applied sequentially in the same order as they are defined.
+So if we have surfaces `A, B, C` with operators `intersect, substract, join`, the end geometry will be `((_ intersect A) substract B) join C`.
+The first surface should always have `intersect` operator.
+
+It is best to see an example at the end of this page.
 
 ### Object fields
 
