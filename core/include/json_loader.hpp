@@ -2,6 +2,7 @@
 #include "environment.hpp"
 
 #include <nlohmann/json.hpp>
+#include <filesystem>
 
 namespace projector {
 
@@ -23,20 +24,14 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
          "interaction_distance_average"},
     })
 
-void from_json(nlohmann::json &j, environment &env);
+void vec3_from_json(nlohmann::json &j, vec3 &vec);
 
-void from_json(nlohmann::json &j, tally &ta);
+void load_simulation_data(std::filesystem::path path, environment &env);
 
-void from_json(nlohmann::json &j, object &obj);
+void load_material_data(std::filesystem::path path, environment &env);
 
-void from_json(nlohmann::json &j, material_data &mat);
+void load_object_data(std::filesystem::path path, environment &env);
 
-void from_json(nlohmann::json &j, geometry &geom);
-
-//void from_json(nlohmann::json &j, geom_primitive &shape);
-
-//void from_json(nlohmann::json &j, operation &op);
-
-void from_json(nlohmann::json &j, vec3 &vec);
+void load_tally_data(std::filesystem::path path, environment &env);
 
 } // namespace projector

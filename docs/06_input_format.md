@@ -23,11 +23,9 @@ The main file contains configuration of the simulator itself and the paths to ot
 |`energy_cutoff`| `float` | Energy cutoff value in kEv |
 |`stack_size`| `uint` | The maximum history length for single particle |
 |`bounding_box`| `[[float]]` | Array of min and max coordinates of the simulation (example bellow) |
-|`bounding_box_material`| `string` | ID of the default material of the simulation |
 |`material_file`| `string` | Path to the material JSON file |
 |`object_file`| `string` | Path to the objects JSON file |
 |`tallies_file`| `string` | Path to the tallies JSON file |
-|`eprdata_file`| `string` | Path to the xsdir file of eprdata14 ACE data |
 |`output_path` | `string` | Output path (where to save output data) |
 
 Example of bounding box field:

@@ -1,11 +1,12 @@
 #include "CLI/CLI.hpp"
 #include "environment.hpp"
-#include "json_converters.hpp"
+#include "json_loader.hpp"
 #include "runtime.hpp"
 #include "utils.hpp"
 
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <termcolor/termcolor.hpp>
 #include <string_view>
 
 int main(int argc, char *argv[]) {
@@ -17,14 +18,10 @@ int main(int argc, char *argv[]) {
     std::string_view xsdir_path;
     int thread_count = 1;
 
-    app.add_option("--xcom, -x", xcom_path, "XCOM database path (deprecated)")
-        ->check(CLI::ExistingPath);
-    app.add_option("--ace_xsdir, -a", xsdir_path,
-                   "xsdir file path for ACE (eprdata14)")
+    app.add_option("--input_file, -i", config_path, "Input JSON file")
         ->required()
         ->check(CLI::ExistingFile);
-    app.add_option("--input_file, -i, input_file", config_path,
-                   "Input json file")
+    app.add_option("--ace_data, -a", xsdir_path, "Path to eprdata14 xsdir")
         ->required()
         ->check(CLI::ExistingFile);
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
@@ -32,7 +29,8 @@ int main(int argc, char *argv[]) {
     CLI11_PARSE(app, argc, argv);
 
 
-    std::cout << "<<-- Projector -->>" << std::endl;
+    std::cout << termcolor::blue << termcolor::bold
+              << "<<-- Projector -->>" << termcolor::reset << std::endl;
 
     projector::environment sim_env;
 
@@ -65,13 +63,8 @@ int main(int argc, char *argv[]) {
         print_nested_exception(e);
         return EXIT_FAILURE;
     }
-    std::cout << "Loaded cross section data successfully" << std::endl;
 
     std::cout << "Processing material data" << std::endl;
-    for (auto &obj : sim_env.objects) {
-        sim_env.cross_section_data.material_calculate_missing_values(
-            obj.material);
-    }
 
     std::cout << "Initializing runtime" << std::endl;
     projector::initialize_runtime(sim_env, thread_count);

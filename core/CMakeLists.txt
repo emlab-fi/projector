@@ -12,11 +12,18 @@ FetchContent_Declare(json
 FetchContent_MakeAvailable(json)
 
 #get progress bar lib
-FetchContent_Declare(indicators
-	GIT_REPOSITORY https://github.com/p-ranav/indicators.git
-	GIT_TAG v2.3
+#FetchContent_Declare(indicators
+#	GIT_REPOSITORY https://github.com/p-ranav/indicators.git
+#	GIT_TAG v2.3
+#	GIT_SHALLOW TRUE)
+#FetchContent_MakeAvailable(indicators)
+
+#get termcolor header
+FetchContent_Declare(termcolor
+	GIT_REPOSITORY https://github.com/ikalnytskyi/termcolor
+	GIT_TAG v2.1.0
 	GIT_SHALLOW TRUE)
-FetchContent_MakeAvailable(indicators)
+FetchContent_MakeAvailable(termcolor)
 
 #get command line parsing lib
 FetchContent_Declare(cli11
@@ -48,7 +55,7 @@ set(PROJECTOR_LIB_SRC
 	src/utils.cpp
 	src/material.cpp
 	src/geometry.cpp
-#	src/json_converters.cpp
+	src/json_loader.cpp
 	src/random_numbers.cpp
 	src/environment.cpp
 	src/particle.cpp
@@ -81,7 +88,7 @@ target_link_options(projector_core PRIVATE)
 
 target_link_libraries(projector_core PRIVATE
 	nlohmann_json::nlohmann_json
-	#indicators::indicators
+	termcolor::termcolor
 	CLI11::CLI11
 	Eigen3::Eigen)
 
@@ -105,7 +112,6 @@ target_link_options(projector_tests PRIVATE)
 
 target_link_libraries(projector_tests PRIVATE
 	nlohmann_json::nlohmann_json
-	indicators::indicators
 	CLI11::CLI11
 	Eigen3::Eigen
 	Catch2::Catch2WithMain)

@@ -46,7 +46,7 @@ nlohmann::json load_json_file(std::filesystem::path filepath) {
     nlohmann::json parsed;
 
     try {
-        parsed = nlohmann::json::parse(input_file, nullptr, false, false);
+        parsed = nlohmann::json::parse(input_file, nullptr, false, true);
     } catch (std::exception &e) {
         std::throw_with_nested("Can't parse JSON");
     }
