@@ -32,6 +32,7 @@ public:
     vec3 sample_point(uint64_t &prng_state) const;
 
     void update_bounding_box(const vec3 &min, const vec3 &max);
+
 };
 
 vec3 rotate_direction(vec3 dir, double mu, double phi);

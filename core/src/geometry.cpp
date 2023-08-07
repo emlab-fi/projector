@@ -50,8 +50,8 @@ double geometry::nearest_surface_distance(const vec3 &point,
     auto visitor = [&point, &dir](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
 
-        if constexpr (std::is_same_v<T, surface>) {
-            return arg.distance_along_line(point, dir);
+        if constexpr (std::is_same_v<std::unique_ptr<surface>, T>) {
+            return arg->distance_along_line(point, dir);
         } else if constexpr (std::is_same_v<T, geometry>) {
             return arg.nearest_surface_distance(point, dir);
         }
@@ -75,8 +75,8 @@ bool geometry::point_inside(const vec3 &point) const {
     auto visitor = [&point](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
 
-        if constexpr (std::is_same_v<T, surface>) {
-            return arg.point_inside(point);
+        if constexpr (std::is_same_v<std::unique_ptr<surface>, T>) {
+            return arg->point_inside(point);
         } else if constexpr (std::is_same_v<T, geometry>) {
             return arg.point_inside(point);
         }
@@ -132,7 +132,38 @@ void geometry::update_bounding_box(const vec3 &min, const vec3 &max) {
     vec3 current_min = min;
     vec3 current_max = max;
 
-    // TODO: IMPLEMENT THIS
+    auto visitor = [](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_same_v<std::unique_ptr<surface>, T>) {
+            return arg->bounding_box();
+        } else if constexpr (std::is_same_v<T, geometry>) {
+            return arg.bounding_box;
+        }
+    };
+
+    for (std::size_t i = 0; i < surfaces.size(); ++i) {
+
+        auto [s_min, s_max] = std::visit(visitor, surfaces[i]);
+
+        switch (ops[i]) {
+            case csg_operation::no_op:
+                break;
+            case csg_operation::join:
+                current_min = current_min.cwiseMin(s_min);
+                current_max = current_max.cwiseMax(s_max);
+                break;
+            case csg_operation::intersect:
+                current_min = current_min.cwiseMax(s_min);
+                current_max = current_max.cwiseMin(s_max);
+                break;
+            case csg_operation::substract:
+                break;
+            default:
+                break;
+        }
+
+    }
 
     bounding_box = {current_min, current_max};
 
