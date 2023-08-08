@@ -13,7 +13,7 @@ vec3 vec3_from_json(json &j) {
         throw std::runtime_error("3d vector is not JSON array");
     }
 
-    if (!j.size() != 3) {
+    if ((j.size() != 3)) {
         throw std::runtime_error("Wrong amount of arguments for vec3");
     }
 
@@ -79,6 +79,14 @@ void load_material_data(std::filesystem::path path, environment &env) {
         material_data temp;
 
         material.at("density").get_to(temp.density);
+
+        std::vector<std::string_view> element_str;
+
+        material.at("elements").get_to(element_str);
+
+        for (auto& elem : element_str) {
+            temp.elements.push_back(symbol_to_atomic_number(elem));
+        }
 
         if (material.contains("atomic_percentage")) {
             material.at("atomic_percentage").get_to(temp.atomic_percentage);

@@ -34,27 +34,6 @@ int main(int argc, char *argv[]) {
 
     projector::environment sim_env;
 
-    std::cout << "Loading input file: " << config_path << std::endl;
-
-    nlohmann::json config_json;
-    try {
-        config_json = load_json_file(config_path);
-    } catch (const std::exception &e) {
-        print_nested_exception(e);
-        return EXIT_FAILURE;
-    }
-
-    try {
-        //from_json(config_json, sim_env);
-    } catch (const std::exception &e) {
-        print_nested_exception(e);
-        return EXIT_FAILURE;
-    }
-
-    std::cout << "Loaded config file successfully" << std::endl;
-    std::cout << "Experiment: " << sim_env.name << std::endl;
-
-
     std::cout << "Loading cross section data from: " << xsdir_path << std::endl;
     try {
         sim_env.cross_section_data =
@@ -64,7 +43,13 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    std::cout << "Processing material data" << std::endl;
+    std::cout << "Loading input file: " << config_path << std::endl;
+
+   
+
+    std::cout << "Loaded config files successfully" << std::endl;
+    std::cout << "Experiment: " << sim_env.name << std::endl;
+
 
     std::cout << "Initializing runtime" << std::endl;
     projector::initialize_runtime(sim_env, thread_count);
