@@ -24,7 +24,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
          "interaction_distance_average"},
     })
 
-void vec3_from_json(nlohmann::json &j, vec3 &vec);
+vec3 vec3_from_json(nlohmann::json &j);
 
 void load_simulation_data(std::filesystem::path path, environment &env);
 

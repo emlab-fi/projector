@@ -27,7 +27,7 @@ struct environment {
 
     double energy_cutoff;
     std::size_t stack_size;
-    std::pair<vec3, vec3> top_level_bounding_box;
+    std::pair<vec3, vec3> bounding_box;
 
 
     std::filesystem::path material_path;
@@ -39,7 +39,7 @@ struct environment {
 
     std::vector<std::string_view> material_ids;
 
-    std::map<std::size_t, material_data> materials;
+    std::vector<material_data> materials;
 
     std::vector<object> objects;
 
