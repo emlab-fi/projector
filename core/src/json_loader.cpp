@@ -4,6 +4,22 @@
 
 #include <stdexcept>
 
+namespace {
+
+std::size_t find_mat_id(const std::string_view &str,
+                        const std::vector<std::string_view> &ids) {
+
+    for (std::size_t index = 0; index < ids.size(); ++index) {
+        if (ids[index] == str) {
+            return index;
+        }
+    }
+
+    throw std::runtime_error(std::string("material ID not found:").append(str));
+}
+
+} // namespace
+
 using json = nlohmann::json;
 
 namespace projector {
@@ -24,6 +40,10 @@ vec3 vec3_from_json(json &j) {
     j.at(2).get_to(z);
 
     return {x, y, z};
+}
+
+void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
+
 }
 
 void load_simulation_data(std::filesystem::path path, environment &env) {
@@ -84,7 +104,7 @@ void load_material_data(std::filesystem::path path, environment &env) {
 
         material.at("elements").get_to(element_str);
 
-        for (auto& elem : element_str) {
+        for (auto &elem : element_str) {
             temp.elements.push_back(symbol_to_atomic_number(elem));
         }
 
@@ -107,12 +127,51 @@ void load_material_data(std::filesystem::path path, environment &env) {
     }
 }
 
-void load_object_data(std::filesystem::path path, environment &env){
+void load_object_data(std::filesystem::path path, environment &env) {
+    json file = load_json_file(path);
 
+    if (!file.is_object()) {
+        throw std::runtime_error("The top level is not a JSON object");
+    }
+
+    for (auto &obj_json : file.at("objects")) {
+
+        if (!obj_json.is_object()) {
+            throw std::runtime_error("object definition is not a JSON object");
+        }
+
+        object new_obj;
+
+        obj_json.at("id").get_to(new_obj.id);
+
+        new_obj.photons_activity = 0;
+        new_obj.photons_energy = 0.0;
+
+        if (obj_json.contains("source")) {
+
+            obj_json.at("source")
+                .at("photon_count")
+                .get_to(new_obj.photons_activity);
+
+            obj_json.at("source")
+                .at("photon_energy")
+                .get_to(new_obj.photons_energy);
+        }
+
+        std::string_view material_string;
+        obj_json.at("material_id").get_to(material_string);
+
+        new_obj.material_id = find_mat_id(material_string, env.material_ids);
+
+        std::string_view geom_key;
+        obj_json.at("geometry").get_to(geom_key);
+
+        parse_geometry(new_obj.geom, geom_key, file.at("geometries"));
+
+        env.objects.push_back(std::move(new_obj));
+    }
 }
 
-void load_tally_data(std::filesystem::path path, environment &env){
-
-}
+void load_tally_data(std::filesystem::path path, environment &env) {}
 
 } // namespace projector

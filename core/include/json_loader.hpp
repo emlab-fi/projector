@@ -26,6 +26,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
 
 vec3 vec3_from_json(nlohmann::json &j);
 
+void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j);
+
 void load_simulation_data(std::filesystem::path path, environment &env);
 
 void load_material_data(std::filesystem::path path, environment &env);
