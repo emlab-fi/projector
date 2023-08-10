@@ -341,12 +341,18 @@ void data_library::material_calculate_missing_values(material_data &mat) const {
     double min_value = *std::min_element(mat.atomic_percentage.begin(),
                                          mat.atomic_percentage.end());
 
+    double molar_mass = 0.0;
+
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-        double molar_mass = (mat.atomic_percentage[i] / min_value) *
-                            get_element(mat.elements[i]).atomic_weight;
-        double atom_density =
-            (mat.weight_percentage[i] * mat.density * constants::avogadro) /
-            molar_mass;
+        molar_mass += (mat.atomic_percentage[i] / min_value) *
+                      get_element(mat.elements[i]).atomic_weight;
+    }
+
+    double total_atomic_density =
+        (mat.density * constants::avogadro) / molar_mass;
+
+    for (std::size_t i = 0; i < mat.elements.size(); ++i) {
+        double atom_density =total_atomic_density * mat.atomic_percentage[i];
         mat.atom_density.push_back(atom_density);
     }
 }

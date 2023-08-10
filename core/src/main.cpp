@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 
         std::filesystem::path tally_path = config_path;
         tally_path.replace_filename(sim_env.tally_path);
-        
+
         std::cout << "Loading tally file: " << tally_path << std::endl;
         projector::load_tally_data(tally_path, sim_env);
 
