@@ -101,7 +101,7 @@ std::pair<vec3, vec3> plane::bounding_box() const {
 
     // plane perpendicular to z axis
     if (normal.x() == 0.0 && normal.y() == 0.0) {
-        if (point.z() < 0.0) {
+        if (normal.z() < 0.0) {
             return {{-inf, -inf, point.z()}, {inf, inf, inf}};
         }
         return {{-inf, -inf, -inf}, {inf, inf, point.z()}};
@@ -141,7 +141,7 @@ bool ellipsoid::point_inside(const vec3 &p) const {
 }
 
 std::pair<vec3, vec3> ellipsoid::bounding_box() const {
-    return {-radii, radii};
+    return {center - radii, center + radii};
 }
 
 double x_cone::distance_along_line(const vec3 &p, const vec3 &dir) const {
