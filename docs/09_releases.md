@@ -8,7 +8,7 @@ The nearest version is 0.1, and the preliminary roadmap of the versions and thei
 Preliminary release: end of August / beginning of September 2023
 
 - ✓ BREP and CSG geometry
-- ✗ separate input files for materials, tallies and objects
+- ✓ separate input files for materials, tallies and objects
 - ✗ basic uniform grid tallies
 - ✗ void material support
 - ✗ parallelization in OpenMP

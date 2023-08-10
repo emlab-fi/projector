@@ -1,5 +1,6 @@
 #include "utils.hpp"
 
+#include <termcolor/termcolor.hpp>
 #include <fstream>
 #include <iostream>
 #include <variant>

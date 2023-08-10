@@ -5,13 +5,14 @@
 #include "tally.hpp"
 
 #include <string_view>
+#include <string>
 #include <vector>
 #include <map>
 
 namespace projector {
 
 struct object {
-    std::string_view id;
+    std::string id;
     std::size_t photons_activity;
     double photons_energy;
 
@@ -20,8 +21,8 @@ struct object {
 };
 
 struct environment {
-    std::string_view name;
-    std::string_view description;
+    std::string name;
+    std::string description;
     uint64_t seed;
     bool save_particle_paths;
 
@@ -37,7 +38,7 @@ struct environment {
 
     data_library cross_section_data;
 
-    std::vector<std::string_view> material_ids;
+    std::vector<std::string> material_ids;
 
     std::vector<material_data> materials;
 

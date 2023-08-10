@@ -84,6 +84,7 @@ void calculate_particle_histories(environment &env) {
                 break;
             }
 
+            /*
             sampled_xs macro_xs = env.cross_section_data.material_macro_xs(
                 current_obj->material, p.current_energy());
 
@@ -101,6 +102,7 @@ void calculate_particle_histories(environment &env) {
                 current_obj->material, p.current_energy(), p.prng_state);
 
             p.photon_interaction(elem);
+            */
         }
     }
 }

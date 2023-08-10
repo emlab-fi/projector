@@ -6,8 +6,8 @@
 
 namespace {
 
-std::size_t find_mat_id(const std::string_view &str,
-                        const std::vector<std::string_view> &ids) {
+std::size_t find_mat_id(const std::string &str,
+                        const std::vector<std::string> &ids) {
 
     for (std::size_t index = 0; index < ids.size(); ++index) {
         if (ids[index] == str) {
@@ -113,7 +113,7 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
         } else if (current_surface.is_object()) {
 
-            if (current_surface.at("parameters").is_array()) {
+            if (!current_surface.at("parameters").is_array()) {
                 throw std::runtime_error("surface parameters are not array");
             }
 
@@ -175,7 +175,7 @@ void load_material_data(std::filesystem::path path, environment &env) {
             throw std::runtime_error("Material def is not a JSON object");
         }
 
-        std::string_view id_string;
+        std::string id_string;
         material.at("id").get_to(id_string);
         env.material_ids.push_back(id_string);
 
@@ -241,12 +241,12 @@ void load_object_data(std::filesystem::path path, environment &env) {
                 .get_to(new_obj.photons_energy);
         }
 
-        std::string_view material_string;
+        std::string material_string;
         obj_json.at("material_id").get_to(material_string);
 
         new_obj.material_id = find_mat_id(material_string, env.material_ids);
 
-        std::string_view geom_key;
+        std::string geom_key;
         obj_json.at("geometry").get_to(geom_key);
 
         parse_geometry(new_obj.geom, geom_key, file.at("geometries"));

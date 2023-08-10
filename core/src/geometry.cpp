@@ -132,12 +132,13 @@ void geometry::update_bounding_box(const vec3 &min, const vec3 &max) {
     vec3 current_min = min;
     vec3 current_max = max;
 
-    auto visitor = [](auto &&arg) {
+    auto visitor = [min, max](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_same_v<std::unique_ptr<surface>, T>) {
             return arg->bounding_box();
         } else if constexpr (std::is_same_v<T, geometry>) {
+            arg.update_bounding_box(min, max);
             return arg.bounding_box;
         }
     };
