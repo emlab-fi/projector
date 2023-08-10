@@ -42,7 +42,90 @@ vec3 vec3_from_json(json &j) {
     return {x, y, z};
 }
 
+
+std::unique_ptr<surface> parse_surface(json &j) {
+
+    std::string_view surf_type = j.at("type").get<std::string_view>();
+
+    vec3 center = vec3_from_json(j.at("parameters")[0]);
+
+    if (surf_type == "plane") {
+        vec3 normal = vec3_from_json(j.at("parameters")[1]);
+        return std::make_unique<plane>(center, normal);
+    }
+
+    double a = j.at("parameters")[1].get<double>();
+    double b = j.at("parameters")[2].get<double>();
+    double c = 0.0;
+    if (j.at("parameters").size() >= 4) {
+        c = j.at("parameters")[3].get<double>();
+    }
+
+    if (surf_type == "ellipsoid") {
+        return std::make_unique<ellipsoid>(center, a, b, c);
+    }
+    if (surf_type == "x_cylinder") {
+        return std::make_unique<x_cylinder>(center, a, b);
+    }
+    if (surf_type == "y_cylinder") {
+        return std::make_unique<y_cylinder>(center, a, b);
+    }
+    if (surf_type == "z_cylinder") {
+        return std::make_unique<z_cylinder>(center, a, b);
+    }
+    if (surf_type == "x_cone") {
+        return std::make_unique<x_cone>(center, a, b, c);
+    }
+    if (surf_type == "y_cone") {
+        return std::make_unique<y_cone>(center, a, b, c);
+    }
+    if (surf_type == "z_cone") {
+        return std::make_unique<z_cone>(center, a, b, c);
+    }
+
+    throw std::runtime_error("invalid surface type");
+}
+
 void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
+
+    auto& geom_json = j.at(key);
+
+    if (!geom_json.is_object()) {
+        throw std::runtime_error("geometry is not JSON object");
+    }
+
+    std::size_t surface_count = geom_json.at("operators").size();
+
+    for (std::size_t i = 0; i < surface_count; ++i) {
+
+        auto& current_surface = geom_json.at("surfaces")[i];
+
+        if (current_surface.is_string()) {
+
+            geometry g;
+            std::string_view new_key;
+
+            current_surface.get_to(new_key);
+
+            parse_geometry(g, new_key, j);
+
+            geom.add_surface(std::move(g), geom_json.at("operators")[i]);
+
+        } else if (current_surface.is_object()) {
+
+            if (current_surface.at("parameters").is_array()) {
+                throw std::runtime_error("surface parameters are not array");
+            }
+
+            std::unique_ptr<surface> surf = parse_surface(current_surface);
+
+            geom.add_surface(std::move(surf), geom_json.at("operators")[i]);
+
+        } else {
+            throw std::runtime_error("invalid type for surface definition");
+        }
+
+    }
 
 }
 
@@ -167,6 +250,18 @@ void load_object_data(std::filesystem::path path, environment &env) {
         obj_json.at("geometry").get_to(geom_key);
 
         parse_geometry(new_obj.geom, geom_key, file.at("geometries"));
+
+        vec3 min_bb, max_bb;
+
+        if (obj_json.contains("bounding_box")) {
+            min_bb = vec3_from_json(obj_json.at("bounding_box").at(0));
+            max_bb = vec3_from_json(obj_json.at("bounding_box").at(1));
+        } else {
+            min_bb = env.bounding_box.first;
+            max_bb = env.bounding_box.second;
+        }
+
+        new_obj.geom.update_bounding_box(min_bb, max_bb);
 
         env.objects.push_back(std::move(new_obj));
     }
