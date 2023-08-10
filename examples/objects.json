@@ -1,0 +1,60 @@
+{
+    "geometries": {
+        "lower_part": {
+            "operators": ["intersect"],
+            "surfaces": [
+                {
+                    "type": "plane",
+                    "parameters": [[0.0, 0.0, -0.5], [0.0, 0.0, 1.0]]
+                }
+            ]
+        },
+
+        "water_part": {
+            "operators": ["intersect", "intersect"],
+            "surfaces": [
+                {
+                    "type": "plane",
+                    "parameters": [[0.0, 0.0, -0.5], [0.0, 0.0, -1.0]]
+                },
+                {
+                    "type": "plane",
+                    "parameters": [[0.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
+                }
+            ]
+        },
+        "central_sphere": {
+            "operators": ["intersect"],
+            "surfaces": [
+                {
+                    "type": "ellipsoid",
+                    "parameters": [[0.0, 0.0, 0.5], 0.25, 0.25, 0.25]
+                }
+            ]
+        }
+    },
+
+    "objects": [
+        {
+            "id": "cesium_source",
+            "geometry": "lower_part",
+            "material_id": "cesium137",
+            "source": {
+                "photon_energy": 662.0,
+                "photon_count": 1000,
+                "direction": "random"
+            }
+        },
+        {
+            "id": "water layer",
+            "geometry": "water_part",
+            "material_id": "water"
+        },
+        {
+            "id": "stainless sphere",
+            "geometry": "central_sphere",
+            "material_id": "stainless_304"
+        }
+    ]
+
+}

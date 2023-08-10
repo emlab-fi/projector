@@ -1,0 +1,13 @@
+{
+    "name": "Example config",
+    "description": "Basic showcase simulation configuration",
+    "save_particle_paths": true,
+    "seed": 2,
+    "energy_cutoff": 0.5,
+    "stack_size": 20,
+    "bounding_box": [[-1.0, -1.0, -1.0], [1.0, 1.0, 1.0]],
+    "material_file": "materials.json",
+    "object_file": "objects.json",
+    "tally_file": "tallies.json",
+    "output_path": "output_path"
+}

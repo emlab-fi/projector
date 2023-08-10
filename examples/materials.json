@@ -1,0 +1,22 @@
+{
+    "materials": [
+        {
+            "id": "cesium137",
+            "density": 1.93,
+            "elements": ["Cs"],
+            "atomic_percentage": [1.0]
+        },
+        {
+            "id": "water",
+            "density": 0.999,
+            "elements": ["H", "O"],
+            "atomic_percentage": [2.0, 1.0]
+        },
+        {
+            "id": "stainless_304",
+            "density": 7.93,
+            "elements": ["Fe", "C", "Mn", "Si", "Cr", "Ni", "N", "S", "P"],
+            "weight_percentage": [70.995, 0.08, 2.0, 0.75, 18.0, 8.0, 0.1, 0.03, 0.045]
+        }
+    ]
+}
