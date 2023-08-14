@@ -15,6 +15,15 @@ constexpr double signum(const double d) {
     return -1;
 }
 
+double distance_to_aligned_plane(double x, double x_0, double u) {
+    if (u == 0.0) {
+        return projector::constants::infinity;
+    }
+    double distance = (x_0 - x) / u;
+
+    return distance < 0.0 ? projector::constants::infinity : distance;
+}
+
 } // namespace
 
 namespace projector {
@@ -35,7 +44,22 @@ bool bounding_box::line_intersects(const vec3 &point, const vec3 &dir) const {
 }
 
 double bounding_box::distance_along_line(const vec3 &point, const vec3 &dir) const {
-    return 0.0;
+    double distance = constants::infinity;
+    double temp;
+
+    for (std::size_t i = 0; i < 3; ++i) {
+        temp = distance_to_aligned_plane(point[i], min[i], dir[i]);
+        if (point_inside(point + dir * temp)) {
+            distance = std::min(distance, temp);
+        }
+
+        temp = distance_to_aligned_plane(point[i], max[i], dir[i]);
+        if (point_inside(point + dir * temp)) {
+            distance = std::min(distance, temp);
+        }
+    }
+
+    return distance;
 }
 
 vec3 bounding_box::random_sample(uint64_t &prng_state) const {
@@ -225,7 +249,13 @@ vec3 random_unit_vector(uint64_t &prng_state) {
     double theta = 2.0 * projector::constants::pi * u;
     double phi = std::acos(2.0 * v - 1);
 
-    return {std::sin(theta) * std::cos(phi), std::sin(theta) * std::sin(phi), std::cos(theta)};
+    vec3 vector = {std::sin(theta) * std::cos(phi),
+                   std::sin(theta) * std::sin(phi),
+                   std::cos(theta)};
+
+    vector.normalize();
+
+    return vector;
 }
 
 } // namespace projector

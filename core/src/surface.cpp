@@ -85,9 +85,7 @@ double plane::distance_along_line(const vec3 &p, const vec3 &dir) const {
 
     double numer = (-normal).dot(p - point);
 
-    double d = numer / denom;
-
-    return d;
+    return numer / denom;
 }
 
 bool plane::point_inside(const vec3 &p) const {

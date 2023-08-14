@@ -40,8 +40,8 @@
             "geometry": "lower_part",
             "material_id": "cesium137",
             "source": {
-                "photon_energy": 662.0,
-                "photon_count": 1000,
+                "photon_energy": 0.662,
+                "photon_count": 100,
                 "direction": "random"
             }
         },

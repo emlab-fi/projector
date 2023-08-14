@@ -111,7 +111,7 @@ void calculate_particle_histories(environment &env) {
 
             } else {
                 // move tiny bit behind the surface, to not get stuck on it
-                p.advance(surface_distance + constants::epsilon);
+                p.advance(surface_distance + 5 * constants::epsilon);
                 current_obj = get_current_obj(env.objects, p.current_position());
             }
         }
