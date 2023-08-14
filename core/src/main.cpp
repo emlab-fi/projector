@@ -77,16 +77,16 @@ int main(int argc, char *argv[]) {
     std::cout << "Description: " << sim_env.description << std::endl;
 
     std::cout << "Initializing runtime" << std::endl;
-    // projector::initialize_runtime(sim_env, thread_count);
+    projector::initialize_runtime(sim_env, thread_count);
 
     std::cout << "Running particle simulation" << std::endl;
-    // projector::calculate_particle_histories(sim_env);
+    projector::calculate_particle_histories(sim_env);
 
     std::cout << "Processing tallies" << std::endl;
     // projector::process_tallies(sim_env);
 
     std::cout << "Saving data to: " << sim_env.output_path << std::endl;
-    // projector::save_data(sim_env);
+    projector::save_data(sim_env);
 
     return EXIT_SUCCESS;
 }

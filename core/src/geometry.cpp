@@ -213,4 +213,15 @@ vec3 random_unit_vector(uint64_t &prng_state) {
             std::cos(theta)};
 }
 
+bool point_inside_bb(const vec3 &point, const vec3 &min, const vec3 &max) {
+
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (point[i] < min[i] || point[i] > max[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 } // namespace projector

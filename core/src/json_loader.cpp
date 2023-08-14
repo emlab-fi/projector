@@ -155,6 +155,11 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
     conf.at("object_file").get_to(env.objects_path);
     conf.at("tally_file").get_to(env.tally_path);
     conf.at("output_path").get_to(env.output_path);
+
+    //change output path to be relative to config path
+    std::filesystem::path updated_output_path = path;
+    updated_output_path.replace_filename(env.output_path);
+    env.output_path = updated_output_path;
 }
 
 void load_material_data(std::filesystem::path path, environment &env) {

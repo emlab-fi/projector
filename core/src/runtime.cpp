@@ -1,5 +1,6 @@
 #include "runtime.hpp"
 
+#include "constants.hpp"
 #include "random_numbers.hpp"
 
 #include <filesystem>
@@ -57,12 +58,14 @@ void initialize_runtime(environment &env, int max_threads) {
     }
 
     // allocate memory for particle histories (max stack size)
+    /*
     for (particle &p : env.particles) {
         p.history.elements.reserve(env.stack_size);
         p.history.energies.reserve(env.stack_size);
         p.history.interactions.reserve(env.stack_size);
         p.history.points.reserve(env.stack_size);
     }
+    */
 }
 
 void calculate_particle_histories(environment &env) {
@@ -79,30 +82,43 @@ void calculate_particle_histories(environment &env) {
                 break;
             }
 
-            // check if we ran out of bounds
-            if (current_obj == nullptr) {
+            // check for bounds
+            if (!point_inside_bb(p.current_position(), env.bounding_box.first,
+                                 env.bounding_box.second)) {
                 break;
             }
 
-            /*
+            // move to nearest object if we are not in any object
+            if (current_obj == nullptr) {
+                break; // TODO IMPLEMENT
+            }
+
             sampled_xs macro_xs = env.cross_section_data.material_macro_xs(
-                current_obj->material, p.current_energy());
+                env.materials[current_obj->material_id], p.current_energy());
 
-            // multiply by 10e-24 to convert barns to cm2
-            p.advance(macro_xs.total * 10.0e-24);
+            double surface_distance =
+                current_obj->geom.nearest_surface_distance(p.current_position(),
+                                                           p.current_direction);
 
-            current_obj = get_current_obj(env.objects, p.current_position());
 
-            // check if we ran out of bounds
-            if (current_obj == nullptr) {
-                break;
+            double interaction_dist = -std::log(prng_double(p.prng_state)) /
+                                      (macro_xs.total * 10.0e-24);
+
+            if (interaction_dist < surface_distance) {
+                p.advance(interaction_dist);
+
+                const element &elem = env.cross_section_data.sample_element(
+                    env.materials[current_obj->material_id], p.current_energy(),
+                    p.prng_state);
+
+                p.photon_interaction(elem);
+
+            } else {
+
+                // move tiny bit behind the surface, to not get stuck on it
+                p.advance(surface_distance + constants::epsilon);
+                current_obj = get_current_obj(env.objects, p.current_position());
             }
-
-            const element &elem = env.cross_section_data.sample_element(
-                current_obj->material, p.current_energy(), p.prng_state);
-
-            p.photon_interaction(elem);
-            */
         }
     }
 }

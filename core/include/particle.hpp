@@ -32,7 +32,7 @@ struct particle {
 
     void photon_interaction(const element &elem);
 
-    void advance(double macro_xs);
+    void advance(double distance);
 };
 
 

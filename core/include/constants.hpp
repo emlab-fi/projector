@@ -22,4 +22,6 @@ constexpr double avogadro = 6.02214076e23;
 /// infinity value
 constexpr double infinity = std::numeric_limits<double>::infinity();
 
+constexpr double epsilon = std::numeric_limits<double>::epsilon();
+
 } // namespace projector::constants

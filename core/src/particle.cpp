@@ -65,9 +65,7 @@ void particle::photon_interaction(const element &element) {
     }
 }
 
-void particle::advance(double macro_xs) {
-
-    double distance = -std::log(prng_double(prng_state)) / macro_xs;
+void particle::advance(double distance) {
 
     history.energies.push_back(current_energy());
     history.interactions.push_back(cross_section::no_interaction);
