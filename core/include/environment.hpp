@@ -28,7 +28,7 @@ struct environment {
 
     double energy_cutoff;
     std::size_t stack_size;
-    std::pair<vec3, vec3> bounding_box;
+    bounding_box bounds;
 
 
     std::filesystem::path material_path;

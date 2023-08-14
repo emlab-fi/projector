@@ -73,8 +73,7 @@ void calculate_particle_histories(environment &env) {
     // simulate each particle separately
     for (particle &p : env.particles) {
 
-        object *current_obj =
-            get_current_obj(env.objects, p.current_position());
+        object *current_obj = get_current_obj(env.objects, p.current_position());
 
         for (std::size_t i = 0; i < env.stack_size; ++i) {
             // check for energy cutoff
@@ -83,8 +82,7 @@ void calculate_particle_histories(environment &env) {
             }
 
             // check for bounds
-            if (!point_inside_bb(p.current_position(), env.bounding_box.first,
-                                 env.bounding_box.second)) {
+            if (!env.bounds.point_inside(p.current_position())) {
                 break;
             }
 
@@ -100,7 +98,6 @@ void calculate_particle_histories(environment &env) {
                 current_obj->geom.nearest_surface_distance(p.current_position(),
                                                            p.current_direction);
 
-
             double interaction_dist = -std::log(prng_double(p.prng_state)) /
                                       (macro_xs.total * 10.0e-24);
 
@@ -108,13 +105,11 @@ void calculate_particle_histories(environment &env) {
                 p.advance(interaction_dist);
 
                 const element &elem = env.cross_section_data.sample_element(
-                    env.materials[current_obj->material_id], p.current_energy(),
-                    p.prng_state);
+                    env.materials[current_obj->material_id], p.current_energy(), p.prng_state);
 
                 p.photon_interaction(elem);
 
             } else {
-
                 // move tiny bit behind the surface, to not get stuck on it
                 p.advance(surface_distance + constants::epsilon);
                 current_obj = get_current_obj(env.objects, p.current_position());

@@ -7,21 +7,6 @@
 
 namespace {
 
-
-using pvec3 = projector::vec3;
-
-pvec3 box_random_sample(const pvec3 &min, const pvec3 &max,
-                        uint64_t &prng_state) {
-    pvec3 output = {0.0, 0.0, 0.0};
-
-    for (std::size_t i = 0; i < 3; ++i) {
-        output[i] =
-            min[i] + projector::prng_double(prng_state) * (max[i] - min[i]);
-    }
-
-    return output;
-}
-
 constexpr double signum(const double d) {
     if (d > 0.0)
         return 1;
@@ -34,6 +19,35 @@ constexpr double signum(const double d) {
 
 namespace projector {
 
+bool bounding_box::point_inside(const vec3 &point) const {
+
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (point[i] < min[i] || point[i] > max[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool bounding_box::line_intersects(const vec3 &point, const vec3 &dir) const {
+    return false;
+}
+
+double bounding_box::distance_along_line(const vec3 &point, const vec3 &dir) const {
+    return 0.0;
+}
+
+vec3 bounding_box::random_sample(uint64_t &prng_state) const {
+    vec3 output = {0.0, 0.0, 0.0};
+
+    for (std::size_t i = 0; i < 3; ++i) {
+        output[i] = min[i] + projector::prng_double(prng_state) * (max[i] - min[i]);
+    }
+
+    return output;
+}
+
 void geometry::add_surface(std::unique_ptr<surface> surface, csg_operation op) {
     surfaces.push_back(std::move(surface));
     ops.push_back(op);
@@ -44,8 +58,7 @@ void geometry::add_surface(geometry geom, csg_operation op) {
     ops.push_back(op);
 }
 
-double geometry::nearest_surface_distance(const vec3 &point,
-                                          const vec3 &dir) const {
+double geometry::nearest_surface_distance(const vec3 &point, const vec3 &dir) const {
 
     auto visitor = [&point, &dir](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
@@ -58,13 +71,20 @@ double geometry::nearest_surface_distance(const vec3 &point,
         return constants::infinity;
     };
 
-    // this currently produces false positives when dealing with intersections
-    // and substractions, we need to solve that maybe?
+    // this currently produces false positives, we need to solve that maybe?
     double distance = constants::infinity;
 
     for (std::size_t i = 0; i < surfaces.size(); ++i) {
         double dist_to_surface = std::visit(visitor, surfaces[i]);
+        if (dist_to_surface < 0.0) {
+            continue;
+        }
         distance = std::min(distance, dist_to_surface);
+    }
+
+    // if we still get infinite distance, limit it to bounding box
+    if (distance == constants::infinity) {
+        return bb.distance_along_line(point, dir);
     }
 
     return distance;
@@ -116,8 +136,7 @@ vec3 geometry::sample_point(uint64_t &prng_state) const {
     // - sample the bounding box
     // - check whether point is inside our geometry
     while (true) {
-        vec3 sampled_point = box_random_sample(bounding_box.first,
-                                               bounding_box.second, prng_state);
+        vec3 sampled_point = bb.random_sample(prng_state);
 
         if (point_inside(sampled_point)) {
             return sampled_point;
@@ -139,7 +158,7 @@ void geometry::update_bounding_box(const vec3 &min, const vec3 &max) {
             return arg->bounding_box();
         } else if constexpr (std::is_same_v<T, geometry>) {
             arg.update_bounding_box(min, max);
-            return arg.bounding_box;
+            return std::make_pair(arg.bb.min, arg.bb.max);
         }
     };
 
@@ -148,26 +167,25 @@ void geometry::update_bounding_box(const vec3 &min, const vec3 &max) {
         auto [s_min, s_max] = std::visit(visitor, surfaces[i]);
 
         switch (ops[i]) {
-            case csg_operation::no_op:
-                break;
-            case csg_operation::join:
-                current_min = current_min.cwiseMin(s_min);
-                current_max = current_max.cwiseMax(s_max);
-                break;
-            case csg_operation::intersect:
-                current_min = current_min.cwiseMax(s_min);
-                current_max = current_max.cwiseMin(s_max);
-                break;
-            case csg_operation::substract:
-                break;
-            default:
-                break;
+        case csg_operation::no_op:
+            break;
+        case csg_operation::join:
+            current_min = current_min.cwiseMin(s_min);
+            current_max = current_max.cwiseMax(s_max);
+            break;
+        case csg_operation::intersect:
+            current_min = current_min.cwiseMax(s_min);
+            current_max = current_max.cwiseMin(s_max);
+            break;
+        case csg_operation::substract:
+            break;
+        default:
+            break;
         }
-
     }
 
-    bounding_box = {current_min, current_max};
-
+    bb.min = current_min;
+    bb.max = current_max;
 }
 
 vec3 rotate_direction(vec3 dir, double mu, double phi) {
@@ -187,10 +205,8 @@ vec3 rotate_direction(vec3 dir, double mu, double phi) {
     // parallel to z-axis we can use simpler functions when it is
     // TODO: check whether this is enough or we need OpenMC approach
     if (a > 1e-10) {
-        u = dir[0] * mu +
-            (sin_mu / a) * (dir[0] * dir[2] * cos_phi - dir[1] * sin_phi);
-        v = dir[1] * mu +
-            (sin_mu / a) * (dir[1] * dir[2] * cos_phi + dir[0] * sin_phi);
+        u = dir[0] * mu + (sin_mu / a) * (dir[0] * dir[2] * cos_phi - dir[1] * sin_phi);
+        v = dir[1] * mu + (sin_mu / a) * (dir[1] * dir[2] * cos_phi + dir[0] * sin_phi);
         w = dir[2] * mu - a * sin_mu * cos_phi;
     } else {
         double sign = signum(dir[2]);
@@ -209,19 +225,7 @@ vec3 random_unit_vector(uint64_t &prng_state) {
     double theta = 2.0 * projector::constants::pi * u;
     double phi = std::acos(2.0 * v - 1);
 
-    return {std::sin(theta) * std::cos(phi), std::sin(theta) * std::sin(phi),
-            std::cos(theta)};
-}
-
-bool point_inside_bb(const vec3 &point, const vec3 &min, const vec3 &max) {
-
-    for (std::size_t i = 0; i < 3; ++i) {
-        if (point[i] < min[i] || point[i] > max[i]) {
-            return false;
-        }
-    }
-
-    return true;
+    return {std::sin(theta) * std::cos(phi), std::sin(theta) * std::sin(phi), std::cos(theta)};
 }
 
 } // namespace projector

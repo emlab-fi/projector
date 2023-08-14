@@ -149,7 +149,7 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
     vec3 min_bb = vec3_from_json(conf.at("bounding_box").at(0));
     vec3 max_bb = vec3_from_json(conf.at("bounding_box").at(1));
 
-    env.bounding_box = {min_bb, max_bb};
+    env.bounds = {min_bb, max_bb};
 
     conf.at("material_file").get_to(env.material_path);
     conf.at("object_file").get_to(env.objects_path);
@@ -262,8 +262,8 @@ void load_object_data(std::filesystem::path path, environment &env) {
             min_bb = vec3_from_json(obj_json.at("bounding_box").at(0));
             max_bb = vec3_from_json(obj_json.at("bounding_box").at(1));
         } else {
-            min_bb = env.bounding_box.first;
-            max_bb = env.bounding_box.second;
+            min_bb = env.bounds.min;
+            max_bb = env.bounds.max;
         }
 
         new_obj.geom.update_bounding_box(min_bb, max_bb);

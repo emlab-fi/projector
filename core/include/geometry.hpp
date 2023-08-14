@@ -12,6 +12,19 @@ using vec3 = Eigen::Vector3d;
 
 enum class csg_operation { no_op, join, intersect, substract };
 
+struct bounding_box {
+    vec3 min;
+    vec3 max;
+
+    bool point_inside(const vec3 &point) const;
+
+    bool line_intersects(const vec3& point, const vec3& dir) const;
+
+    double distance_along_line(const vec3 &point, const vec3 &dir) const;
+
+    vec3 random_sample(uint64_t &prng_state) const;
+};
+
 class geometry {
 
     std::vector<std::variant<geometry, std::unique_ptr<surface>>> surfaces;
@@ -19,7 +32,7 @@ class geometry {
 
 public:
 
-    std::pair<vec3, vec3> bounding_box;
+    bounding_box bb;
 
     void add_surface(std::unique_ptr<surface> surface, csg_operation op);
 
@@ -37,10 +50,5 @@ public:
 vec3 rotate_direction(vec3 dir, double mu, double phi);
 
 vec3 random_unit_vector(uint64_t &prng_state);
-
-bool point_inside_bb(const vec3 &point, const vec3 &min, const vec3 &max);
-
-bool line_intersects_bb(const vec3 &point, const vec3 &dir, const vec3 &min,
-                        const vec3 &max);
 
 } // namespace projector
