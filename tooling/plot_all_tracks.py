@@ -1,42 +1,33 @@
 import click
-import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
 import glob
 import os.path
 
 
 
 def load_file(input_file):
-    with open(input_file) as file:
-        lines = file.readlines()[1:]
-
-    x = []
-    y = []
-    z = []
-
-    for line in lines:
-        line_split = line.split(",")
-        x.append(float(line_split[0]))
-        y.append(float(line_split[1]))
-        z.append(float(line_split[2]))
-
-    return x,y,z
-
+    return pd.read_csv(input_file)
 
 @click.command()
 @click.argument('input_dir', type=click.Path(exists=True, file_okay=False, resolve_path=True))
 def main(input_dir):
 
+
     files = glob.glob("photon*.csv", root_dir=input_dir)
 
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
+    dataframes = []
 
     for file in files:
-        x,y,z = load_file(os.path.join(input_dir, file))
-        ax.plot(x, y, z, c = 'b', alpha=0.2)
+        df = load_file(os.path.join(input_dir, file))
+        df["filename"] = file
+        dataframes.append(df)
 
-    ax.set_box_aspect([1, 1, 1])
-    plt.show()
+    final_data = pd.concat(dataframes)
+
+
+    fig = px.line_3d(final_data, x="x", y="y", z="z", color="filename")
+    fig.write_html("output.html")
 
 
 
