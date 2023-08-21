@@ -22,6 +22,7 @@ double distance_to_aligned_plane(double x, double x_0, double u) {
     double distance = (x_0 - x) / u;
 
     return distance < 0.0 ? projector::constants::infinity : distance;
+
 }
 
 } // namespace
@@ -39,23 +40,38 @@ bool bounding_box::point_inside(const vec3 &point) const {
     return true;
 }
 
+bool bounding_box::point_inside_2d(const vec3& point, std::size_t in1, std::size_t in2) const {
+
+    for (auto& index : {in1, in2}) {
+        if (point[index] < min[index] || point[index] > max[index]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool bounding_box::line_intersects(const vec3 &point, const vec3 &dir) const {
     return false;
 }
 
 double bounding_box::distance_along_line(const vec3 &point, const vec3 &dir) const {
     double distance = constants::infinity;
-    double temp;
+    double temp_distance;
 
-    for (std::size_t i = 0; i < 3; ++i) {
-        temp = distance_to_aligned_plane(point[i], min[i], dir[i]);
-        if (point_inside(point + dir * temp)) {
-            distance = std::min(distance, temp);
+    constexpr std::array<std::array<std::size_t, 3>, 3> index_order = {{
+        {0, 1, 2}, {1, 0, 2}, {2, 0, 1}
+    }};
+
+    for (auto& index : index_order) {
+        temp_distance = distance_to_aligned_plane(point[index[0]], min[index[0]], dir[index[0]]);
+        if (point_inside_2d(point + temp_distance * dir, index[1], index[2])) {
+            distance = std::min(distance, temp_distance);
         }
 
-        temp = distance_to_aligned_plane(point[i], max[i], dir[i]);
-        if (point_inside(point + dir * temp)) {
-            distance = std::min(distance, temp);
+        temp_distance = distance_to_aligned_plane(point[index[0]], max[index[0]], dir[index[0]]);
+        if (point_inside_2d(point + temp_distance * dir, index[1], index[2])) {
+            distance = std::min(distance, temp_distance);
         }
     }
 
@@ -106,10 +122,9 @@ double geometry::nearest_surface_distance(const vec3 &point, const vec3 &dir) co
         distance = std::min(distance, dist_to_surface);
     }
 
-    // if we still get infinite distance, limit it to bounding box
-    if (distance == constants::infinity) {
-        return bb.distance_along_line(point, dir);
-    }
+    // check against the bounding box, we might have run out of the global bounds
+    double bb_distance = bb.distance_along_line(point, dir);
+    distance = std::min(distance, bb_distance);
 
     return distance;
 }

@@ -18,6 +18,8 @@ struct bounding_box {
 
     bool point_inside(const vec3 &point) const;
 
+    bool point_inside_2d(const vec3& point, std::size_t index1, std::size_t index2) const;
+
     bool line_intersects(const vec3& point, const vec3& dir) const;
 
     double distance_along_line(const vec3 &point, const vec3 &dir) const;

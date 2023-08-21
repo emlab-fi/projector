@@ -70,6 +70,8 @@ void initialize_runtime(environment &env, int max_threads) {
 
 void calculate_particle_histories(environment &env) {
 
+    std::size_t counter = 0;
+
     // simulate each particle separately
     for (particle &p : env.particles) {
 
@@ -115,6 +117,8 @@ void calculate_particle_histories(environment &env) {
                 current_obj = get_current_obj(env.objects, p.current_position());
             }
         }
+
+        counter++;
     }
 }
 

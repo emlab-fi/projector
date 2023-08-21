@@ -17,9 +17,9 @@ using pvec3 = projector::vec3;
 
 template <int S_x, int S_y, int S_z, int R>
 double generic_eval(const pvec3 &p, double a, double b, double c) {
-    double x = (S_x * p.x() * p.x()) / a * a;
-    double y = (S_y * p.y() * p.y()) / b * b;
-    double z = (S_z * p.z() * p.z()) / c * c;
+    double x = (S_x * p.x() * p.x()) / (a * a);
+    double y = (S_y * p.y() * p.y()) / (b * b);
+    double z = (S_z * p.z() * p.z()) / (c * c);
 
     return (x + y + z) < R;
 }
