@@ -122,10 +122,6 @@ double geometry::nearest_surface_distance(const vec3 &point, const vec3 &dir) co
         distance = std::min(distance, dist_to_surface);
     }
 
-    // check against the bounding box, we might have run out of the global bounds
-    double bb_distance = bb.distance_along_line(point, dir);
-    distance = std::min(distance, bb_distance);
-
     return distance;
 }
 
