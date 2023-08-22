@@ -34,20 +34,19 @@ double nearest_global_distance(projector::environment &env, projector::particle 
     // this currently goes through all objects and if we find new nearest BB, we check the surface
     // distance and take it if it is nearer than the previous surface distance
     // it possibly generates false data, need to check/test later
-    for (auto& obj : env.objects) {
-        double temp_dist =
-            obj.geom.bb.distance_along_line(p.current_position(), p.current_direction);
+    for (auto &obj : env.objects) {
+        double temp_dist = obj.geom.bb.distance_along_line(p.position(), p.direction);
 
 
         if (temp_dist < bb_distance) {
-            double s_dist = obj.geom.nearest_surface_distance(p.current_position(), p.current_direction);
+            double s_dist = obj.geom.nearest_surface_distance(p.position(), p.direction);
             surface_distance = std::min(surface_distance, s_dist);
             bb_distance = temp_dist;
         }
     }
 
     if (surface_distance == projector::constants::infinity) {
-        return env.bounds.distance_along_line(p.current_position(), p.current_direction);
+        return env.bounds.distance_along_line(p.position(), p.direction);
     }
 
     return surface_distance;
@@ -71,7 +70,7 @@ void initialize_runtime(environment &env, int max_threads) {
         for (std::size_t i = 0; i < obj.photons_activity; ++i) {
 
             particle p = {.particle_type = particle::type::photon,
-                          .current_direction = random_unit_vector(prng_local),
+                          .direction = random_unit_vector(prng_local),
                           .prng_state = generate_prng_seed()};
             p.history.elements.push_back(0);
             p.history.energies.push_back(obj.photons_energy);
@@ -90,16 +89,16 @@ void calculate_particle_histories(environment &env) {
     // simulate each particle separately
     for (particle &p : env.particles) {
 
-        object *current_obj = get_current_obj(env.objects, p.current_position());
+        object *current_obj = get_current_obj(env.objects, p.position());
 
         for (std::size_t i = 0; i < env.stack_size; ++i) {
             // check for energy cutoff
-            if (p.current_energy() <= env.energy_cutoff) {
+            if (p.energy() <= env.energy_cutoff) {
                 break;
             }
 
             // check for bounds
-            if (!env.bounds.point_inside(p.current_position())) {
+            if (!env.bounds.point_inside(p.position())) {
                 break;
             }
 
@@ -107,22 +106,21 @@ void calculate_particle_histories(environment &env) {
             if (current_obj == nullptr) {
                 double dist = nearest_global_distance(env, p);
                 p.advance(dist + 5 * constants::epsilon);
-                current_obj = get_current_obj(env.objects, p.current_position());
+                current_obj = get_current_obj(env.objects, p.position());
                 continue;
             }
 
             sampled_xs macro_xs = env.cross_section_data.material_macro_xs(
-                env.materials[current_obj->material_id], p.current_energy());
+                env.materials[current_obj->material_id], p.energy());
 
-            double surface_distance = current_obj->geom.nearest_surface_distance(
-                p.current_position(), p.current_direction);
+            double surface_distance =
+                current_obj->geom.nearest_surface_distance(p.position(), p.direction);
 
             double interaction_dist =
                 -std::log(prng_double(p.prng_state)) / (macro_xs.total * 10.0e-24);
 
             // we also need to check whether we dont go out of the bounds
-            double env_distance =
-                env.bounds.distance_along_line(p.current_position(), p.current_direction);
+            double env_distance = env.bounds.distance_along_line(p.position(), p.direction);
 
             if (env_distance < surface_distance && env_distance < interaction_dist) {
                 p.advance(env_distance + 5 * constants::epsilon);
@@ -132,14 +130,14 @@ void calculate_particle_histories(environment &env) {
                 p.advance(interaction_dist);
 
                 const element &elem = env.cross_section_data.sample_element(
-                    env.materials[current_obj->material_id], p.current_energy(), p.prng_state);
+                    env.materials[current_obj->material_id], p.energy(), p.prng_state);
 
                 p.photon_interaction(elem);
 
             } else {
                 // move tiny bit behind the surface, to not get stuck on it
                 p.advance(surface_distance + 5 * constants::epsilon);
-                current_obj = get_current_obj(env.objects, p.current_position());
+                current_obj = get_current_obj(env.objects, p.position());
             }
         }
 

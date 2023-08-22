@@ -10,7 +10,6 @@ Preliminary release: end of August / beginning of September 2023
 - ✓ BREP and CSG geometry
 - ✓ separate input files for materials, tallies and objects
 - ✗ basic uniform grid tallies
-- ✗ void material support
 - ✗ parallelization in OpenMP
 - ✗ basic real life verification tests
 - ✓ basic documentation
@@ -19,6 +18,7 @@ Preliminary release: end of August / beginning of September 2023
 
 Preliminary release: end of 2023
 
+- ✗ void material support
 - ✗ lattice (geometry instantiation) support
 - ✗ non-uniform source definitions
 - ✗ simulate secondary particles from interactions (bremstrahhlung, photoelectrons, pair production)

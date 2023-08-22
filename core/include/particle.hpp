@@ -18,15 +18,15 @@ struct particle {
 
     type particle_type;
 
-    vec3 current_direction;
+    vec3 direction;
 
     uint64_t prng_state;
 
     particle_history history;
 
-    double &current_energy();
+    double &energy();
 
-    vec3 &current_position();
+    vec3 &position();
 
     void save_particle(const std::filesystem::path path) const;
 
