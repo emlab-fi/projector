@@ -32,7 +32,7 @@ namespace projector {
 bool bounding_box::point_inside(const vec3 &point) const {
 
     for (std::size_t i = 0; i < 3; ++i) {
-        if (point[i] < min[i] || point[i] > max[i]) {
+        if (point[i] <= min[i] || point[i] >= max[i]) {
             return false;
         }
     }
