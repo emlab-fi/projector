@@ -69,7 +69,7 @@ void particle::advance(double distance) {
 
     history.energies.push_back(current_energy());
     history.interactions.push_back(cross_section::no_interaction);
-    history.elements.push_back(history.elements.back());
+    history.elements.push_back(0);
 
     vec3 new_position = current_position() + distance * current_direction;
 
