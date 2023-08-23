@@ -158,6 +158,7 @@ The keys depend on the type of the tally, short overview of required keys for ta
 |tally type|required parameters|
 |:---------|:------------------|
 |`uniform_mesh`|`start`, `end`, `resolution`|
+|`visualization`|`resolution`|
 
 ## Input example
 
