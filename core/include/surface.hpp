@@ -7,7 +7,7 @@ namespace projector {
 
 using vec3 = Eigen::Vector3d;
 
-/// Abstract interface class representing a quadric surface
+/// @brief Abstract interface class representing a quadric surface
 ///
 /// This class acts as the base class for additional surface classes.
 /// As such it has no implementation and it is fully abstract.

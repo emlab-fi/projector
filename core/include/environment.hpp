@@ -7,7 +7,6 @@
 #include <string_view>
 #include <string>
 #include <vector>
-#include <map>
 
 namespace projector {
 
@@ -44,7 +43,7 @@ struct environment {
 
     std::vector<object> objects;
 
-    std::vector<tally> tallies;
+    std::vector<std::unique_ptr<tally>> tallies;
 
     std::vector<particle> particles;
 };

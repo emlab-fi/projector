@@ -10,6 +10,8 @@ namespace projector {
 
 using vec3 = Eigen::Vector3d;
 
+using coord3 = Eigen::Vector3i;
+
 enum class csg_operation { no_op, join, intersect, substract };
 
 struct bounding_box {
@@ -21,6 +23,8 @@ struct bounding_box {
     bool point_inside_2d(const vec3& point, std::size_t index1, std::size_t index2) const;
 
     bool line_intersects(const vec3& point, const vec3& dir) const;
+
+    bool segment_intersect(const vec3& start, const vec3& end) const;
 
     double distance_along_line(const vec3 &point, const vec3 &dir) const;
 
