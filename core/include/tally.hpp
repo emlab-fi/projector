@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <vector>
 #include <variant>
+#include <optional>
 
 namespace projector {
 
@@ -31,7 +32,7 @@ struct tally {
 
     /// Save tally results to filesystem.
     ///
-    /// @param path Path for the tally. Should not include the tally filename itself.
+    /// @param path Path for the tally. Should also include the filename.
     ///
     virtual void save_tally(const std::filesystem::path path) const = 0;
 };
@@ -67,6 +68,18 @@ class uniform_mesh_tally : public tally {
     std::vector<std::variant<double, int>> data;
 
     tally_score score;
+
+    /// Determine cell coordinates of a point
+    /// @param point the point to evaluate
+    /// @return returns empty if point is outside the grid, otherwise returns coordinates
+    ///
+    std::optional<coord3> determine_cell(const vec3& point) const;
+
+    /// Calculate the base index for given coordinate
+    /// @param coord the coordinate to evaluate
+    /// @return the base index for given coordinate
+    ///
+    std::size_t calculate_index(const coord3& c) const;
 
 public:
 
