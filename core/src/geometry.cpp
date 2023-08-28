@@ -52,7 +52,26 @@ bool bounding_box::point_inside_2d(const vec3& point, std::size_t in1, std::size
 }
 
 bool bounding_box::line_intersects(const vec3 &point, const vec3 &dir) const {
-    return false;
+    // currently simple implementation using distance
+    // should you slab test https://noonat.github.io/intersect/#aabb-vs-segment
+
+    return distance_along_line(point, dir) < constants::infinity;
+}
+
+bool bounding_box::segment_intersect(const vec3 &start, const vec3 &end) const {
+
+    // early trivial check
+    if (point_inside(start) || point_inside(end)) {
+        return true;
+    }
+
+    // to be bit more optimized, we should use slab test:
+    // https://noonat.github.io/intersect/#aabb-vs-segment extended to 3
+
+    // simple implementation using distance
+    double dist = distance_along_line(start, end - start);
+
+    return dist <= 1.0;
 }
 
 double bounding_box::distance_along_line(const vec3 &point, const vec3 &dir) const {

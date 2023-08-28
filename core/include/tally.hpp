@@ -81,6 +81,20 @@ class uniform_mesh_tally : public tally {
     ///
     std::size_t calculate_index(const coord3& c) const;
 
+    /// Calculate intersection values for all grid crossings of a segment
+    /// @param start start point of the segment
+    /// @param end end point of a segment
+    /// @return interpolation coefficients for all grid crossings
+    std::vector<double> calculate_intersections(const vec3 &start, const vec3& end) const;
+
+    /// Add particle interactions to tally (tally must be have interaction count score setup)
+    /// @param p particle to add
+    void add_particle_interactionwise(const particle &p);
+
+    /// Add particle segments to tally
+    /// @param p particle to add
+    void add_particle_segmentwise(const particle &p);
+
 public:
 
     /// Default and only constructor for uniform_mesh_tally

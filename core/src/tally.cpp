@@ -29,6 +29,41 @@ std::size_t uniform_mesh_tally::calculate_index(const coord3 &c) const {
     return i;
 }
 
+std::vector<double> uniform_mesh_tally::calculate_intersections(const vec3 &start, const vec3& end) const {
+
+}
+
+void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
+    std::size_t amount = p.history.points.size();
+
+    auto increment_visit = [](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_arithmetic_v<T>) {
+            arg += 1;
+        }
+    };
+
+    for (std::size_t i = 0; i < amount; ++i) {
+
+        auto coord = determine_cell(p.history.points[i]);
+
+        if (coord && p.history.interactions[i] != cross_section::no_interaction) {
+            std::size_t data_index = calculate_index(*coord);
+
+            std::visit(increment_visit, data[data_index]);
+
+            data_index += static_cast<std::size_t>(p.history.interactions[i]) - 1;
+
+            std::visit(increment_visit, data[data_index]);
+        }
+    }
+}
+
+void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
+
+}
+
 uniform_mesh_tally::uniform_mesh_tally(const vec3 &start, const vec3 &end, const coord3 &res,
                                        tally_score sc)
     : resolution(res), score(sc) {
@@ -66,7 +101,19 @@ void uniform_mesh_tally::init_tally() {
     }
 }
 
-void uniform_mesh_tally::add_particle(const particle &p) {}
+void uniform_mesh_tally::add_particle(const particle &p) {
+
+    switch (score) {
+        case tally_score::interaction_counts:
+            add_particle_interactionwise(p);
+            break;
+        case tally_score::flux:
+        case tally_score::average_energy:
+            add_particle_segmentwise(p);
+            break;
+    }
+
+}
 
 void uniform_mesh_tally::finalize_data() {
     // empty implementation
@@ -105,8 +152,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
                 std::size_t base = calculate_index({x,y,z});
 
                 for (std::size_t i = 0; i < stride; ++i) {
-                    //THIS DOESNT WORK BECAUSE VARIANT
-                    print_variant(data[base + i]);
+                    std::visit(print_variant, data[base + i]);
                 }
 
                 output_file << "\n";
