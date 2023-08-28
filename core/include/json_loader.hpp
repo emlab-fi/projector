@@ -14,15 +14,6 @@ NLOHMANN_JSON_SERIALIZE_ENUM(csg_operation,
                                  {csg_operation::substract, "substract"},
                              })
 
-NLOHMANN_JSON_SERIALIZE_ENUM(
-    tally::type,
-    {
-        {tally::type::photon_energy_average, "photon_energy_average"},
-        {tally::type::photon_flux, "photon_flux"},
-        {tally::type::photon_interaction_counts, "photon_interaction_counts"},
-        {tally::type::interaction_distance_average,
-         "interaction_distance_average"},
-    })
 
 vec3 vec3_from_json(nlohmann::json &j);
 

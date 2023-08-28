@@ -1,6 +1,7 @@
 #include "tally.hpp"
 
 #include <fstream>
+#include <type_traits>
 
 namespace projector {
 
@@ -53,7 +54,7 @@ void uniform_mesh_tally::init_tally() {
 
     std::size_t total = resolution.x() * resolution.y() * resolution.z() * stride;
 
-    // init to proper type depending in score
+    // init to proper type depending on score
     switch (score) {
     case tally_score::average_energy:
         data.resize(total, double(0.0));
@@ -67,7 +68,9 @@ void uniform_mesh_tally::init_tally() {
 
 void uniform_mesh_tally::add_particle(const particle &p) {}
 
-void uniform_mesh_tally::finalize_data() {}
+void uniform_mesh_tally::finalize_data() {
+    // empty implementation
+}
 
 void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
@@ -85,6 +88,14 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
     output_file << std::setprecision(10) << std::scientific;
 
+    auto print_variant = [&output_file](auto &&arg) {
+        using T = std::decay_t<decltype(arg)>;
+
+        if constexpr (std::is_arithmetic_v<T>) {
+            output_file << "," << arg;
+        }
+    };
+
     for (std::size_t z = 0; z < resolution.z(); ++z) {
         for (std::size_t y = 0; y < resolution.y(); ++z) {
             for (std::size_t x = 0; x < resolution.x(); ++x) {
@@ -95,7 +106,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
                 for (std::size_t i = 0; i < stride; ++i) {
                     //THIS DOESNT WORK BECAUSE VARIANT
-                    output_file << "," << data[base + i];
+                    print_variant(data[base + i]);
                 }
 
                 output_file << "\n";
