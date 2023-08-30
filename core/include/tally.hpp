@@ -87,6 +87,15 @@ class uniform_mesh_tally : public tally {
     /// @return interpolation coefficients for all grid crossings
     std::vector<double> calculate_intersections(const vec3 &start, const vec3& end) const;
 
+    /// Increment the data by one at a given index
+    /// @param index index to increment
+    void increment_index(std::size_t index);
+
+    /// Update the mean value at a given index
+    /// @param index index to update
+    /// @param value value to update the mean with
+    void update_mean_index(std::size_t index, double value);
+
     /// Add particle interactions to tally (tally must be have interaction count score setup)
     /// @param p particle to add
     void add_particle_interactionwise(const particle &p);
