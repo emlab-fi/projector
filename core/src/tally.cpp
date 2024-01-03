@@ -5,6 +5,23 @@
 #include <fstream>
 #include <type_traits>
 
+namespace {
+
+double distance_to_aligned_plane(double x, double x_0, double u) {
+
+    if (u == 0.0) {
+        return projector::constants::infinity;
+    }
+    double distance = (x_0 - x) / u;
+
+    if (distance < 0.0 || distance > 1.0) {
+        return projector::constants::infinity;
+    }
+    return distance;
+}
+
+} // namespace
+
 namespace projector {
 
 std::optional<coord3> uniform_mesh_tally::determine_cell(const vec3 &point) const {
@@ -34,7 +51,19 @@ std::size_t uniform_mesh_tally::calculate_index(const coord3 &c) const {
 std::vector<double> uniform_mesh_tally::calculate_intersections(const vec3 &start,
                                                                 const vec3 &end) const {
 
-    return {};
+    vec3 dir = end - start;
+    std::vector<double> out;
+
+    for (std::size_t index = 0; index < 3; ++index) {
+        double step = (bounds.max[index] - bounds.min[index]) / resolution[index];
+
+        for (int i = 0; i < resolution[index] + 1; ++i) {
+            double temp_dist =
+                distance_to_aligned_plane(start[index], bounds.min[index] + i * step, dir[index]);
+            out.push_back(temp_dist);
+        }
+    }
+    return out;
 }
 
 void uniform_mesh_tally::increment_index(std::size_t index) {
@@ -51,7 +80,7 @@ void uniform_mesh_tally::increment_index(std::size_t index) {
 }
 
 void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
-    
+
     auto add_visit = [&value](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
 
