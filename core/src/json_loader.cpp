@@ -269,6 +269,9 @@ void load_tally_data(std::filesystem::path path, environment &env) {
         std::string type;
         tally_json.at("type").get_to(type);
 
+        std::string id;
+        tally_json.at("id").get_to(id);
+
         tally_score score;
         tally_json.at("score").get_to(score);
 
@@ -280,7 +283,7 @@ void load_tally_data(std::filesystem::path path, environment &env) {
         vec3 end = vector_from_json<double>(tally_json.at("parameters").at("end"));
         coord3 resolution = vector_from_json<int>(tally_json.at("parameters").at("resolution"));
 
-        auto tally = std::make_unique<uniform_mesh_tally>(start, end, resolution, score);
+        auto tally = std::make_unique<uniform_mesh_tally>(id, start, end, resolution, score);
 
         env.tallies.emplace_back(std::move(tally));
     }

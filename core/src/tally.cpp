@@ -154,9 +154,9 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
     }
 }
 
-uniform_mesh_tally::uniform_mesh_tally(const vec3 &start, const vec3 &end, const coord3 &res,
-                                       tally_score sc)
-    : resolution(res), score(sc) {
+uniform_mesh_tally::uniform_mesh_tally(std::string user_id, const vec3 &start, const vec3 &end,
+                                       const coord3 &res, tally_score sc)
+    : id(user_id), resolution(res), score(sc) {
 
     bounds.min = start;
     bounds.max = end;
@@ -223,7 +223,9 @@ void uniform_mesh_tally::finalize_data() {
 
 void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
-    std::fstream output_file(path, output_file.trunc | output_file.out);
+    std::string filename = id + ".csv";
+
+    std::fstream output_file(path / filename, output_file.trunc | output_file.out);
 
     if (!output_file.is_open()) {
         throw std::runtime_error("failed to open file: " + path.string());

@@ -2,9 +2,9 @@
 #include "particle.hpp"
 
 #include <filesystem>
-#include <vector>
-#include <variant>
 #include <optional>
+#include <variant>
+#include <vector>
 
 namespace projector {
 
@@ -32,7 +32,7 @@ struct tally {
 
     /// Save tally results to filesystem.
     ///
-    /// @param path Path for the tally. Should also include the filename.
+    /// @param path Path for the tally. Should not include the filename!
     ///
     virtual void save_tally(const std::filesystem::path path) const = 0;
 };
@@ -55,6 +55,8 @@ enum class tally_score {
 /// measured volume into. It supports these scores: flux, average_energy, interaction_counts
 class uniform_mesh_tally : public tally {
 
+    std::string id; /// the user supplied id of the tally
+
     bounding_box bounds; /// the bounds of the tally
 
     coord3 resolution; /// resolution for each axis
@@ -73,19 +75,19 @@ class uniform_mesh_tally : public tally {
     /// @param point the point to evaluate
     /// @return returns empty if point is outside the grid, otherwise returns coordinates
     ///
-    std::optional<coord3> determine_cell(const vec3& point) const;
+    std::optional<coord3> determine_cell(const vec3 &point) const;
 
     /// Calculate the base index for given coordinate
     /// @param coord the coordinate to evaluate
     /// @return the base index for given coordinate
     ///
-    std::size_t calculate_index(const coord3& c) const;
+    std::size_t calculate_index(const coord3 &c) const;
 
     /// Calculate intersection values for all grid crossings of a segment
     /// @param start start point of the segment
     /// @param end end point of a segment
     /// @return interpolation coefficients for all grid crossings
-    std::vector<double> calculate_intersections(const vec3 &start, const vec3& end) const;
+    std::vector<double> calculate_intersections(const vec3 &start, const vec3 &end) const;
 
     /// Increment the data by one at a given index
     /// @param index index to increment
@@ -107,12 +109,14 @@ class uniform_mesh_tally : public tally {
 public:
 
     /// Default and only constructor for uniform_mesh_tally
+    /// @param user_id User supplied ID 
     /// @param start The start point of the tally space
     /// @param end  The end point of the tally space
     /// @param res Resolution (number of cells) per axis
     /// @param sc  The score to evaluate
     ///
-    uniform_mesh_tally(const vec3& start, const vec3& end, const coord3& res, tally_score sc);
+    uniform_mesh_tally(std::string user_id, const vec3 &start, const vec3 &end, const coord3 &res,
+                       tally_score sc);
 
     void init_tally() final;
 
