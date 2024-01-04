@@ -239,8 +239,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
     output_file << std::setprecision(10) << std::scientific;
 
-    auto print_variant = [&output_file](auto &&arg) {
-        using T = std::decay_t<decltype(arg)>;
+    auto print_variant = [&output_file]<typename T>(T &&arg) {
 
         if constexpr (std::is_arithmetic_v<T>) {
             output_file << "," << arg;
@@ -248,7 +247,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
     };
 
     for (int z = 0; z < resolution.z(); ++z) {
-        for (int y = 0; y < resolution.y(); ++z) {
+        for (int y = 0; y < resolution.y(); ++y) {
             for (int x = 0; x < resolution.x(); ++x) {
 
                 output_file << x << "," << y << "," << z;
