@@ -80,6 +80,11 @@ void initialize_runtime(environment &env, int max_threads) {
             env.particles.push_back(p);
         }
     }
+
+    for (auto& tally : env.tallies) {
+        tally->init_tally();
+    }
+
 }
 
 void calculate_particle_histories(environment &env) {
@@ -145,9 +150,24 @@ void calculate_particle_histories(environment &env) {
     }
 }
 
-void process_tallies(environment &env) {}
+void process_tallies(environment &env) {
+
+    for (auto& tally : env.tallies) {
+        for (auto& particle : env.particles) {
+            tally->add_particle(particle);
+        }
+
+        tally->finalize_data();
+    }
+}
 
 void save_data(environment &env) {
+
+    std::filesystem::create_directories(env.output_path / "tallies");
+
+    for (auto& tally : env.tallies) {
+        tally->save_tally(env.output_path / "tallies");
+    }
 
     // check if we can skip saving particle data
     if (!env.save_particle_paths) {
