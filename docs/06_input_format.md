@@ -148,6 +148,7 @@ More details on tallies are here: [tallies](03_tallies.md).
 
 |field|type|description|
 |:----|:--:|:----------|
+|`id`|`string` |user supplied ID for easy identification |
 |`type`| `string` | type of the tally, currently only `uniform_mesh` is supported |
 |`score`| `string` | the physical quantity to evaluate |
 |`parameters`| `object` | parameters for the tally, depend on the type |
