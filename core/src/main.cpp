@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     projector::calculate_particle_histories(sim_env);
 
     std::cout << "Processing tallies" << std::endl;
-    // projector::process_tallies(sim_env);
+    projector::process_tallies(sim_env);
 
     std::cout << "Saving data to: " << sim_env.output_path << std::endl;
     projector::save_data(sim_env);

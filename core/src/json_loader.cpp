@@ -24,33 +24,14 @@ using json = nlohmann::json;
 
 namespace projector {
 
-vec3 vec3_from_json(json &j) {
-    if (!j.is_array()) {
-        throw std::runtime_error("3d vector is not JSON array");
-    }
-
-    if ((j.size() != 3)) {
-        throw std::runtime_error("Wrong amount of arguments for vec3");
-    }
-
-    double x, y, z;
-
-    j.at(0).get_to(x);
-    j.at(1).get_to(y);
-    j.at(2).get_to(z);
-
-    return {x, y, z};
-}
-
-
 std::unique_ptr<surface> parse_surface(json &j) {
 
     std::string_view surf_type = j.at("type").get<std::string_view>();
 
-    vec3 center = vec3_from_json(j.at("parameters")[0]);
+    vec3 center = vector_from_json<double>(j.at("parameters")[0]);
 
     if (surf_type == "plane") {
-        vec3 normal = vec3_from_json(j.at("parameters")[1]);
+        vec3 normal = vector_from_json<double>(j.at("parameters")[1]);
         return std::make_unique<plane>(center, normal);
     }
 
@@ -146,8 +127,8 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
     conf.at("stack_size").get_to(env.stack_size);
 
 
-    vec3 min_bb = vec3_from_json(conf.at("bounding_box").at(0));
-    vec3 max_bb = vec3_from_json(conf.at("bounding_box").at(1));
+    vec3 min_bb = vector_from_json<double>(conf.at("bounding_box").at(0));
+    vec3 max_bb = vector_from_json<double>(conf.at("bounding_box").at(1));
 
     env.bounds = {min_bb, max_bb};
 
@@ -259,8 +240,8 @@ void load_object_data(std::filesystem::path path, environment &env) {
         vec3 min_bb, max_bb;
 
         if (obj_json.contains("bounding_box")) {
-            min_bb = vec3_from_json(obj_json.at("bounding_box").at(0));
-            max_bb = vec3_from_json(obj_json.at("bounding_box").at(1));
+            min_bb = vector_from_json<double>(obj_json.at("bounding_box").at(0));
+            max_bb = vector_from_json<double>(obj_json.at("bounding_box").at(1));
         } else {
             min_bb = env.bounds.min;
             max_bb = env.bounds.max;
@@ -272,6 +253,38 @@ void load_object_data(std::filesystem::path path, environment &env) {
     }
 }
 
-void load_tally_data(std::filesystem::path path, environment &env) {}
+void load_tally_data(std::filesystem::path path, environment &env) {
+
+    json file = load_json_file(path);
+
+    if (!file.is_object()) {
+        throw std::runtime_error("The top level is not an object");
+    }
+
+    if (!file.at("tallies").is_array()) {
+        throw std::runtime_error("No array of tallies in JSON");
+    }
+
+    for (auto& tally_json : file.at("tallies")) {
+        std::string type;
+        tally_json.at("type").get_to(type);
+
+        tally_score score;
+        tally_json.at("score").get_to(score);
+
+        if (type != "uniform_mesh") {
+            throw std::runtime_error("Unsupported tally type");
+        }
+
+        vec3 start = vector_from_json<double>(tally_json.at("parameters").at("start"));
+        vec3 end = vector_from_json<double>(tally_json.at("parameters").at("end"));
+        coord3 resolution = vector_from_json<int>(tally_json.at("parameters").at("resolution"));
+
+        auto tally = std::make_unique<uniform_mesh_tally>(start, end, resolution, score);
+
+        env.tallies.emplace_back(std::move(tally));
+    }
+
+}
 
 } // namespace projector

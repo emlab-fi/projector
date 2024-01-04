@@ -1,21 +1,27 @@
 #pragma once
 #include "environment.hpp"
 
-#include <nlohmann/json.hpp>
 #include <filesystem>
+#include <nlohmann/json.hpp>
 
 namespace projector {
 
-NLOHMANN_JSON_SERIALIZE_ENUM(csg_operation,
+NLOHMANN_JSON_SERIALIZE_ENUM(csg_operation, {
+                                                {csg_operation::no_op, "no_op"},
+                                                {csg_operation::join, "join"},
+                                                {csg_operation::intersect, "intersect"},
+                                                {csg_operation::substract, "substract"},
+                                            })
+
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tally_score,
                              {
-                                 {csg_operation::no_op, "no_op"},
-                                 {csg_operation::join, "join"},
-                                 {csg_operation::intersect, "intersect"},
-                                 {csg_operation::substract, "substract"},
-                             })
+                                 {tally_score::flux, "flux"},
+                                 {tally_score::average_energy, "average_energy"},
+                                 {tally_score::interaction_counts, "interaction_counts"},
+                             }
 
-
-vec3 vec3_from_json(nlohmann::json &j);
+)
 
 std::unique_ptr<surface> parse_surface(nlohmann::json &j);
 
