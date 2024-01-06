@@ -240,10 +240,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
     output_file << std::setprecision(10) << std::scientific;
 
     auto print_variant = [&output_file]<typename T>(T &&arg) {
-
-        if constexpr (std::is_arithmetic_v<T>) {
-            output_file << "," << arg;
-        }
+        output_file << "," << arg;
     };
 
     for (int z = 0; z < resolution.z(); ++z) {
