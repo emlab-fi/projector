@@ -26,7 +26,7 @@ namespace projector {
 
 std::optional<coord3> uniform_mesh_tally::determine_cell(const vec3 &point) const {
     if (!bounds.point_inside(point)) {
-        return {};
+         return {};
     }
 
     coord3 output = {0, 0, 0};
@@ -57,9 +57,12 @@ std::vector<double> uniform_mesh_tally::calculate_intersections(const vec3 &star
     for (std::size_t index = 0; index < 3; ++index) {
         double step = (bounds.max[index] - bounds.min[index]) / resolution[index];
 
-        for (int i = 0; i < resolution[index] + 1; ++i) {
+        for (int i = 0; i < resolution[index]; ++i) {
             double temp_dist =
                 distance_to_aligned_plane(start[index], bounds.min[index] + i * step, dir[index]);
+            if (temp_dist == projector::constants::infinity) {
+                continue;
+            }
             out.push_back(temp_dist);
         }
     }
@@ -72,11 +75,14 @@ void uniform_mesh_tally::increment_index(std::size_t index) {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_arithmetic_v<T>) {
+            #pragma omp atomic
             arg += 1;
         }
     };
 
-    std::visit(increment_visit, data[index]);
+    {
+        std::visit(increment_visit, data[index]);
+    }
 }
 
 void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
@@ -85,13 +91,16 @@ void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_arithmetic_v<T>) {
+            #pragma omp atomic
             arg += value;
         }
     };
 
-    increment_index(index + 1);
+    {
+        increment_index(index + 1);
 
-    std::visit(add_visit, data[index]);
+        std::visit(add_visit, data[index]);
+    }
 }
 
 void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
@@ -215,7 +224,7 @@ void uniform_mesh_tally::finalize_data() {
     if (score == tally_score::average_energy) {
         for (std::size_t i = 0; i < data.size(); i += 2) {
             double sum = std::get<double>(data[i]);
-            double count = std::get<double>(data[i]);
+            double count = std::get<double>(data[i + 1]);
             data[i] = sum / count;
         }
     }

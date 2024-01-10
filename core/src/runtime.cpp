@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <iostream>
 #include <stdio.h>
+#include<omp.h>
 
 int thread_count = 1;
 
@@ -60,6 +61,8 @@ namespace projector {
 void initialize_runtime(environment &env, int max_threads) {
     thread_count = max_threads;
 
+    omp_set_num_threads(thread_count);
+
     seed_master_prng(env.seed);
 
     // sample objects and create particles
@@ -92,6 +95,7 @@ void calculate_particle_histories(environment &env) {
     std::size_t counter = 0;
 
     // simulate each particle separately
+    #pragma omp parallel for
     for (particle &p : env.particles) {
 
         object *current_obj = get_current_obj(env.objects, p.position());
@@ -153,6 +157,7 @@ void calculate_particle_histories(environment &env) {
 void process_tallies(environment &env) {
 
     for (auto& tally : env.tallies) {
+        #pragma omp parallel for
         for (auto& particle : env.particles) {
             tally->add_particle(particle);
         }

@@ -49,6 +49,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 
+find_package(OpenMP)
+
 set(PROJECTOR_LIB_SRC
 #	src/xcom_loader.cpp
 	src/ace_loader.cpp
@@ -82,15 +84,14 @@ set_target_properties(projector_core PROPERTIES
 	CXX_EXTENSIONS OFF
 )
 
-target_compile_options(projector_core PRIVATE -Wall -Wextra -pedantic -O0 -g -gdwarf)
-
-target_link_options(projector_core PRIVATE)
+target_compile_options(projector_core PRIVATE -Wall -Wextra -pedantic -O3 -g -gdwarf)
 
 target_link_libraries(projector_core PRIVATE
 	nlohmann_json::nlohmann_json
 	termcolor::termcolor
 	CLI11::CLI11
-	Eigen3::Eigen)
+	Eigen3::Eigen
+	OpenMP::OpenMP_CXX)
 
 target_include_directories(projector_core PRIVATE ./include)
 
