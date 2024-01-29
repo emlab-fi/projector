@@ -126,6 +126,7 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
 
     std::size_t amount = p.history.points.size() - 1;
 
+    //change to DDA algorithm!
     for (std::size_t i = 0; i < amount; ++i) {
 
         const vec3 &start = p.history.points[i];
@@ -139,7 +140,7 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
 
         for (double &t : intersects) {
             // get a point a tiny bit behind the intersection
-            vec3 point = start + (t + 5 * constants::epsilon) * (end - start);
+            vec3 point = start + (t + 50 * constants::epsilon) * (end - start);
 
             auto coordinates = determine_cell(point);
 

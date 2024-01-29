@@ -2,6 +2,7 @@
 #include "environment.hpp"
 #include "json_loader.hpp"
 #include "runtime.hpp"
+#include "constants.hpp"
 #include "utils.hpp"
 
 #include <iostream>
@@ -78,6 +79,8 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Initializing runtime" << std::endl;
     projector::initialize_runtime(sim_env, thread_count);
+
+    std::cout << "Epsilon size: " << projector::constants::epsilon << std::endl;
 
     std::cout << "Running particle simulation" << std::endl;
     projector::calculate_particle_histories(sim_env);
