@@ -133,9 +133,10 @@ The fields for the `source` are the following:
 
 |field|type|description|
 |:----|:--:|:----------|
-|`photon_energy`|`float`| photon energy in kEv |
+|`photon_energy`|`float`| photon energy in MEv |
 |`photon_count`|`uint`| how many photons originate from this source |
-|`direction` |`string`| currently only `random` is supported |
+|`direction` |`[x, y, z]`| direction of the photons |
+|`spread`|`float`|cosine of angle of maximum spread away from the direction |
 
 ## Tally file
 

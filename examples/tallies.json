@@ -1,0 +1,34 @@
+{
+    "tallies": [
+        {
+            "id": "particle_flux",
+            "type": "uniform_mesh",
+            "score": "flux",
+            "parameters": {
+                "start": [-6.0, -6.0, -6.0],
+                "end": [6.0, 6.0, 6.0],
+                "resolution": [120, 120, 120]
+            }
+        },
+        {
+            "id": "average_energy",
+            "type": "uniform_mesh",
+            "score": "average_energy",
+            "parameters": {
+                "start": [-6.0, -6.0, -6.0],
+                "end": [6.0, 6.0, 6.0],
+                "resolution": [10, 10, 10]
+            }
+        },
+        {
+            "id": "interactions",
+            "type": "uniform_mesh",
+            "score": "interaction_counts",
+            "parameters": {
+                "start": [-6.0, -6.0, -6.0],
+                "end": [6.0, 6.0, 6.0],
+                "resolution": [120, 120, 120]
+            }
+        }
+    ]
+}

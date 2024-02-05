@@ -28,7 +28,7 @@
             "surfaces": [
                 {
                     "type": "ellipsoid",
-                    "parameters": [[0.0, 0.0, 0.5], 0.25, 0.25, 0.25]
+                    "parameters": [[0.0, 0.0, 2.0], 5.0, 3.0, 1.0]
                 }
             ]
         }
@@ -38,23 +38,23 @@
         {
             "id": "cesium_source",
             "geometry": "lower_part",
-            "material_id": "cesium137",
+            "material_id": "water",
             "source": {
                 "photon_energy": 0.662,
-                "photon_count": 100,
-                "direction": "random"
+                "photon_count": 10000000,
+                "direction": [0.0, 0.0, 1.0],
+                "spread": -1.0
             }
         },
         {
             "id": "water layer",
             "geometry": "water_part",
-            "material_id": "water"
+            "material_id": "stainless_304"
         },
         {
-            "id": "stainless sphere",
+            "id": "sphere",
             "geometry": "central_sphere",
-            "material_id": "stainless_304"
+            "material_id": "lead"
         }
     ]
-
 }

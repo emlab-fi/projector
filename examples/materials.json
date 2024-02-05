@@ -7,16 +7,22 @@
             "atomic_percentage": [1.0]
         },
         {
+            "id": "lead",
+            "density": 11.35,
+            "elements": ["Pb"],
+            "atomic_percentage": [1.0]
+        },
+        {
             "id": "water",
-            "density": 0.999,
+            "density": 0.997,
             "elements": ["H", "O"],
             "atomic_percentage": [2.0, 1.0]
         },
         {
             "id": "stainless_304",
-            "density": 7.93,
-            "elements": ["Fe", "C", "Mn", "Si", "Cr", "Ni", "N", "S", "P"],
-            "weight_percentage": [70.995, 0.08, 2.0, 0.75, 18.0, 8.0, 0.1, 0.03, 0.045]
+            "density": 8.03,
+            "elements": ["C", "Mn", "P", "S", "Si", "Cr", "Ni", "Fe"],
+            "atomic_percentage": [0.003635, 0.019870, 0.000793, 0.000511, 0.019434, 0.199443, 0.088343, 0.667971]
         }
     ]
 }
