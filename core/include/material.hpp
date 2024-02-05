@@ -64,6 +64,8 @@ class element {
 
 struct material_data {
     double density;
+    double total_atomic_density;
+    double molar_mass;
 
     std::vector<std::size_t> elements;
     std::vector<double> atomic_percentage;

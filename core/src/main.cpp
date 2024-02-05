@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
     std::string_view config_path_str;
     std::string_view xcom_path;
     std::string_view xsdir_path;
+    bool parse_only = false;
     int thread_count = 1;
 
     app.add_option("--input_file, -i", config_path_str, "Input JSON file")
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
         ->required()
         ->check(CLI::ExistingFile);
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
+    app.add_flag("--parse_only, -p", parse_only, "Only run the input parser");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -73,14 +75,36 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    for (std::size_t i = 0; i < sim_env.material_ids.size(); ++i) {
+        std::cout << sim_env.material_ids[i] << std::endl;
+        const auto& mat = sim_env.materials[i];
+        std::cout << "density: " << mat.density << std::endl;
+        std::cout << "molar mass: " << mat.molar_mass << std::endl;
+        std::cout << "atomic density: " << mat.total_atomic_density << std::endl;
+        std::cout << "atomic density (atoms/b^cm): " << mat.total_atomic_density * 1e-24 << std::endl;
+        for (std::size_t j = 0; j < mat.elements.size(); ++j) {
+            std::cout << std::setw(5) << mat.elements[j] << " ";
+            std::cout << std::setw(12) << mat.weight_percentage[j] << " ";
+            std::cout << std::setw(12) << mat.atomic_percentage[j] << " ";
+            std::cout << std::setw(12) << mat.atom_density[j] << " ";
+            std::cout << std::setw(12) << mat.atom_density[j] * 1e-24 << " " << std::endl;
+
+        }
+
+    }
+
     std::cout << "Loaded all files successfully" << std::endl;
     std::cout << "Experiment: " << sim_env.name << std::endl;
     std::cout << "Description: " << sim_env.description << std::endl;
+    std::cout << "Epsilon size: " << projector::constants::epsilon << std::endl;
+
+    if (parse_only) {
+        std::cout << "Parse only run - exiting" << std::endl;
+        return EXIT_SUCCESS;
+    }
 
     std::cout << "Initializing runtime" << std::endl;
     projector::initialize_runtime(sim_env, thread_count);
-
-    std::cout << "Epsilon size: " << projector::constants::epsilon << std::endl;
 
     std::cout << "Running particle simulation" << std::endl;
     projector::calculate_particle_histories(sim_env);

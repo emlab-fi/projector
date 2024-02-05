@@ -12,8 +12,7 @@
 namespace {
 
 
-std::string parse_name(const std::string_view &material,
-                       std::string_view::iterator &pos) {
+std::string parse_name(const std::string_view &material, std::string_view::iterator &pos) {
     if (!std::isupper(*pos) && pos != material.end()) {
         return "";
     }
@@ -32,8 +31,7 @@ std::string parse_name(const std::string_view &material,
     return out;
 }
 
-int parse_amount(const std::string_view &material,
-                 std::string_view::iterator &pos) {
+int parse_amount(const std::string_view &material, std::string_view::iterator &pos) {
     if (pos == material.end()) {
         return 1;
     }
@@ -52,7 +50,7 @@ int parse_amount(const std::string_view &material,
     return std::stoi(read);
 }
 
-void normalize_vector(std::vector<double> vec) {
+void normalize_vector(std::vector<double>& vec) {
     double sum = 0.0;
     for (double val : vec) {
         sum += val;
@@ -62,8 +60,8 @@ void normalize_vector(std::vector<double> vec) {
     }
 }
 
-std::pair<std::size_t, double>
-calculate_interpolation_values(double x, const std::vector<double> &values) {
+std::pair<std::size_t, double> calculate_interpolation_values(double x,
+                                                              const std::vector<double> &values) {
 
     auto index_iter = std::lower_bound(values.begin(), values.end(), x);
 
@@ -77,8 +75,7 @@ calculate_interpolation_values(double x, const std::vector<double> &values) {
     return {index, t};
 }
 
-double interpolate(const std::vector<double> &x_vals,
-                   const std::vector<double> &y_vals, double x) {
+double interpolate(const std::vector<double> &x_vals, const std::vector<double> &y_vals, double x) {
 
     if (x <= x_vals.front()) {
         return y_vals.front();
@@ -128,8 +125,7 @@ std::pair<double, double> klein_nishina(double k, uint64_t &prng_state) {
         double g = 1.0 - std::pow(beta, -2);
 
         double t = prng_double(prng_state) *
-                   (4.0 / k + 0.5 * g +
-                    (1.0 - (1.0 + beta) / (k * k)) * std::log(beta));
+                   (4.0 / k + 0.5 * g + (1.0 - (1.0 + beta) / (k * k)) * std::log(beta));
 
         if (t <= 2.0 / k) {
             k_out = k / (1.0 + 2.0 * k * prng_double(prng_state));
@@ -187,8 +183,7 @@ sampled_xs element::get_all_cross_sections(double energy) const {
     xs.photoelectric = std::lerp(xs_data[3][index], xs_data[3][index + 1], t);
     xs.pair_production = std::lerp(xs_data[4][index], xs_data[4][index + 1], t);
 
-    xs.total =
-        xs.coherent + xs.incoherent + xs.photoelectric + xs.pair_production;
+    xs.total = xs.coherent + xs.incoherent + xs.photoelectric + xs.pair_production;
 
     return xs;
 }
@@ -218,8 +213,7 @@ double element::rayleigh(double energy, uint64_t &prng_state) const {
     return mu;
 }
 
-std::pair<double, double> element::compton(double energy,
-                                           uint64_t &prng_state) const {
+std::pair<double, double> element::compton(double energy, uint64_t &prng_state) const {
 
     double k = energy / constants::electron_mass_ev;
 
@@ -232,8 +226,8 @@ std::pair<double, double> element::compton(double energy,
     while (true) {
         auto [k_sample, mu_sample] = klein_nishina(k, prng_state);
 
-        double x = constants::electron_mass_ev / constants::planck_c *
-                   k_sample * std::sqrt(0.5 * (1 - mu_sample));
+        double x = constants::electron_mass_ev / constants::planck_c * k_sample *
+                   std::sqrt(0.5 * (1 - mu_sample));
 
         double f = get_form_factor(x, form_factor::incoherent);
 
@@ -247,16 +241,14 @@ std::pair<double, double> element::compton(double energy,
     return {k_out * constants::electron_mass_ev, mu};
 }
 
-sampled_xs data_library::material_macro_xs(const material_data &mat,
-                                           double energy) const {
+sampled_xs data_library::material_macro_xs(const material_data &mat, double energy) const {
 
     sampled_xs output = {0, 0, 0, 0, 0, 0};
     output.energy = energy;
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
         double atomic_density = mat.atom_density[i];
-        sampled_xs elem_xs =
-            get_element(mat.elements[i]).get_all_cross_sections(energy);
+        sampled_xs elem_xs = get_element(mat.elements[i]).get_all_cross_sections(energy);
 
         output.coherent += atomic_density * elem_xs.coherent;
         output.incoherent += atomic_density * elem_xs.incoherent;
@@ -272,8 +264,7 @@ const element &data_library::get_element(std::size_t atomic_number) const {
     return elements[atomic_number - 1];
 }
 
-const element &data_library::sample_element(const material_data &material,
-                                            double energy,
+const element &data_library::sample_element(const material_data &material, double energy,
                                             uint64_t &prng_state) const {
 
     double total_macro_xs = material_macro_xs(material, energy).total;
@@ -282,9 +273,7 @@ const element &data_library::sample_element(const material_data &material,
 
     double prob = 0.0;
     for (std::size_t i = 0; i < material.elements.size(); ++i) {
-        double total_xs = get_element(material.elements[i])
-                              .get_all_cross_sections(energy)
-                              .total;
+        double total_xs = get_element(material.elements[i]).get_all_cross_sections(energy).total;
 
         prob += total_xs * material.atom_density[i];
 
@@ -305,15 +294,12 @@ void data_library::material_calculate_missing_values(material_data &mat) const {
         double total = 0.0;
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            total += mat.atomic_percentage[i] *
-                     get_element(mat.elements[i]).atomic_weight;
+            total += mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight;
         }
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
             double weight_percent =
-                (mat.atomic_percentage[i] *
-                 get_element(mat.elements[i]).atomic_weight) /
-                total;
+                (mat.atomic_percentage[i] * get_element(mat.elements[i]).atomic_weight) / total;
             mat.weight_percentage.push_back(weight_percent);
         }
 
@@ -326,33 +312,34 @@ void data_library::material_calculate_missing_values(material_data &mat) const {
         double total = 0.0;
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            total += mat.weight_percentage[i] /
-                     get_element(mat.elements[i]).atomic_weight;
+            total += mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight;
         }
 
         for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-            double atom_percent = (mat.weight_percentage[i] /
-                                   get_element(mat.elements[i]).atomic_weight) /
-                                  total;
+            double atom_percent =
+                (mat.weight_percentage[i] / get_element(mat.elements[i]).atomic_weight) / total;
             mat.atomic_percentage.push_back(atom_percent);
         }
     }
 
-    double min_value = *std::min_element(mat.atomic_percentage.begin(),
-                                         mat.atomic_percentage.end());
+    double min_value =
+        *std::min_element(mat.atomic_percentage.begin(), mat.atomic_percentage.end());
 
-    double molar_mass = 0.0;
+    mat.molar_mass = 0.0;
+
+    double atoms_count = 0.0;
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-        molar_mass += (mat.atomic_percentage[i] / min_value) *
-                      get_element(mat.elements[i]).atomic_weight;
+        double atom_count = mat.atomic_percentage[i] / min_value;
+        atoms_count += atom_count;
+        mat.molar_mass +=
+            atom_count * get_element(mat.elements[i]).atomic_weight;
     }
 
-    double total_atomic_density =
-        (mat.density * constants::avogadro) / molar_mass;
+    mat.total_atomic_density = (atoms_count * mat.density * constants::avogadro) / mat.molar_mass;
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
-        double atom_density =total_atomic_density * mat.atomic_percentage[i];
+        double atom_density = mat.total_atomic_density * mat.atomic_percentage[i];
         mat.atom_density.push_back(atom_density);
     }
 }
