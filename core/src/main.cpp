@@ -75,24 +75,6 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    for (std::size_t i = 0; i < sim_env.material_ids.size(); ++i) {
-        std::cout << sim_env.material_ids[i] << std::endl;
-        const auto& mat = sim_env.materials[i];
-        std::cout << "density: " << mat.density << std::endl;
-        std::cout << "molar mass: " << mat.molar_mass << std::endl;
-        std::cout << "atomic density: " << mat.total_atomic_density << std::endl;
-        std::cout << "atomic density (atoms/b^cm): " << mat.total_atomic_density * 1e-24 << std::endl;
-        for (std::size_t j = 0; j < mat.elements.size(); ++j) {
-            std::cout << std::setw(5) << mat.elements[j] << " ";
-            std::cout << std::setw(12) << mat.weight_percentage[j] << " ";
-            std::cout << std::setw(12) << mat.atomic_percentage[j] << " ";
-            std::cout << std::setw(12) << mat.atom_density[j] << " ";
-            std::cout << std::setw(12) << mat.atom_density[j] * 1e-24 << " " << std::endl;
-
-        }
-
-    }
-
     std::cout << "Loaded all files successfully" << std::endl;
     std::cout << "Experiment: " << sim_env.name << std::endl;
     std::cout << "Description: " << sim_env.description << std::endl;

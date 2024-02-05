@@ -1,10 +1,11 @@
 #pragma once
-#include "geometry.hpp"
+#include "material.hpp"
 
 #include <exception>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <optional>
+#include<Eigen/Dense>
 
 std::size_t symbol_to_atomic_number(const std::string_view &symbol);
 
@@ -14,7 +15,10 @@ void print_nested_exception(const std::exception &e, int level = 0);
 // json loading utility
 nlohmann::json load_json_file(std::filesystem::path);
 
-//eigen vector loading from json
+// material pretty printer
+void print_material(const projector::material_data& mat, const std::string& name);
+
+// eigen vector loading from json
 template<typename T>
 Eigen::Matrix<T, 1, 3> vector_from_json(nlohmann::json &j) {
     if (!j.is_array()) {
