@@ -72,8 +72,13 @@ void initialize_runtime(environment &env, int max_threads) {
 
         for (std::size_t i = 0; i < obj.photons_activity; ++i) {
 
+            double mu = obj.photons_spread + prng_double(prng_local) * (1.0 - obj.photons_spread);
+            double phi = prng_double(prng_local) * 2.0 * constants::pi;
+            vec3 direction = rotate_direction(obj.photons_dir, mu, phi);
+
+
             particle p = {.particle_type = particle::type::photon,
-                          .direction = random_unit_vector(prng_local),
+                          .direction = direction,
                           .prng_state = generate_prng_seed()};
             p.history.elements.push_back(0);
             p.history.energies.push_back(obj.photons_energy);

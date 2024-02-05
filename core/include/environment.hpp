@@ -14,6 +14,8 @@ struct object {
     std::string id;
     std::size_t photons_activity;
     double photons_energy;
+    vec3 photons_dir;
+    double photons_spread;
 
     std::size_t material_id;
     geometry geom;

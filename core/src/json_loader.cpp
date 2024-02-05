@@ -6,8 +6,7 @@
 
 namespace {
 
-std::size_t find_mat_id(const std::string &str,
-                        const std::vector<std::string> &ids) {
+std::size_t find_mat_id(const std::string &str, const std::vector<std::string> &ids) {
 
     for (std::size_t index = 0; index < ids.size(); ++index) {
         if (ids[index] == str) {
@@ -69,7 +68,7 @@ std::unique_ptr<surface> parse_surface(json &j) {
 
 void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
-    auto& geom_json = j.at(key);
+    auto &geom_json = j.at(key);
 
     if (!geom_json.is_object()) {
         throw std::runtime_error("geometry is not JSON object");
@@ -79,7 +78,7 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
     for (std::size_t i = 0; i < surface_count; ++i) {
 
-        auto& current_surface = geom_json.at("surfaces")[i];
+        auto &current_surface = geom_json.at("surfaces")[i];
 
         if (current_surface.is_string()) {
 
@@ -105,9 +104,7 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
         } else {
             throw std::runtime_error("invalid type for surface definition");
         }
-
     }
-
 }
 
 void load_simulation_data(std::filesystem::path path, environment &env) {
@@ -137,7 +134,7 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
     conf.at("tally_file").get_to(env.tally_path);
     conf.at("output_path").get_to(env.output_path);
 
-    //change output path to be relative to config path
+    // change output path to be relative to config path
     std::filesystem::path updated_output_path = path;
     updated_output_path.replace_filename(env.output_path);
     env.output_path = updated_output_path;
@@ -191,8 +188,7 @@ void load_material_data(std::filesystem::path path, environment &env) {
     }
 
     if (env.materials.size() != env.material_ids.size()) {
-        throw std::runtime_error(
-            "Error while loading material data, length mismatch");
+        throw std::runtime_error("Error while loading material data, length mismatch");
     }
 }
 
@@ -218,13 +214,15 @@ void load_object_data(std::filesystem::path path, environment &env) {
 
         if (obj_json.contains("source")) {
 
-            obj_json.at("source")
-                .at("photon_count")
-                .get_to(new_obj.photons_activity);
+            obj_json.at("source").at("photon_count").get_to(new_obj.photons_activity);
 
-            obj_json.at("source")
-                .at("photon_energy")
-                .get_to(new_obj.photons_energy);
+            obj_json.at("source").at("photon_energy").get_to(new_obj.photons_energy);
+
+            new_obj.photons_dir = vector_from_json<double>(obj_json.at("source").at("direction"));
+
+            new_obj.photons_dir.normalize();
+
+            obj_json.at("source").at("spread").get_to(new_obj.photons_spread);
         }
 
         std::string material_string;
@@ -265,7 +263,7 @@ void load_tally_data(std::filesystem::path path, environment &env) {
         throw std::runtime_error("No array of tallies in JSON");
     }
 
-    for (auto& tally_json : file.at("tallies")) {
+    for (auto &tally_json : file.at("tallies")) {
         std::string type;
         tally_json.at("type").get_to(type);
 
@@ -287,7 +285,6 @@ void load_tally_data(std::filesystem::path path, environment &env) {
 
         env.tallies.emplace_back(std::move(tally));
     }
-
 }
 
 } // namespace projector
