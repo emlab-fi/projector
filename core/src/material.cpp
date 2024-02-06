@@ -50,7 +50,7 @@ int parse_amount(const std::string_view &material, std::string_view::iterator &p
     return std::stoi(read);
 }
 
-void normalize_vector(std::vector<double>& vec) {
+void normalize_vector(std::vector<double> &vec) {
     double sum = 0.0;
     for (double val : vec) {
         sum += val;
@@ -176,8 +176,6 @@ sampled_xs element::get_all_cross_sections(double energy) const {
     auto [index, t] = calculate_interpolation_values(energy, xs_data[0]);
 
     sampled_xs xs;
-    xs.energy = energy;
-
     xs.coherent = std::lerp(xs_data[1][index], xs_data[1][index + 1], t);
     xs.incoherent = std::lerp(xs_data[2][index], xs_data[2][index + 1], t);
     xs.photoelectric = std::lerp(xs_data[3][index], xs_data[3][index + 1], t);
@@ -241,44 +239,45 @@ std::pair<double, double> element::compton(double energy, uint64_t &prng_state) 
     return {k_out * constants::electron_mass_ev, mu};
 }
 
-sampled_xs data_library::material_macro_xs(const material_data &mat, double energy) const {
+double data_library::material_macro_xs(const material_data &mat, double energy) const {
 
-    sampled_xs output = {0, 0, 0, 0, 0, 0};
-    output.energy = energy;
+    double total_xs = 0.0;
 
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
         double atomic_density = mat.atom_density[i];
         sampled_xs elem_xs = get_element(mat.elements[i]).get_all_cross_sections(energy);
-
-        output.coherent += atomic_density * elem_xs.coherent;
-        output.incoherent += atomic_density * elem_xs.incoherent;
-        output.photoelectric += atomic_density * elem_xs.photoelectric;
-        output.pair_production += atomic_density * elem_xs.pair_production;
-        output.total += atomic_density * elem_xs.total;
+        total_xs += atomic_density * elem_xs.total;
     }
 
-    return output;
+    return total_xs;
 };
 
 const element &data_library::get_element(std::size_t atomic_number) const {
     return elements[atomic_number - 1];
 }
 
-const element &data_library::sample_element(const material_data &material, double energy,
-                                            uint64_t &prng_state) const {
+std::pair<double, const element &> data_library::sample_material(const material_data &material,
+                                                                 double energy,
+                                                                 uint64_t &prng_state) const {
 
-    double total_macro_xs = material_macro_xs(material, energy).total;
+    // calculate total material macro xs
+    std::vector<double> total_xs_cumulative;
 
-    double sample = prng_double(prng_state) * total_macro_xs;
-
-    double prob = 0.0;
+    double temp = 0.0;
     for (std::size_t i = 0; i < material.elements.size(); ++i) {
-        double total_xs = get_element(material.elements[i]).get_all_cross_sections(energy).total;
+        double elem_xs = get_element(material.elements[i]).get_all_cross_sections(energy).total;
 
-        prob += total_xs * material.atom_density[i];
+        temp += elem_xs * material.atom_density[i];
+        total_xs_cumulative.push_back(temp);
+    }
 
-        if (sample < prob) {
-            return get_element(material.elements[i]);
+    // sample an element
+    double sample = prng_double(prng_state) * total_xs_cumulative.back();
+
+    for (std::size_t i = 0; i < total_xs_cumulative.size(); ++i) {
+        if (sample < total_xs_cumulative[i]) {
+            return {total_xs_cumulative.back(), get_element(material.elements[i])};
+            break;
         }
     }
 
@@ -332,8 +331,7 @@ void data_library::material_calculate_missing_values(material_data &mat) const {
     for (std::size_t i = 0; i < mat.elements.size(); ++i) {
         double atom_count = mat.atomic_percentage[i] / min_value;
         atoms_count += atom_count;
-        mat.molar_mass +=
-            atom_count * get_element(mat.elements[i]).atomic_weight;
+        mat.molar_mass += atom_count * get_element(mat.elements[i]).atomic_weight;
     }
 
     mat.total_atomic_density = (atoms_count * mat.density * constants::avogadro) / mat.molar_mass;

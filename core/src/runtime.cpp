@@ -5,8 +5,8 @@
 
 #include <filesystem>
 #include <iostream>
+#include <omp.h>
 #include <stdio.h>
-#include<omp.h>
 
 int thread_count = 1;
 
@@ -89,10 +89,9 @@ void initialize_runtime(environment &env, int max_threads) {
         }
     }
 
-    for (auto& tally : env.tallies) {
+    for (auto &tally : env.tallies) {
         tally->init_tally();
     }
-
 }
 
 void calculate_particle_histories(environment &env) {
@@ -124,14 +123,14 @@ void calculate_particle_histories(environment &env) {
                 continue;
             }
 
-            sampled_xs macro_xs = env.cross_section_data.material_macro_xs(
-                env.materials[current_obj->material_id], p.energy());
+            auto [material_total_macro_xs, elem] = env.cross_section_data.sample_material(
+                env.materials[current_obj->material_id], p.energy(), p.prng_state);
 
             double surface_distance =
                 current_obj->geom.nearest_surface_distance(p.position(), p.direction);
 
             double interaction_dist =
-                -std::log(prng_double(p.prng_state)) / (macro_xs.total * 10.0e-24);
+                -std::log(prng_double(p.prng_state)) / (material_total_macro_xs * 10.0e-24);
 
             // we also need to check whether we dont go out of the bounds
             double env_distance = env.bounds.distance_along_line(p.position(), p.direction);
@@ -142,9 +141,6 @@ void calculate_particle_histories(environment &env) {
 
             else if (interaction_dist < surface_distance) {
                 p.advance(interaction_dist);
-
-                const element &elem = env.cross_section_data.sample_element(
-                    env.materials[current_obj->material_id], p.energy(), p.prng_state);
 
                 p.photon_interaction(elem);
 
@@ -161,9 +157,9 @@ void calculate_particle_histories(environment &env) {
 
 void process_tallies(environment &env) {
 
-    for (auto& tally : env.tallies) {
+    for (auto &tally : env.tallies) {
         #pragma omp parallel for
-        for (auto& particle : env.particles) {
+        for (auto &particle : env.particles) {
             tally->add_particle(particle);
         }
 
@@ -175,7 +171,7 @@ void save_data(environment &env) {
 
     std::filesystem::create_directories(env.output_path / "tallies");
 
-    for (auto& tally : env.tallies) {
+    for (auto &tally : env.tallies) {
         tally->save_tally(env.output_path / "tallies");
     }
 

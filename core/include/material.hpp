@@ -27,7 +27,6 @@ enum class form_factor {
 using parsed_material = std::vector<std::pair<std::string_view, int>>;
 
 struct sampled_xs {
-    double energy;
     double coherent;
     double incoherent;
     double photoelectric;
@@ -40,7 +39,7 @@ class element {
     std::array<std::vector<double>, 5> xs_data;
     std::array<std::vector<double>, 5> ff_data;
 
-  public:
+public:
     uint32_t atomic_number;
     double atomic_weight;
 
@@ -52,14 +51,12 @@ class element {
 
     double rayleigh(double energy, uint64_t &prng_state) const;
 
-    std::pair<double, double> compton(double energy,
-                                      uint64_t &prng_state) const;
+    std::pair<double, double> compton(double energy, uint64_t &prng_state) const;
 
     // deprecated! use endf
     static element load_xcom_file(std::filesystem::path path);
 
-    static element load_from_ace_file(std::filesystem::path path,
-                                      std::size_t line);
+    static element load_from_ace_file(std::filesystem::path path, std::size_t line);
 };
 
 struct material_data {
@@ -77,13 +74,13 @@ class data_library {
 
     std::array<element, 100> elements;
 
-  public:
+public:
     const element &get_element(std::size_t atomic_number) const;
 
-    sampled_xs material_macro_xs(const material_data &mat, double energy) const;
+    double material_macro_xs(const material_data &mat, double energy) const;
 
-    const element &sample_element(const material_data &mat, double energy,
-                                  uint64_t &prng_state) const;
+    std::pair<double, const element &> sample_material(const material_data &mat, double energy,
+                                                       uint64_t &prng_state) const;
 
     void material_calculate_missing_values(material_data &mat) const;
 
