@@ -62,8 +62,8 @@ set(PROJECTOR_LIB_SRC
 	src/environment.cpp
 	src/particle.cpp
 	src/runtime.cpp
-	src/tally.cpp
 	src/surface.cpp
+	src/uniform_mesh_tally.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

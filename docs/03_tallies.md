@@ -29,7 +29,8 @@ Currently supported scores are:
 
 - Photon flux
 - Number of reactions
-- Average energy 
+- Average energy
+- Deposited energy
 
 ## Visualization tally
 

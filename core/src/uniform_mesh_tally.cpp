@@ -85,7 +85,7 @@ void uniform_mesh_tally::increment_index(std::size_t index) {
     }
 }
 
-void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
+void uniform_mesh_tally::add_index(std::size_t index, double value) {
 
     auto add_visit = [&value](auto &&arg) {
         using T = std::decay_t<decltype(arg)>;
@@ -97,8 +97,6 @@ void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
     };
 
     {
-        increment_index(index + 1);
-
         std::visit(add_visit, data[index]);
     }
 }
@@ -106,18 +104,30 @@ void uniform_mesh_tally::update_mean_index(std::size_t index, double value) {
 void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
     std::size_t amount = p.history.points.size();
 
-    for (std::size_t i = 0; i < amount; ++i) {
+    // start at index 1, as index 0 is always initial particle state and that does not do anything
+    for (std::size_t i = 1; i < amount; ++i) {
 
         auto coord = determine_cell(p.history.points[i]);
+        if (!coord) {
+            continue;
+        }
 
-        if (coord && p.history.interactions[i] != cross_section::no_interaction) {
-            std::size_t data_index = calculate_index(*coord);
+        std::size_t data_index = calculate_index(*coord);
 
-            increment_index(data_index);
+        if (score == tally_score::interaction_counts) {
+            if (p.history.interactions[i] != cross_section::no_interaction) {
 
-            data_index += static_cast<std::size_t>(p.history.interactions[i]);
+                increment_index(data_index);
 
-            increment_index(data_index);
+                data_index += static_cast<std::size_t>(p.history.interactions[i]);
+
+                increment_index(data_index);
+            }
+        }
+
+        else if (score == tally_score::deposited_energy) {
+            double energy_diff = p.history.energies[i - 1] - p.history.energies[i];
+            add_index(data_index, energy_diff);
         }
     }
 }
@@ -155,7 +165,8 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
                 increment_index(data_index);
                 break;
             case tally_score::average_energy:
-                update_mean_index(data_index, p.history.energies[i]);
+                add_index(data_index, p.history.energies[i]);
+                increment_index(data_index + 1);
                 break;
             default:
                 break;
@@ -173,6 +184,7 @@ uniform_mesh_tally::uniform_mesh_tally(std::string user_id, const vec3 &start, c
 
     switch (score) {
     case tally_score::flux:
+    case tally_score::deposited_energy:
         stride = 1;
         break;
     case tally_score::average_energy:
@@ -194,6 +206,7 @@ void uniform_mesh_tally::init_tally() {
     // init to proper type depending on score
     switch (score) {
     case tally_score::average_energy:
+    case tally_score::deposited_energy:
         data.resize(total, double(0.0));
         break;
     case tally_score::flux:
@@ -209,6 +222,7 @@ void uniform_mesh_tally::add_particle(const particle &p) {
 
     switch (score) {
     case tally_score::interaction_counts:
+    case tally_score::deposited_energy:
         add_particle_interactionwise(p);
         break;
     case tally_score::flux:

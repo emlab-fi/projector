@@ -157,17 +157,8 @@ More details on tallies are here: [tallies](03_tallies.md).
 The `parameters` entry is an object of more key-value pairs.
 The keys depend on the type of the tally, short overview of required keys for tallies is bellow.
 
-|tally type|required parameters|
-|:---------|:------------------|
-|`uniform_mesh`|`start`, `end`, `resolution`|
-|`visualization`|`resolution`|
-
-## Input example
-
-**Main file:**
-
-**Material file:**
-
-**Object file:**
-
-**Tally file:**
+|tally type|required parameters|supported scores|
+|:---------|:------------------|:---------------|
+|`uniform_mesh`|`start`, `end`, `resolution`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
+|`visualization`|`resolution`||
+|`volume`|`object_id`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`, `pulse_estimation`|

@@ -46,7 +46,9 @@ enum class tally_score {
     /// average energy of a particle
     average_energy,
     /// total interaction counts
-    interaction_counts
+    interaction_counts,
+    /// energy deposited by particles
+    deposited_energy
 };
 
 /// @brief Basic uniform mesh tally. Divides space into uniform grid.
@@ -93,10 +95,10 @@ class uniform_mesh_tally : public tally {
     /// @param index index to increment
     void increment_index(std::size_t index);
 
-    /// Update the mean value at a given index
+    /// Add value at a given index
     /// @param index index to update
-    /// @param value value to update the mean with
-    void update_mean_index(std::size_t index, double value);
+    /// @param value value to add to index
+    void add_index(std::size_t index, double value);
 
     /// Add particle interactions to tally (tally must be have interaction count score setup)
     /// @param p particle to add
