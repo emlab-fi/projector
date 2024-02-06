@@ -67,12 +67,12 @@ The cylinder is infinite and axis aligned. Following equations are for a z-cylin
 \f]
 
 
-## Helper geometries
+## Helper surfaces
 
-Projector provides several helper geometries for creating common geometric constructs.
+Projector provides several helper surfaces for creating common geometric constructs.
 They are internally converted to the typical surface representation.
 
-### Rectangular cuboid
+### Box
 
 This is a simple axis-aligned box, consisting of 6 surfaces.
 It is defined by 2 parameters, the min and max coordinates:

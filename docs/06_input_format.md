@@ -108,6 +108,7 @@ The parameters should be identical to the ones in [geometry docs](02_geometry.md
 |`x_cone`|`[x0, y0, z0], a, b, c`|
 |`y_cone`|`[x0, y0, z0], a, b, c`|
 |`z_cone`|`[x0, y0, z0], a, b, c`|
+|`box`|`[x0, y0, z0], [x1, y1, z1]`|
 
 There should be no cyclic or self references when using geometries in place of surfaces, as this will not parse.
 
@@ -161,4 +162,5 @@ The keys depend on the type of the tally, short overview of required keys for ta
 |:---------|:------------------|:---------------|
 |`uniform_mesh`|`start`, `end`, `resolution`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
 |`visualization`|`resolution`||
-|`volume`|`object_id`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`, `pulse_estimation`|
+|`volume`|`object_id`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
+|`scintillator`|`object_id`, `energy_range_bins`, `energy_max`||

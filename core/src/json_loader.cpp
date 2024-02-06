@@ -66,6 +66,35 @@ std::unique_ptr<surface> parse_surface(json &j) {
     throw std::runtime_error("invalid surface type");
 }
 
+void parse_box(geometry &output, nlohmann::json &j) {
+    vec3 min = vector_from_json<double>(j.at("parameters")[0]);
+    vec3 max = vector_from_json<double>(j.at("parameters")[1]);
+
+    // botom
+    auto bottom = std::make_unique<plane>(min, vec3{0.0, 0.0, -1.0});
+    output.add_surface(std::move(bottom), csg_operation::intersect);
+
+    // left
+    auto left = std::make_unique<plane>(min, vec3{-1.0, 0.0, 0.0});
+    output.add_surface(std::move(left), csg_operation::intersect);
+
+    // front
+    auto front = std::make_unique<plane>(min, vec3{0.0, -1.0, 0.0});
+    output.add_surface(std::move(front), csg_operation::intersect);
+
+    // top
+    auto top = std::make_unique<plane>(max, vec3{0.0, 0.0, 1.0});
+    output.add_surface(std::move(top), csg_operation::intersect);
+
+    // right
+    auto right = std::make_unique<plane>(max, vec3{1.0, 0.0, 0.0});
+    output.add_surface(std::move(right), csg_operation::intersect);
+
+    // back
+    auto back = std::make_unique<plane>(max, vec3{0.0, 1.0, 0.0});
+    output.add_surface(std::move(back), csg_operation::intersect);
+}
+
 void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
     auto &geom_json = j.at(key);
@@ -97,10 +126,15 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
                 throw std::runtime_error("surface parameters are not array");
             }
 
-            std::unique_ptr<surface> surf = parse_surface(current_surface);
+            if (current_surface.at("type").get<std::string>() == "box") {
+                geometry box;
+                parse_box(box, current_surface);
+                geom.add_surface(std::move(box), geom_json.at("operators")[i]);
+            } else {
+                std::unique_ptr<surface> surf = parse_surface(current_surface);
 
-            geom.add_surface(std::move(surf), geom_json.at("operators")[i]);
-
+                geom.add_surface(std::move(surf), geom_json.at("operators")[i]);
+            }
         } else {
             throw std::runtime_error("invalid type for surface definition");
         }
