@@ -17,13 +17,89 @@ std::size_t find_mat_id(const std::string &str, const std::vector<std::string> &
     throw std::runtime_error(std::string("material ID not found:").append(str));
 }
 
-} // namespace
 
-using json = nlohmann::json;
+void parse_box(projector::geometry &output, nlohmann::json &j) {
+    using projector::csg_operation;
+    using projector::plane;
+    using projector::vec3;
+
+    vec3 min = vector_from_json<double>(j.at("parameters")[0]);
+    vec3 max = vector_from_json<double>(j.at("parameters")[1]);
+
+    // botom
+    auto bottom = std::make_unique<plane>(min, vec3{0.0, 0.0, -1.0});
+    output.add_surface(std::move(bottom), csg_operation::intersect);
+
+    // left
+    auto left = std::make_unique<plane>(min, vec3{-1.0, 0.0, 0.0});
+    output.add_surface(std::move(left), csg_operation::intersect);
+
+    // front
+    auto front = std::make_unique<plane>(min, vec3{0.0, -1.0, 0.0});
+    output.add_surface(std::move(front), csg_operation::intersect);
+
+    // top
+    auto top = std::make_unique<plane>(max, vec3{0.0, 0.0, 1.0});
+    output.add_surface(std::move(top), csg_operation::intersect);
+
+    // right
+    auto right = std::make_unique<plane>(max, vec3{1.0, 0.0, 0.0});
+    output.add_surface(std::move(right), csg_operation::intersect);
+
+    // back
+    auto back = std::make_unique<plane>(max, vec3{0.0, 1.0, 0.0});
+    output.add_surface(std::move(back), csg_operation::intersect);
+}
+
+template <typename T>
+void parse_capped_cylinder(projector::geometry &output, nlohmann::json &j, projector::vec3 normal) {
+    using projector::csg_operation;
+    using projector::plane;
+    using projector::vec3;
+
+    vec3 center = vector_from_json<double>(j.at("parameters")[0]);
+    double a = j.at("parameters")[1].get<double>();
+    double b = j.at("parameters")[2].get<double>();
+    double h = j.at("parameters")[3].get<double>();
+
+    auto cyl = std::make_unique<T>(center, a, b);
+    output.add_surface(std::move(cyl), csg_operation::intersect);
+
+    auto top = std::make_unique<plane>(center + (normal * h / 2), normal);
+    output.add_surface(std::move(top), csg_operation::intersect);
+
+    auto bottom = std::make_unique<plane>(center - (normal * h / 2), -normal);
+    output.add_surface(std::move(bottom), csg_operation::intersect);
+}
+
+template <typename T>
+void parse_capped_cone(projector::geometry &output, nlohmann::json &j, projector::vec3 normal) {
+    using projector::csg_operation;
+    using projector::plane;
+    using projector::vec3;
+
+    vec3 center = vector_from_json<double>(j.at("parameters")[0]);
+    double a = j.at("parameters")[1].get<double>();
+    double b = j.at("parameters")[2].get<double>();
+    double c = j.at("parameters")[3].get<double>();
+    double d1 = j.at("parameters")[4].get<double>();
+    double d2 = j.at("parameters")[5].get<double>();
+
+    auto cone = std::make_unique<T>(center, a, b, c);
+    output.add_surface(std::move(cone), csg_operation::intersect);
+
+    auto top = std::make_unique<plane>(center + (normal * d1), normal);
+    output.add_surface(std::move(top), csg_operation::intersect);
+
+    auto bottom = std::make_unique<plane>(center + (normal * d2), -normal);
+    output.add_surface(std::move(bottom), csg_operation::intersect);
+}
+
+} // namespace
 
 namespace projector {
 
-std::unique_ptr<surface> parse_surface(json &j) {
+std::unique_ptr<surface> parse_surface(nlohmann::json &j) {
 
     std::string_view surf_type = j.at("type").get<std::string_view>();
 
@@ -66,35 +142,6 @@ std::unique_ptr<surface> parse_surface(json &j) {
     throw std::runtime_error("invalid surface type");
 }
 
-void parse_box(geometry &output, nlohmann::json &j) {
-    vec3 min = vector_from_json<double>(j.at("parameters")[0]);
-    vec3 max = vector_from_json<double>(j.at("parameters")[1]);
-
-    // botom
-    auto bottom = std::make_unique<plane>(min, vec3{0.0, 0.0, -1.0});
-    output.add_surface(std::move(bottom), csg_operation::intersect);
-
-    // left
-    auto left = std::make_unique<plane>(min, vec3{-1.0, 0.0, 0.0});
-    output.add_surface(std::move(left), csg_operation::intersect);
-
-    // front
-    auto front = std::make_unique<plane>(min, vec3{0.0, -1.0, 0.0});
-    output.add_surface(std::move(front), csg_operation::intersect);
-
-    // top
-    auto top = std::make_unique<plane>(max, vec3{0.0, 0.0, 1.0});
-    output.add_surface(std::move(top), csg_operation::intersect);
-
-    // right
-    auto right = std::make_unique<plane>(max, vec3{1.0, 0.0, 0.0});
-    output.add_surface(std::move(right), csg_operation::intersect);
-
-    // back
-    auto back = std::make_unique<plane>(max, vec3{0.0, 1.0, 0.0});
-    output.add_surface(std::move(back), csg_operation::intersect);
-}
-
 void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
     auto &geom_json = j.at(key);
@@ -126,13 +173,45 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
                 throw std::runtime_error("surface parameters are not array");
             }
 
-            if (current_surface.at("type").get<std::string>() == "box") {
+            std::string_view surf_type = current_surface.at("type").get<std::string_view>();
+
+            if (surf_type == "box") {
                 geometry box;
                 parse_box(box, current_surface);
                 geom.add_surface(std::move(box), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_x_cylinder") {
+                geometry cyl;
+                parse_capped_cylinder<x_cylinder>(cyl, current_surface, vec3{1.0, 0.0, 0.0});
+                geom.add_surface(std::move(cyl), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_y_cylinder") {
+                geometry cyl;
+                parse_capped_cylinder<y_cylinder>(cyl, current_surface, vec3{0.0, 1.0, 0.0});
+                geom.add_surface(std::move(cyl), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_z_cylinder") {
+                geometry cyl;
+                parse_capped_cylinder<z_cylinder>(cyl, current_surface, vec3{0.0, 0.0, 1.0});
+                geom.add_surface(std::move(cyl), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_x_cone") {
+                geometry cone;
+                parse_capped_cone<x_cone>(cone, current_surface, vec3{1.0, 0.0, 0.0});
+                geom.add_surface(std::move(cone), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_y_cone") {
+                geometry cone;
+                parse_capped_cone<y_cone>(cone, current_surface, vec3{0.0, 1.0, 0.0});
+                geom.add_surface(std::move(cone), geom_json.at("operators")[i]);
+
+            } else if (surf_type == "capped_z_cone") {
+                geometry cone;
+                parse_capped_cone<z_cone>(cone, current_surface, vec3{0.0, 0.0, 1.0});
+                geom.add_surface(std::move(cone), geom_json.at("operators")[i]);
+
             } else {
                 std::unique_ptr<surface> surf = parse_surface(current_surface);
-
                 geom.add_surface(std::move(surf), geom_json.at("operators")[i]);
             }
         } else {
@@ -143,7 +222,7 @@ void parse_geometry(geometry &geom, std::string_view key, nlohmann::json &j) {
 
 void load_simulation_data(std::filesystem::path path, environment &env) {
 
-    json conf = load_json_file(path);
+    nlohmann::json conf = load_json_file(path);
 
     if (!conf.is_object()) {
         throw std::runtime_error("The top level is not a JSON object");
@@ -176,7 +255,7 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
 
 void load_material_data(std::filesystem::path path, environment &env) {
 
-    json file = load_json_file(path);
+    nlohmann::json file = load_json_file(path);
 
     if (!file.is_object()) {
         throw std::runtime_error("The top level is not a JSON object");
@@ -227,7 +306,7 @@ void load_material_data(std::filesystem::path path, environment &env) {
 }
 
 void load_object_data(std::filesystem::path path, environment &env) {
-    json file = load_json_file(path);
+    nlohmann::json file = load_json_file(path);
 
     if (!file.is_object()) {
         throw std::runtime_error("The top level is not a JSON object");
@@ -287,7 +366,7 @@ void load_object_data(std::filesystem::path path, environment &env) {
 
 void load_tally_data(std::filesystem::path path, environment &env) {
 
-    json file = load_json_file(path);
+    nlohmann::json file = load_json_file(path);
 
     if (!file.is_object()) {
         throw std::runtime_error("The top level is not an object");

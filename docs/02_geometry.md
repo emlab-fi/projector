@@ -81,11 +81,15 @@ It is defined by 2 parameters, the min and max coordinates:
 
 ### Capped cylinder
 
-The cylinder has 1 more parameter `h`, which defines two planes along the cylinder axis, perpendicular to it. The planes are distanced `h/2` from the center point symmetrically.
+The cylinder has 1 more parameter `h`, which defines two planes along the cylinder axis, perpendicular to it.
+The planes are distanced `h/2` from the center point symmetrically.
 
 ### Capped cone
 
-There are two additional parameters, `d1` and `d2`. They define the location of two planes. The plane defined by `d1` is this distance away from the center point of the cone and it's normal points to the negative direction. The plane defined by `d2` is similar, but the normal points to the positive direction.
+There are two additional parameters, `d1` and `d2`.
+They define the location of two planes.
+The plane defined by `d1` is this distance away from the center point of the cone and it's normal points to the positive direction.
+The plane defined by `d2` is similar, but the normal points to the negative direction.
 
 ## Bounding box calculation
 

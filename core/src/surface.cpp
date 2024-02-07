@@ -194,7 +194,7 @@ bool x_cylinder::point_inside(const vec3 &p) const {
 
 std::pair<vec3, vec3> x_cylinder::bounding_box() const {
     return {{-constants::infinity, center.y() - a, center.z() - b},
-            {constants::infinity, center.y() - a, center.z() - b}};
+            {constants::infinity, center.y() + a, center.z() + b}};
 }
 
 double y_cylinder::distance_along_line(const vec3 &p, const vec3 &dir) const {
