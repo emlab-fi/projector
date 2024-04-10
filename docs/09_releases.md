@@ -5,33 +5,39 @@ The nearest version is 0.1, and the preliminary roadmap of the versions and thei
 
 ## v0.1
 
-Preliminary release: Soon(tm)
+- [x] polymorphic BREP geometry and CSG support
+- [ ] proper unit testing of BREP, CSG
+- [x] separate input to multiple files linked by one main file
+- [ ] helper geometries
+- [ ] implement support for void material/element
+- [x] basic uniform mesh tally
+- [x] add bounding box of environment
+- [x] take bounding box into consideration in compute
+- [ ] switch to eV from MeV units
+- [ ] improve nearest surface calculations in x86 runtime
+- [ ] parallelization in OpenMP
+- [ ] basic documentation
+- [x] clang format file
 
-- ✓ BREP and CSG geometry
-- ✗ helper geometries
-- ✓ separate input files for materials, tallies and objects
-- ✓ basic uniform grid tallies
-- ✓ parallelization in OpenMP
-- ✗ basic real life verification tests
-- ✓ basic documentation
+## v0.2
 
-# v0.2
+- [ ] rewrite talies
+    - [ ] filters
+    - [ ] various quantities
+    - [ ] approximators?
+    - [ ] statistical calculations
+- [ ] separate sources from geometry objects (still can use objects as volume)
+- [ ] add timestamp for events
+- [ ] simulate more interactions (bremstrahhlung, proper compton?)
+- [ ] batches, confidence/statistics calculation
+- [ ] better python tooling
+- [ ] better interface for different runtimes (CUDA etc.)
 
-Preliminary release:
+## v0.3
 
-- ✗ void material support
-- ✗ lattice (geometry instantiation) support
-- ✓ non-uniform source definitions
-- ✗ simulate secondary particles from interactions (bremstrahhlung, photoelectrons, pair production)
-- ✗ basic python tooling for data visualization and data preparation
-- ✗ filters for tallies
-- ✗ additional tallies: pulse height, 2D detector flux, surface flux, deposited energy
-- ✗ better interface for different runtimes (CUDA etc.)
-
-# v0.3
-
-Preliminary release:
-
-- ✗ .STL mesh support (or other format)
-- ✗ multiple runtimes (CUDA etc.)
-- ✗ benchmarks
+- [ ] look into mesh support (STL? OBJ?)
+- [ ] non-x86 runtimes
+- [ ] benchmarks
+- [ ] verification, validation
+- [ ] more generic ACE data parsing
+- [ ] better output format
