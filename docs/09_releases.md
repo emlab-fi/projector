@@ -9,13 +9,12 @@ The nearest version is 0.1, and the preliminary roadmap of the versions and thei
 - [ ] proper unit testing of BREP, CSG
 - [x] separate input to multiple files linked by one main file
 - [ ] helper geometries
-- [ ] implement support for void material/element
 - [x] basic uniform mesh tally
 - [x] add bounding box of environment
 - [x] take bounding box into consideration in compute
-- [ ] switch to eV from MeV units
+- [x] switch to eV from MeV units
 - [ ] improve nearest surface calculations in x86 runtime
-- [ ] parallelization in OpenMP
+- [x] parallelization in OpenMP
 - [ ] basic documentation
 - [x] clang format file
 
@@ -27,6 +26,7 @@ The nearest version is 0.1, and the preliminary roadmap of the versions and thei
     - [ ] approximators?
     - [ ] statistical calculations
 - [ ] separate sources from geometry objects (still can use objects as volume)
+- [ ] object instancing/grids
 - [ ] add timestamp for events
 - [ ] simulate more interactions (bremstrahhlung, proper compton?)
 - [ ] batches, confidence/statistics calculation

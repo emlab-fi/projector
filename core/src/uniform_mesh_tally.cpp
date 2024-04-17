@@ -1,6 +1,5 @@
-#include "tally.hpp"
-
 #include "constants.hpp"
+#include "tally.hpp"
 
 #include <fstream>
 #include <type_traits>
@@ -26,7 +25,7 @@ namespace projector {
 
 std::optional<coord3> uniform_mesh_tally::determine_cell(const vec3 &point) const {
     if (!bounds.point_inside(point)) {
-         return {};
+        return {};
     }
 
     coord3 output = {0, 0, 0};
@@ -34,8 +33,9 @@ std::optional<coord3> uniform_mesh_tally::determine_cell(const vec3 &point) cons
     for (std::size_t i = 0; i < 3; ++i) {
         double shifted = point[i] - bounds.min[i];
         double step_size = std::abs(bounds.max[i] - bounds.min[i]) / resolution[i];
+        double out = std::floor(shifted / step_size);
 
-        output[i] = std::floor(shifted / step_size);
+        output[i] = out;
     }
 
     return output;
@@ -75,14 +75,12 @@ void uniform_mesh_tally::increment_index(std::size_t index) {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_arithmetic_v<T>) {
-            #pragma omp atomic
+#pragma omp atomic
             arg += 1;
         }
     };
 
-    {
-        std::visit(increment_visit, data[index]);
-    }
+    { std::visit(increment_visit, data[index]); }
 }
 
 void uniform_mesh_tally::add_index(std::size_t index, double value) {
@@ -91,14 +89,12 @@ void uniform_mesh_tally::add_index(std::size_t index, double value) {
         using T = std::decay_t<decltype(arg)>;
 
         if constexpr (std::is_arithmetic_v<T>) {
-            #pragma omp atomic
+#pragma omp atomic
             arg += value;
         }
     };
 
-    {
-        std::visit(add_visit, data[index]);
-    }
+    { std::visit(add_visit, data[index]); }
 }
 
 void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
@@ -108,6 +104,7 @@ void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
     for (std::size_t i = 1; i < amount; ++i) {
 
         auto coord = determine_cell(p.history.points[i]);
+
         if (!coord) {
             continue;
         }
@@ -136,7 +133,7 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
 
     std::size_t amount = p.history.points.size() - 1;
 
-    //change to DDA algorithm!
+    // change to DDA algorithm!
     for (std::size_t i = 0; i < amount; ++i) {
 
         const vec3 &start = p.history.points[i];
@@ -263,9 +260,7 @@ void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
 
     output_file << std::setprecision(10) << std::scientific;
 
-    auto print_variant = [&output_file]<typename T>(T &&arg) {
-        output_file << "," << arg;
-    };
+    auto print_variant = [&output_file]<typename T>(T &&arg) { output_file << "," << arg; };
 
     for (int z = 0; z < resolution.z(); ++z) {
         for (int y = 0; y < resolution.y(); ++y) {
