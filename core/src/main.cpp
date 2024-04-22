@@ -13,24 +13,43 @@
 int main(int argc, char *argv[]) {
 
     CLI::App app{"Projector - photon transport simulator"};
+    CLI::App& run_subcommand = *app.add_subcommand("run", "run simulation from input files");
+    CLI::App& parse_subcommand = *app.add_subcommand("validate", "validates input files");
+    CLI::App& vis_subcommand = *app.add_subcommand("visualize", "plot input geometry");
 
-    std::string_view config_path_str;
-    std::string_view xcom_path;
-    std::string_view xsdir_path;
-    bool parse_only = false;
+    std::string config_path_str;
+    std::string xcom_path;
+    std::string xsdir_path;
     int thread_count = 1;
 
-    app.add_option("--input_file, -i", config_path_str, "Input JSON file")
+    std::vector<double> vis_center;
+    std::vector<double> vis_resolution;
+    std::string vis_plane;
+    std::string vis_output_path;
+
+    app.require_subcommand(1);
+    app.add_option("--ace_data, -a", xsdir_path, "Path to eprdata14 xsdir")
+        ->envname("PROJECTOR_ACE_XSDIR")
         ->required()
         ->check(CLI::ExistingFile);
-    app.add_option("--ace_data, -a", xsdir_path, "Path to eprdata14 xsdir")
+    app.add_option("INPUT", config_path_str, "Input JSON file")
         ->required()
         ->check(CLI::ExistingFile);
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
-    app.add_flag("--parse_only, -p", parse_only, "Only run the input parser");
+
+    vis_subcommand.add_option("-s, --slice", vis_plane, "Slice plane")
+        ->check(CLI::IsMember({"x", "y", "z"}))
+        ->required();
+    vis_subcommand.add_option("-c, --center", vis_center, "Center point of the slice")
+        ->expected(3)
+        ->required();
+    vis_subcommand.add_option("-r, --resolution", vis_resolution, "output resolution")
+        ->expected(2)
+        ->required();
+    vis_subcommand.add_option("-o, --output", vis_output_path, "output_path")
+        ->default_val("slice_out.csv");
 
     CLI11_PARSE(app, argc, argv);
-
 
     std::cout << termcolor::blue << termcolor::bold << "<<-- Projector -->>"
               << termcolor::reset << std::endl;
@@ -80,22 +99,47 @@ int main(int argc, char *argv[]) {
     std::cout << "Description: " << sim_env.description << std::endl;
     std::cout << "Epsilon size: " << projector::constants::epsilon << std::endl;
 
-    if (parse_only) {
-        std::cout << "Parse only run - exiting" << std::endl;
+    if (parse_subcommand) {
+        std::cout << "Validate only run - exiting" << std::endl;
         return EXIT_SUCCESS;
     }
 
-    std::cout << "Initializing runtime" << std::endl;
-    projector::initialize_runtime(sim_env, thread_count);
 
-    std::cout << "Running particle simulation" << std::endl;
-    projector::calculate_particle_histories(sim_env);
+    if (vis_subcommand ) {
+        std::cout << "Plotting geometry" << std::endl;
 
-    std::cout << "Processing tallies" << std::endl;
-    projector::process_tallies(sim_env);
+        std::cout << "Slice plane: " << vis_plane << std::endl;
+        std::cout << "Slice center: ";
 
-    std::cout << "Saving data to: " << sim_env.output_path << std::endl;
-    projector::save_data(sim_env);
+        // pretty print vector
+        for (double& x : vis_center) {
+            std::cout << x << "  ";
+        }
 
-    return EXIT_SUCCESS;
+        std::cout << std::endl;
+        std::cout << "Resolution: " << vis_resolution[0] << " " << vis_resolution[1] << std::endl;
+
+        //run visualization
+
+        std::cout << "Saved slice to: " << vis_output_path << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+
+    if (run_subcommand) {
+        std::cout << "Initializing runtime" << std::endl;
+        projector::initialize_runtime(sim_env, thread_count);
+
+        std::cout << "Running particle simulation" << std::endl;
+        projector::calculate_particle_histories(sim_env);
+
+        std::cout << "Processing tallies" << std::endl;
+        projector::process_tallies(sim_env);
+
+        std::cout << "Saving data to: " << sim_env.output_path << std::endl;
+        projector::save_data(sim_env);
+    }
+
+    std::cout << "Invalid subcommand, exiting" << std::endl;
+    return EXIT_FAILURE;
 }

@@ -28,7 +28,7 @@ FetchContent_MakeAvailable(termcolor)
 #get command line parsing lib
 FetchContent_Declare(cli11
 	GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-	GIT_TAG  v2.3.2
+	GIT_TAG  v2.4.1
 	GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(cli11)
 

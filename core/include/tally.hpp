@@ -111,7 +111,7 @@ class uniform_mesh_tally : public tally {
 public:
 
     /// Default and only constructor for uniform_mesh_tally
-    /// @param user_id User supplied ID 
+    /// @param user_id User supplied ID
     /// @param start The start point of the tally space
     /// @param end  The end point of the tally space
     /// @param res Resolution (number of cells) per axis
