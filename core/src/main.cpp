@@ -33,10 +33,8 @@ int main(int argc, char *argv[]) {
         ->envname("PROJECTOR_ACE_XSDIR")
         ->required()
         ->check(CLI::ExistingFile);
-    app.add_option("INPUT", config_path_str, "Input JSON file")
-        ->required()
-        ->check(CLI::ExistingFile);
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
+    app.set_help_all_flag("--help-all", "Show help for all subcommands");
 
     vis_subcommand.add_option("-s, --slice", vis_plane, "Slice plane")
         ->check(CLI::IsMember({'x', 'y', 'z'}))
@@ -48,6 +46,17 @@ int main(int argc, char *argv[]) {
         ->required();
     vis_subcommand.add_option("-o, --output", vis_output_path, "output_path")
         ->default_val("slice_out.csv");
+    vis_subcommand.add_option("INPUT", config_path_str, "Input JSON file")
+        ->required()
+        ->check(CLI::ExistingFile);
+
+    parse_subcommand.add_option("INPUT", config_path_str, "Input JSON file")
+        ->required()
+        ->check(CLI::ExistingFile);
+
+    run_subcommand.add_option("INPUT", config_path_str, "Input JSON file")
+        ->required()
+        ->check(CLI::ExistingFile);
 
     CLI11_PARSE(app, argc, argv);
 
