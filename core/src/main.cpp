@@ -1,8 +1,9 @@
 #include "CLI/CLI.hpp"
+#include "constants.hpp"
 #include "environment.hpp"
 #include "json_loader.hpp"
+#include "plot.hpp"
 #include "runtime.hpp"
-#include "constants.hpp"
 #include "utils.hpp"
 
 #include <iostream>
@@ -13,18 +14,18 @@
 int main(int argc, char *argv[]) {
 
     CLI::App app{"Projector - photon transport simulator"};
-    CLI::App& run_subcommand = *app.add_subcommand("run", "run simulation from input files");
-    CLI::App& parse_subcommand = *app.add_subcommand("validate", "validates input files");
-    CLI::App& vis_subcommand = *app.add_subcommand("visualize", "plot input geometry");
+    CLI::App &run_subcommand = *app.add_subcommand("run", "run simulation from input files");
+    CLI::App &parse_subcommand = *app.add_subcommand("validate", "validates input files");
+    CLI::App &vis_subcommand = *app.add_subcommand("visualize", "plot input geometry");
 
     std::string config_path_str;
     std::string xcom_path;
     std::string xsdir_path;
     int thread_count = 1;
 
-    std::vector<double> vis_center;
-    std::vector<double> vis_resolution;
-    std::string vis_plane;
+    double vis_center;
+    std::vector<std::size_t> vis_resolution;
+    char vis_plane;
     std::string vis_output_path;
 
     app.require_subcommand(1);
@@ -38,11 +39,10 @@ int main(int argc, char *argv[]) {
     app.add_option("--thread_count, -t", thread_count, "Max threads to use");
 
     vis_subcommand.add_option("-s, --slice", vis_plane, "Slice plane")
-        ->check(CLI::IsMember({"x", "y", "z"}))
+        ->check(CLI::IsMember({'x', 'y', 'z'}))
         ->required();
     vis_subcommand.add_option("-c, --center", vis_center, "Center point of the slice")
-        ->expected(3)
-        ->required();
+        ->default_val(0.0);
     vis_subcommand.add_option("-r, --resolution", vis_resolution, "output resolution")
         ->expected(2)
         ->required();
@@ -51,15 +51,14 @@ int main(int argc, char *argv[]) {
 
     CLI11_PARSE(app, argc, argv);
 
-    std::cout << termcolor::blue << termcolor::bold << "<<-- Projector -->>"
-              << termcolor::reset << std::endl;
+    std::cout << termcolor::blue << termcolor::bold << "<<-- Projector -->>" << termcolor::reset
+              << std::endl;
 
     projector::environment sim_env;
 
     std::cout << "Loading cross section data from: " << xsdir_path << std::endl;
     try {
-        sim_env.cross_section_data =
-            projector::data_library::load_ace_data(xsdir_path);
+        sim_env.cross_section_data = projector::data_library::load_ace_data(xsdir_path);
     } catch (const std::exception &e) {
         print_nested_exception(e);
         return EXIT_FAILURE;
@@ -105,21 +104,18 @@ int main(int argc, char *argv[]) {
     }
 
 
-    if (vis_subcommand ) {
+    if (vis_subcommand) {
         std::cout << "Plotting geometry" << std::endl;
 
         std::cout << "Slice plane: " << vis_plane << std::endl;
-        std::cout << "Slice center: ";
-
-        // pretty print vector
-        for (double& x : vis_center) {
-            std::cout << x << "  ";
-        }
+        std::cout << "Slice center: " << vis_center << std::endl;
 
         std::cout << std::endl;
         std::cout << "Resolution: " << vis_resolution[0] << " " << vis_resolution[1] << std::endl;
 
-        //run visualization
+        // run visualization
+        projector::env_slice_plot(sim_env, vis_plane, vis_center, vis_resolution[0],
+                                  vis_resolution[1], vis_output_path);
 
         std::cout << "Saved slice to: " << vis_output_path << std::endl;
         return EXIT_SUCCESS;

@@ -61,6 +61,7 @@ set(PROJECTOR_LIB_SRC
 	src/random_numbers.cpp
 	src/environment.cpp
 	src/particle.cpp
+	src/plot.cpp
 	src/runtime.cpp
 	src/surface.cpp
 	src/uniform_mesh_tally.cpp
