@@ -8,7 +8,7 @@ The tallies are saved into a `.csv` file at location specified in the configurat
 These tallies are counted in a uniform grid.
 Each quantity is then tallied in each cell of the grid.
 
-### Algorithm for tallying a single particle
+### Algorithm for tallying a single particle track (ie, photon flux)
 
 For each segment of particle history, do the following:
 
@@ -31,9 +31,3 @@ Currently supported scores are:
 - Number of reactions
 - Average energy
 - Deposited energy
-
-## Visualization tally
-
-This tally is a helper tally to visualize the geometry of the environment.
-It divides the whole simulation environment bounding box into grid and looking up the material/object at center of each grid cell.
-The input parameters are the X, Y and Z resolution (number of grid cells per axis).

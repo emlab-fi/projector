@@ -6,7 +6,7 @@ These units are not always standard SI units and sometimes are a different
 |Physical quantity|Unit|Unit shorthand|
 |:----------------|:---|:-------------|
 |Distance|centimeter|cm|
-|Energy|megaelectronvolts|MEv|
+|Energy|megaelectronvolts|MeV|
 |Density||g/cm^3|
 
 
@@ -16,4 +16,4 @@ There are few key constants used in Projector.
 
 |Constant|Value|
 |:-------|:----|
-|
+|||

@@ -109,6 +109,13 @@ The parameters should be identical to the ones in [geometry docs](02_geometry.md
 |`y_cone`|`[x0, y0, z0], a, b, c`|
 |`z_cone`|`[x0, y0, z0], a, b, c`|
 |`box`|`[x0, y0, z0], [x1, y1, z1]`|
+|`capped_x_cylinder`|`[x0, y0, z0], a, b, h`|
+|`capped_y_cylinder`|`[x0, y0, z0], a, b, h`|
+|`capped_z_cylinder`|`[x0, y0, z0], a, b, h`|
+|`capped_x_cone`|`[x0, y0, z0], a, b, c, d1, d2`|
+|`capped_y_cone`|`[x0, y0, z0], a, b, c, d1, d2`|
+|`capped_z_cone`|`[x0, y0, z0], a, b, c, d1, d2`|
+
 
 There should be no cyclic or self references when using geometries in place of surfaces, as this will not parse.
 
@@ -161,6 +168,5 @@ The keys depend on the type of the tally, short overview of required keys for ta
 |tally type|required parameters|supported scores|
 |:---------|:------------------|:---------------|
 |`uniform_mesh`|`start`, `end`, `resolution`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
-|`visualization`|`resolution`||
 |`volume`|`object_id`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
 |`scintillator`|`object_id`, `energy_range_bins`, `energy_max`||

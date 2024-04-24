@@ -1,6 +1,6 @@
 # Projector simulation principle
 
-- general flow:
+General flow:
 
 1. load input data (cross sections, simulation config)
 2. initialize simulation runtime
@@ -32,13 +32,13 @@
 - determine interaction
 
 ### Photoeletric Absorption
-- as we do not care about secondary particles, the photon just gets stopped
+- as we do not care about secondary particles, the photon just gets stopped/absorbed
 
 ### Coherent Scattering (Rayleigh)
--
+- TODO: write this
 
 ### Incoherent Scattering (Compton)
--
+- TODO: write this
 
 ### Pair Production
 - as we do not care about secondary particles, the photon just gets stopped/absorbed
