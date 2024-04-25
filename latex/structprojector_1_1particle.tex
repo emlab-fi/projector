@@ -1,0 +1,138 @@
+\hypertarget{structprojector_1_1particle}{}\doxysection{projector\+::particle Struct Reference}
+\label{structprojector_1_1particle}\index{projector::particle@{projector::particle}}
+
+
+{\ttfamily \#include $<$particle.\+hpp$>$}
+
+
+
+Collaboration diagram for projector\+::particle\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structprojector_1_1particle__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}{type}} \{ \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea730b4badf792bef64e026438bfed73d4}{photon}}
+, \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea98c142d283291143afff7f5f1d79e3b7}{positron}}
+, \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea1b85623431169fedc9a20ecf24df3f54}{electron}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \& \mbox{\hyperlink{structprojector_1_1particle_ab426aa00bcd41686dac6846246bbba6d}{energy}} ()
+\item 
+\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \& \mbox{\hyperlink{structprojector_1_1particle_a43ca69958fe2dad40a883182dac6f43b}{position}} ()
+\item 
+void \mbox{\hyperlink{structprojector_1_1particle_a4298c68ce5f79697e843d65dea941960}{save\+\_\+particle}} (const std\+::filesystem\+::path path) const
+\item 
+void \mbox{\hyperlink{structprojector_1_1particle_a8b5495df5a6bc28c57b417d6bf6f0c05}{photon\+\_\+interaction}} (const \mbox{\hyperlink{classprojector_1_1element}{element}} \&elem)
+\item 
+void \mbox{\hyperlink{structprojector_1_1particle_aface9d8975d47106617083cecbeb5a82}{advance}} (double distance)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}{type}} \mbox{\hyperlink{structprojector_1_1particle_ae6337af25f845725ccf4dfef1fdea32b}{particle\+\_\+type}}
+\item 
+\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \mbox{\hyperlink{structprojector_1_1particle_a415872c01f6126e3a8a9394d68ebf3c7}{direction}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{structprojector_1_1particle_afe5df97061c488c41b42654f57e90855}{prng\+\_\+state}}
+\item 
+\mbox{\hyperlink{structprojector_1_1particle__history}{particle\+\_\+history}} \mbox{\hyperlink{structprojector_1_1particle_aeabc5ba4bd720cf97a951e30d406428c}{history}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}\label{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}} 
+\index{projector::particle@{projector::particle}!type@{type}}
+\index{type@{type}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}{projector\+::particle\+::type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{photon@{photon}!projector::particle@{projector::particle}}\index{projector::particle@{projector::particle}!photon@{photon}}}\mbox{\Hypertarget{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea730b4badf792bef64e026438bfed73d4}\label{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea730b4badf792bef64e026438bfed73d4}} 
+photon&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{positron@{positron}!projector::particle@{projector::particle}}\index{projector::particle@{projector::particle}!positron@{positron}}}\mbox{\Hypertarget{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea98c142d283291143afff7f5f1d79e3b7}\label{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea98c142d283291143afff7f5f1d79e3b7}} 
+positron&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{electron@{electron}!projector::particle@{projector::particle}}\index{projector::particle@{projector::particle}!electron@{electron}}}\mbox{\Hypertarget{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea1b85623431169fedc9a20ecf24df3f54}\label{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973ea1b85623431169fedc9a20ecf24df3f54}} 
+electron&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structprojector_1_1particle_aface9d8975d47106617083cecbeb5a82}\label{structprojector_1_1particle_aface9d8975d47106617083cecbeb5a82}} 
+\index{projector::particle@{projector::particle}!advance@{advance}}
+\index{advance@{advance}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{advance()}{advance()}}
+{\footnotesize\ttfamily void projector\+::particle\+::advance (\begin{DoxyParamCaption}\item[{double}]{distance }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structprojector_1_1particle_ab426aa00bcd41686dac6846246bbba6d}\label{structprojector_1_1particle_ab426aa00bcd41686dac6846246bbba6d}} 
+\index{projector::particle@{projector::particle}!energy@{energy}}
+\index{energy@{energy}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{energy()}{energy()}}
+{\footnotesize\ttfamily double \& projector\+::particle\+::energy (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structprojector_1_1particle_a8b5495df5a6bc28c57b417d6bf6f0c05}\label{structprojector_1_1particle_a8b5495df5a6bc28c57b417d6bf6f0c05}} 
+\index{projector::particle@{projector::particle}!photon\_interaction@{photon\_interaction}}
+\index{photon\_interaction@{photon\_interaction}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{photon\_interaction()}{photon\_interaction()}}
+{\footnotesize\ttfamily void projector\+::particle\+::photon\+\_\+interaction (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classprojector_1_1element}{element}} \&}]{elem }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structprojector_1_1particle_a43ca69958fe2dad40a883182dac6f43b}\label{structprojector_1_1particle_a43ca69958fe2dad40a883182dac6f43b}} 
+\index{projector::particle@{projector::particle}!position@{position}}
+\index{position@{position}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{position()}{position()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \& projector\+::particle\+::position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structprojector_1_1particle_a4298c68ce5f79697e843d65dea941960}\label{structprojector_1_1particle_a4298c68ce5f79697e843d65dea941960}} 
+\index{projector::particle@{projector::particle}!save\_particle@{save\_particle}}
+\index{save\_particle@{save\_particle}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{save\_particle()}{save\_particle()}}
+{\footnotesize\ttfamily void projector\+::particle\+::save\+\_\+particle (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path}]{path }\end{DoxyParamCaption}) const}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structprojector_1_1particle_a415872c01f6126e3a8a9394d68ebf3c7}\label{structprojector_1_1particle_a415872c01f6126e3a8a9394d68ebf3c7}} 
+\index{projector::particle@{projector::particle}!direction@{direction}}
+\index{direction@{direction}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{direction}{direction}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} projector\+::particle\+::direction}
+
+\mbox{\Hypertarget{structprojector_1_1particle_aeabc5ba4bd720cf97a951e30d406428c}\label{structprojector_1_1particle_aeabc5ba4bd720cf97a951e30d406428c}} 
+\index{projector::particle@{projector::particle}!history@{history}}
+\index{history@{history}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{history}{history}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structprojector_1_1particle__history}{particle\+\_\+history}} projector\+::particle\+::history}
+
+\mbox{\Hypertarget{structprojector_1_1particle_ae6337af25f845725ccf4dfef1fdea32b}\label{structprojector_1_1particle_ae6337af25f845725ccf4dfef1fdea32b}} 
+\index{projector::particle@{projector::particle}!particle\_type@{particle\_type}}
+\index{particle\_type@{particle\_type}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{particle\_type}{particle\_type}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structprojector_1_1particle_ae8b1d7e5d40c2a5d41ed59a61c40973e}{type}} projector\+::particle\+::particle\+\_\+type}
+
+\mbox{\Hypertarget{structprojector_1_1particle_afe5df97061c488c41b42654f57e90855}\label{structprojector_1_1particle_afe5df97061c488c41b42654f57e90855}} 
+\index{projector::particle@{projector::particle}!prng\_state@{prng\_state}}
+\index{prng\_state@{prng\_state}!projector::particle@{projector::particle}}
+\doxysubsubsection{\texorpdfstring{prng\_state}{prng\_state}}
+{\footnotesize\ttfamily uint64\+\_\+t projector\+::particle\+::prng\+\_\+state}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{particle_8hpp}{particle.\+hpp}}\item 
+core/src/\mbox{\hyperlink{environment_8cpp}{environment.\+cpp}}\item 
+core/src/\mbox{\hyperlink{particle_8cpp}{particle.\+cpp}}\end{DoxyCompactItemize}

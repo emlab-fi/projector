@@ -1,0 +1,4 @@
+<map id="projector::ellipsoid" name="projector::ellipsoid">
+<area shape="rect" id="node1" title="Generic axis alligned ellipsoid, defined by a center point and 3 radii." alt="" coords="5,80,148,107"/>
+<area shape="rect" id="node2" href="$structprojector_1_1surface.html" title="Abstract interface class representing a quadric surface." alt="" coords="9,5,145,32"/>
+</map>

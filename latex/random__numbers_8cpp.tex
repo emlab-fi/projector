@@ -1,0 +1,66 @@
+\hypertarget{random__numbers_8cpp}{}\doxysection{core/src/random\+\_\+numbers.cpp File Reference}
+\label{random__numbers_8cpp}\index{core/src/random\_numbers.cpp@{core/src/random\_numbers.cpp}}
+{\ttfamily \#include \char`\"{}random\+\_\+numbers.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+Include dependency graph for random\+\_\+numbers.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=275pt]{random__numbers_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceprojector}{projector}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceprojector_a20f4f9c0871c43e50441b43bae9d0e00}{projector\+::seed\+\_\+master\+\_\+prng}} (uint64\+\_\+t seed)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{namespaceprojector_a9062723326ae2e4b5b709dad93bbfda4}{projector\+::generate\+\_\+prng\+\_\+seed}} ()
+\item 
+double \mbox{\hyperlink{namespaceprojector_a06640d278c8294eaa2eb112eba24f5c4}{projector\+::prng\+\_\+double}} (uint64\+\_\+t \&state)
+\item 
+double \mbox{\hyperlink{namespaceprojector_adc39477a3bb596841e62b6f8552da8fe}{projector\+::prng\+\_\+double}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{random__numbers_8cpp_a16ee8c518f072dd535aac39490b2c95b}{master\+\_\+seed}} = 1
+\item 
+constexpr uint64\+\_\+t \mbox{\hyperlink{random__numbers_8cpp_a27ff9caa02e26263720c7c388437571c}{prng\+\_\+mult}} = 6364136223846793005ull
+\item 
+constexpr uint64\+\_\+t \mbox{\hyperlink{random__numbers_8cpp_a0affa8793d12e834e635b5d1fd980215}{prng\+\_\+add}} = 1442695040888963407ull
+\item 
+constexpr uint64\+\_\+t \mbox{\hyperlink{random__numbers_8cpp_a7b8577271bfcffe1548b5e86fd0e07df}{prng\+\_\+permute\+\_\+mult}} = 12605985483714917081ull
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{random__numbers_8cpp_a16ee8c518f072dd535aac39490b2c95b}\label{random__numbers_8cpp_a16ee8c518f072dd535aac39490b2c95b}} 
+\index{random\_numbers.cpp@{random\_numbers.cpp}!master\_seed@{master\_seed}}
+\index{master\_seed@{master\_seed}!random\_numbers.cpp@{random\_numbers.cpp}}
+\doxysubsubsection{\texorpdfstring{master\_seed}{master\_seed}}
+{\footnotesize\ttfamily uint64\+\_\+t master\+\_\+seed = 1}
+
+\mbox{\Hypertarget{random__numbers_8cpp_a0affa8793d12e834e635b5d1fd980215}\label{random__numbers_8cpp_a0affa8793d12e834e635b5d1fd980215}} 
+\index{random\_numbers.cpp@{random\_numbers.cpp}!prng\_add@{prng\_add}}
+\index{prng\_add@{prng\_add}!random\_numbers.cpp@{random\_numbers.cpp}}
+\doxysubsubsection{\texorpdfstring{prng\_add}{prng\_add}}
+{\footnotesize\ttfamily constexpr uint64\+\_\+t prng\+\_\+add = 1442695040888963407ull\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\mbox{\Hypertarget{random__numbers_8cpp_a27ff9caa02e26263720c7c388437571c}\label{random__numbers_8cpp_a27ff9caa02e26263720c7c388437571c}} 
+\index{random\_numbers.cpp@{random\_numbers.cpp}!prng\_mult@{prng\_mult}}
+\index{prng\_mult@{prng\_mult}!random\_numbers.cpp@{random\_numbers.cpp}}
+\doxysubsubsection{\texorpdfstring{prng\_mult}{prng\_mult}}
+{\footnotesize\ttfamily constexpr uint64\+\_\+t prng\+\_\+mult = 6364136223846793005ull\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\mbox{\Hypertarget{random__numbers_8cpp_a7b8577271bfcffe1548b5e86fd0e07df}\label{random__numbers_8cpp_a7b8577271bfcffe1548b5e86fd0e07df}} 
+\index{random\_numbers.cpp@{random\_numbers.cpp}!prng\_permute\_mult@{prng\_permute\_mult}}
+\index{prng\_permute\_mult@{prng\_permute\_mult}!random\_numbers.cpp@{random\_numbers.cpp}}
+\doxysubsubsection{\texorpdfstring{prng\_permute\_mult}{prng\_permute\_mult}}
+{\footnotesize\ttfamily constexpr uint64\+\_\+t prng\+\_\+permute\+\_\+mult = 12605985483714917081ull\hspace{0.3cm}{\ttfamily [constexpr]}}
+

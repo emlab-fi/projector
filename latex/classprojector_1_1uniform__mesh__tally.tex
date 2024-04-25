@@ -1,0 +1,138 @@
+\hypertarget{classprojector_1_1uniform__mesh__tally}{}\doxysection{projector\+::uniform\+\_\+mesh\+\_\+tally Class Reference}
+\label{classprojector_1_1uniform__mesh__tally}\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+
+
+Basic uniform mesh tally. Divides space into uniform grid.  
+
+
+
+
+{\ttfamily \#include $<$tally.\+hpp$>$}
+
+
+
+Inheritance diagram for projector\+::uniform\+\_\+mesh\+\_\+tally\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=184pt]{classprojector_1_1uniform__mesh__tally__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for projector\+::uniform\+\_\+mesh\+\_\+tally\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=184pt]{classprojector_1_1uniform__mesh__tally__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_ab2526bc5d131f6d889e2d37603298f29}{uniform\+\_\+mesh\+\_\+tally}} (std\+::string user\+\_\+id, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&start, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&end, const \mbox{\hyperlink{namespaceprojector_af4527976e288543f152bafaa9049216f}{coord3}} \&res, \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71}{tally\+\_\+score}} sc)
+\item 
+void \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_ac8be325ee8a8c29c7fd41c3ac9b84fb1}{init\+\_\+tally}} () final
+\begin{DoxyCompactList}\small\item\em Initialize the tally, should be called only once at the beginning. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_a8ae78075591decb128130d647a560a8b}{add\+\_\+particle}} (const \mbox{\hyperlink{structprojector_1_1particle}{particle}} \&p) final
+\item 
+void \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_aaf7b22e9b6db53d7b9974a08f4c366cb}{finalize\+\_\+data}} () final
+\item 
+void \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_a57ea2983619ffd6915a91900af386b91}{save\+\_\+tally}} (const std\+::filesystem\+::path path) const final
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Basic uniform mesh tally. Divides space into uniform grid. 
+
+The tally is defined by start and stop points and the resolution of the grid to divide the measured volume into. It supports these scores\+: flux, average\+\_\+energy, interaction\+\_\+counts 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classprojector_1_1uniform__mesh__tally_ab2526bc5d131f6d889e2d37603298f29}\label{classprojector_1_1uniform__mesh__tally_ab2526bc5d131f6d889e2d37603298f29}} 
+\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}!uniform\_mesh\_tally@{uniform\_mesh\_tally}}
+\index{uniform\_mesh\_tally@{uniform\_mesh\_tally}!projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+\doxysubsubsection{\texorpdfstring{uniform\_mesh\_tally()}{uniform\_mesh\_tally()}}
+{\footnotesize\ttfamily projector\+::uniform\+\_\+mesh\+\_\+tally\+::uniform\+\_\+mesh\+\_\+tally (\begin{DoxyParamCaption}\item[{std\+::string}]{user\+\_\+id,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{start,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{end,  }\item[{const \mbox{\hyperlink{namespaceprojector_af4527976e288543f152bafaa9049216f}{coord3}} \&}]{res,  }\item[{\mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71}{tally\+\_\+score}}}]{sc }\end{DoxyParamCaption})}
+
+Default and only constructor for \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally}{uniform\+\_\+mesh\+\_\+tally}} 
+\begin{DoxyParams}{Parameters}
+{\em user\+\_\+id} & User supplied ID \\
+\hline
+{\em start} & The start point of the tally space \\
+\hline
+{\em end} & The end point of the tally space \\
+\hline
+{\em res} & Resolution (number of cells) per axis \\
+\hline
+{\em sc} & The score to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classprojector_1_1uniform__mesh__tally_a8ae78075591decb128130d647a560a8b}\label{classprojector_1_1uniform__mesh__tally_a8ae78075591decb128130d647a560a8b}} 
+\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}!add\_particle@{add\_particle}}
+\index{add\_particle@{add\_particle}!projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+\doxysubsubsection{\texorpdfstring{add\_particle()}{add\_particle()}}
+{\footnotesize\ttfamily void projector\+::uniform\+\_\+mesh\+\_\+tally\+::add\+\_\+particle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structprojector_1_1particle}{particle}} \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Add single particle data to the tally results.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The particle to add \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1tally_af0703f71a30cba4bb1661728ad23708f}{projector\+::tally}}.
+
+\mbox{\Hypertarget{classprojector_1_1uniform__mesh__tally_aaf7b22e9b6db53d7b9974a08f4c366cb}\label{classprojector_1_1uniform__mesh__tally_aaf7b22e9b6db53d7b9974a08f4c366cb}} 
+\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}!finalize\_data@{finalize\_data}}
+\index{finalize\_data@{finalize\_data}!projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+\doxysubsubsection{\texorpdfstring{finalize\_data()}{finalize\_data()}}
+{\footnotesize\ttfamily void projector\+::uniform\+\_\+mesh\+\_\+tally\+::finalize\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Finalize the resulting data. Should be called only once at the end. 
+
+Implements \mbox{\hyperlink{structprojector_1_1tally_a63cb52b48487e16fa8b992c78416eda4}{projector\+::tally}}.
+
+\mbox{\Hypertarget{classprojector_1_1uniform__mesh__tally_ac8be325ee8a8c29c7fd41c3ac9b84fb1}\label{classprojector_1_1uniform__mesh__tally_ac8be325ee8a8c29c7fd41c3ac9b84fb1}} 
+\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}!init\_tally@{init\_tally}}
+\index{init\_tally@{init\_tally}!projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+\doxysubsubsection{\texorpdfstring{init\_tally()}{init\_tally()}}
+{\footnotesize\ttfamily void projector\+::uniform\+\_\+mesh\+\_\+tally\+::init\+\_\+tally (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+
+
+Initialize the tally, should be called only once at the beginning. 
+
+
+
+Implements \mbox{\hyperlink{structprojector_1_1tally_aead5eff8ddf8e024016471db9a911c98}{projector\+::tally}}.
+
+\mbox{\Hypertarget{classprojector_1_1uniform__mesh__tally_a57ea2983619ffd6915a91900af386b91}\label{classprojector_1_1uniform__mesh__tally_a57ea2983619ffd6915a91900af386b91}} 
+\index{projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}!save\_tally@{save\_tally}}
+\index{save\_tally@{save\_tally}!projector::uniform\_mesh\_tally@{projector::uniform\_mesh\_tally}}
+\doxysubsubsection{\texorpdfstring{save\_tally()}{save\_tally()}}
+{\footnotesize\ttfamily void projector\+::uniform\+\_\+mesh\+\_\+tally\+::save\+\_\+tally (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path}]{path }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Save tally results to filesystem.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path for the tally. Should not include the filename! \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1tally_ab0366f3295ba09b7626876c1434eba2e}{projector\+::tally}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{tally_8hpp}{tally.\+hpp}}\item 
+core/src/\mbox{\hyperlink{uniform__mesh__tally_8cpp}{uniform\+\_\+mesh\+\_\+tally.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,11 @@
+<map id="projector::surface" name="projector::surface">
+<area shape="rect" id="node1" title="Abstract interface class representing a quadric surface." alt="" coords="5,183,141,209"/>
+<area shape="rect" id="node2" href="$classprojector_1_1ellipsoid.html" title="Generic axis alligned ellipsoid, defined by a center point and 3 radii." alt="" coords="195,5,338,32"/>
+<area shape="rect" id="node3" href="$classprojector_1_1plane.html" title="A generic surface defined by a point and a normal vector." alt="" coords="205,56,329,83"/>
+<area shape="rect" id="node4" href="$classprojector_1_1x__cone.html" title="X axis aligned elliptic cone, defined by center point and parameters a, b, c." alt="" coords="199,107,334,133"/>
+<area shape="rect" id="node5" href="$classprojector_1_1x__cylinder.html" title="X axis aligned elliptic cylinder, defined by center point and 2 radii a, b." alt="" coords="189,157,344,184"/>
+<area shape="rect" id="node6" href="$classprojector_1_1y__cone.html" title="Y axis aligned elliptic cone, defined by center point and parameters a, b, c." alt="" coords="199,208,334,235"/>
+<area shape="rect" id="node7" href="$classprojector_1_1y__cylinder.html" title="Y axis aligned elliptic cylinder, defined by center point and 2 radii a, b." alt="" coords="189,259,344,285"/>
+<area shape="rect" id="node8" href="$classprojector_1_1z__cone.html" title="Z axis aligned elliptic cone, defined by center point and parameters a, b, c." alt="" coords="200,309,333,336"/>
+<area shape="rect" id="node9" href="$classprojector_1_1z__cylinder.html" title="Z axis aligned elliptic cylinder, defined by center point and 2 radii a, b." alt="" coords="189,360,344,387"/>
+</map>

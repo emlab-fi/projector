@@ -1,0 +1,90 @@
+\hypertarget{classprojector_1_1geometry}{}\doxysection{projector\+::geometry Class Reference}
+\label{classprojector_1_1geometry}\index{projector::geometry@{projector::geometry}}
+
+
+{\ttfamily \#include $<$geometry.\+hpp$>$}
+
+
+
+Collaboration diagram for projector\+::geometry\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classprojector_1_1geometry__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classprojector_1_1geometry_a94a8c3844216d2652662149f640a8b07}{add\+\_\+surface}} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structprojector_1_1surface}{surface}} $>$ \mbox{\hyperlink{structprojector_1_1surface}{surface}}, \mbox{\hyperlink{namespaceprojector_a7cbaa1d8564b48f957f36b06aa72917f}{csg\+\_\+operation}} op)
+\item 
+void \mbox{\hyperlink{classprojector_1_1geometry_afc519e648c526a41be54edca1c9aac76}{add\+\_\+surface}} (\mbox{\hyperlink{classprojector_1_1geometry}{geometry}} geom, \mbox{\hyperlink{namespaceprojector_a7cbaa1d8564b48f957f36b06aa72917f}{csg\+\_\+operation}} op)
+\item 
+double \mbox{\hyperlink{classprojector_1_1geometry_a572dc7131328af6b78ce0041b5a3c67d}{nearest\+\_\+surface\+\_\+distance}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&point, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&dir) const
+\item 
+bool \mbox{\hyperlink{classprojector_1_1geometry_a549aee4118e6a4259e64fd61230d74aa}{point\+\_\+inside}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&point) const
+\item 
+\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \mbox{\hyperlink{classprojector_1_1geometry_a0a2612801d4e6c92e686ae6d7af43233}{sample\+\_\+point}} (uint64\+\_\+t \&prng\+\_\+state) const
+\item 
+void \mbox{\hyperlink{classprojector_1_1geometry_a3346f7b88f80eb80123f7bf5e1c989c7}{update\+\_\+bounding\+\_\+box}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&min, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&max)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structprojector_1_1bounding__box}{bounding\+\_\+box}} \mbox{\hyperlink{classprojector_1_1geometry_ad7b46c18803591773b99c80eced607d3}{bb}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classprojector_1_1geometry_afc519e648c526a41be54edca1c9aac76}\label{classprojector_1_1geometry_afc519e648c526a41be54edca1c9aac76}} 
+\index{projector::geometry@{projector::geometry}!add\_surface@{add\_surface}}
+\index{add\_surface@{add\_surface}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{add\_surface()}{add\_surface()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void projector\+::geometry\+::add\+\_\+surface (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classprojector_1_1geometry}{geometry}}}]{geom,  }\item[{\mbox{\hyperlink{namespaceprojector_a7cbaa1d8564b48f957f36b06aa72917f}{csg\+\_\+operation}}}]{op }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classprojector_1_1geometry_a94a8c3844216d2652662149f640a8b07}\label{classprojector_1_1geometry_a94a8c3844216d2652662149f640a8b07}} 
+\index{projector::geometry@{projector::geometry}!add\_surface@{add\_surface}}
+\index{add\_surface@{add\_surface}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{add\_surface()}{add\_surface()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void projector\+::geometry\+::add\+\_\+surface (\begin{DoxyParamCaption}\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{structprojector_1_1surface}{surface}} $>$}]{surface,  }\item[{\mbox{\hyperlink{namespaceprojector_a7cbaa1d8564b48f957f36b06aa72917f}{csg\+\_\+operation}}}]{op }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classprojector_1_1geometry_a572dc7131328af6b78ce0041b5a3c67d}\label{classprojector_1_1geometry_a572dc7131328af6b78ce0041b5a3c67d}} 
+\index{projector::geometry@{projector::geometry}!nearest\_surface\_distance@{nearest\_surface\_distance}}
+\index{nearest\_surface\_distance@{nearest\_surface\_distance}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{nearest\_surface\_distance()}{nearest\_surface\_distance()}}
+{\footnotesize\ttfamily double projector\+::geometry\+::nearest\+\_\+surface\+\_\+distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{point,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{dir }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classprojector_1_1geometry_a549aee4118e6a4259e64fd61230d74aa}\label{classprojector_1_1geometry_a549aee4118e6a4259e64fd61230d74aa}} 
+\index{projector::geometry@{projector::geometry}!point\_inside@{point\_inside}}
+\index{point\_inside@{point\_inside}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{point\_inside()}{point\_inside()}}
+{\footnotesize\ttfamily bool projector\+::geometry\+::point\+\_\+inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{point }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classprojector_1_1geometry_a0a2612801d4e6c92e686ae6d7af43233}\label{classprojector_1_1geometry_a0a2612801d4e6c92e686ae6d7af43233}} 
+\index{projector::geometry@{projector::geometry}!sample\_point@{sample\_point}}
+\index{sample\_point@{sample\_point}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{sample\_point()}{sample\_point()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} projector\+::geometry\+::sample\+\_\+point (\begin{DoxyParamCaption}\item[{uint64\+\_\+t \&}]{prng\+\_\+state }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classprojector_1_1geometry_a3346f7b88f80eb80123f7bf5e1c989c7}\label{classprojector_1_1geometry_a3346f7b88f80eb80123f7bf5e1c989c7}} 
+\index{projector::geometry@{projector::geometry}!update\_bounding\_box@{update\_bounding\_box}}
+\index{update\_bounding\_box@{update\_bounding\_box}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{update\_bounding\_box()}{update\_bounding\_box()}}
+{\footnotesize\ttfamily void projector\+::geometry\+::update\+\_\+bounding\+\_\+box (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{min,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{max }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classprojector_1_1geometry_ad7b46c18803591773b99c80eced607d3}\label{classprojector_1_1geometry_ad7b46c18803591773b99c80eced607d3}} 
+\index{projector::geometry@{projector::geometry}!bb@{bb}}
+\index{bb@{bb}!projector::geometry@{projector::geometry}}
+\doxysubsubsection{\texorpdfstring{bb}{bb}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structprojector_1_1bounding__box}{bounding\+\_\+box}} projector\+::geometry\+::bb}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{geometry_8hpp}{geometry.\+hpp}}\item 
+core/src/\mbox{\hyperlink{geometry_8cpp}{geometry.\+cpp}}\end{DoxyCompactItemize}

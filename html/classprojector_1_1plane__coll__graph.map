@@ -1,0 +1,4 @@
+<map id="projector::plane" name="projector::plane">
+<area shape="rect" id="node1" title="A generic surface defined by a point and a normal vector." alt="" coords="11,80,135,107"/>
+<area shape="rect" id="node2" href="$structprojector_1_1surface.html" title="Abstract interface class representing a quadric surface." alt="" coords="5,5,141,32"/>
+</map>

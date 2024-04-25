@@ -1,0 +1,53 @@
+\hypertarget{utils_8cpp}{}\doxysection{core/src/utils.cpp File Reference}
+\label{utils_8cpp}\index{core/src/utils.cpp@{core/src/utils.cpp}}
+{\ttfamily \#include \char`\"{}utils.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$termcolor/termcolor.\+hpp$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+Include dependency graph for utils.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::size\+\_\+t \mbox{\hyperlink{utils_8cpp_ae463595a298f286530ed338083d310b6}{symbol\+\_\+to\+\_\+atomic\+\_\+number}} (const std\+::string\+\_\+view \&symbol)
+\item 
+void \mbox{\hyperlink{utils_8cpp_a94b2ba19a3b794242618c289dbe31159}{print\+\_\+material}} (const \mbox{\hyperlink{structprojector_1_1material__data}{projector\+::material\+\_\+data}} \&mat, const std\+::string \&name)
+\item 
+void \mbox{\hyperlink{utils_8cpp_a4ed2ec22e1876d889301589e76e67967}{print\+\_\+nested\+\_\+exception}} (const std\+::exception \&e, int level)
+\item 
+nlohmann\+::json \mbox{\hyperlink{utils_8cpp_ac03520690dddd64a5950bfba110cc76f}{load\+\_\+json\+\_\+file}} (std\+::filesystem\+::path filepath)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{utils_8cpp_ac03520690dddd64a5950bfba110cc76f}\label{utils_8cpp_ac03520690dddd64a5950bfba110cc76f}} 
+\index{utils.cpp@{utils.cpp}!load\_json\_file@{load\_json\_file}}
+\index{load\_json\_file@{load\_json\_file}!utils.cpp@{utils.cpp}}
+\doxysubsubsection{\texorpdfstring{load\_json\_file()}{load\_json\_file()}}
+{\footnotesize\ttfamily nlohmann\+::json load\+\_\+json\+\_\+file (\begin{DoxyParamCaption}\item[{std\+::filesystem\+::path}]{filepath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8cpp_a94b2ba19a3b794242618c289dbe31159}\label{utils_8cpp_a94b2ba19a3b794242618c289dbe31159}} 
+\index{utils.cpp@{utils.cpp}!print\_material@{print\_material}}
+\index{print\_material@{print\_material}!utils.cpp@{utils.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_material()}{print\_material()}}
+{\footnotesize\ttfamily void print\+\_\+material (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structprojector_1_1material__data}{projector\+::material\+\_\+data}} \&}]{mat,  }\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8cpp_a4ed2ec22e1876d889301589e76e67967}\label{utils_8cpp_a4ed2ec22e1876d889301589e76e67967}} 
+\index{utils.cpp@{utils.cpp}!print\_nested\_exception@{print\_nested\_exception}}
+\index{print\_nested\_exception@{print\_nested\_exception}!utils.cpp@{utils.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_nested\_exception()}{print\_nested\_exception()}}
+{\footnotesize\ttfamily void print\+\_\+nested\+\_\+exception (\begin{DoxyParamCaption}\item[{const std\+::exception \&}]{e,  }\item[{int}]{level }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8cpp_ae463595a298f286530ed338083d310b6}\label{utils_8cpp_ae463595a298f286530ed338083d310b6}} 
+\index{utils.cpp@{utils.cpp}!symbol\_to\_atomic\_number@{symbol\_to\_atomic\_number}}
+\index{symbol\_to\_atomic\_number@{symbol\_to\_atomic\_number}!utils.cpp@{utils.cpp}}
+\doxysubsubsection{\texorpdfstring{symbol\_to\_atomic\_number()}{symbol\_to\_atomic\_number()}}
+{\footnotesize\ttfamily std\+::size\+\_\+t symbol\+\_\+to\+\_\+atomic\+\_\+number (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view \&}]{symbol }\end{DoxyParamCaption})}
+

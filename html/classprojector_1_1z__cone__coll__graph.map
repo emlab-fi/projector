@@ -1,0 +1,4 @@
+<map id="projector::z_cone" name="projector::z_cone">
+<area shape="rect" id="node1" title="Z axis aligned elliptic cone, defined by center point and parameters a, b, c." alt="" coords="7,80,140,107"/>
+<area shape="rect" id="node2" href="$structprojector_1_1surface.html" title="Abstract interface class representing a quadric surface." alt="" coords="5,5,141,32"/>
+</map>

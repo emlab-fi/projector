@@ -1,0 +1,120 @@
+\hypertarget{classprojector_1_1z__cone}{}\doxysection{projector\+::z\+\_\+cone Class Reference}
+\label{classprojector_1_1z__cone}\index{projector::z\_cone@{projector::z\_cone}}
+
+
+Z axis aligned elliptic cone, defined by center point and parameters a, b, c.  
+
+
+
+
+{\ttfamily \#include $<$surface.\+hpp$>$}
+
+
+
+Inheritance diagram for projector\+::z\+\_\+cone\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=182pt]{classprojector_1_1z__cone__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for projector\+::z\+\_\+cone\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=182pt]{classprojector_1_1z__cone__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classprojector_1_1z__cone_a34600b43e250b16d109a87eaa013ddac}{z\+\_\+cone}} (\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} center, double a, double b, double c)
+\item 
+double \mbox{\hyperlink{classprojector_1_1z__cone_a9196e32e183b432420213bf3b87e8a59}{distance\+\_\+along\+\_\+line}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&dir) const final
+\item 
+bool \mbox{\hyperlink{classprojector_1_1z__cone_a48d7c02f9e40a6585a2f18731f2bf3ff}{point\+\_\+inside}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p) const final
+\item 
+std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ \mbox{\hyperlink{classprojector_1_1z__cone_a1b290d4e105beab26f4a922c7407dbc8}{bounding\+\_\+box}} () const final
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Z axis aligned elliptic cone, defined by center point and parameters a, b, c. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classprojector_1_1z__cone_a34600b43e250b16d109a87eaa013ddac}\label{classprojector_1_1z__cone_a34600b43e250b16d109a87eaa013ddac}} 
+\index{projector::z\_cone@{projector::z\_cone}!z\_cone@{z\_cone}}
+\index{z\_cone@{z\_cone}!projector::z\_cone@{projector::z\_cone}}
+\doxysubsubsection{\texorpdfstring{z\_cone()}{z\_cone()}}
+{\footnotesize\ttfamily projector\+::z\+\_\+cone\+::z\+\_\+cone (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}}]{center,  }\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classprojector_1_1z__cone_a1b290d4e105beab26f4a922c7407dbc8}\label{classprojector_1_1z__cone_a1b290d4e105beab26f4a922c7407dbc8}} 
+\index{projector::z\_cone@{projector::z\_cone}!bounding\_box@{bounding\_box}}
+\index{bounding\_box@{bounding\_box}!projector::z\_cone@{projector::z\_cone}}
+\doxysubsubsection{\texorpdfstring{bounding\_box()}{bounding\_box()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ projector\+::z\+\_\+cone\+::bounding\+\_\+box (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate the bounding box of the surface.
+
+\begin{DoxyReturn}{Returns}
+pair of min and max points of the bounding box. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_a8e8cc49d1a3e48a7195571ae0ffcae96}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1z__cone_a9196e32e183b432420213bf3b87e8a59}\label{classprojector_1_1z__cone_a9196e32e183b432420213bf3b87e8a59}} 
+\index{projector::z\_cone@{projector::z\_cone}!distance\_along\_line@{distance\_along\_line}}
+\index{distance\_along\_line@{distance\_along\_line}!projector::z\_cone@{projector::z\_cone}}
+\doxysubsubsection{\texorpdfstring{distance\_along\_line()}{distance\_along\_line()}}
+{\footnotesize\ttfamily double projector\+::z\+\_\+cone\+::distance\+\_\+along\+\_\+line (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{dir }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate distance from point to the surface along a line.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point from which to calculate distance \\
+\hline
+{\em dir} & The vector defining the direction of the line, normalized\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Distance to the surface. Negative distance is inside the surface. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_acdc631f84b6bf343d915354778635ca5}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1z__cone_a48d7c02f9e40a6585a2f18731f2bf3ff}\label{classprojector_1_1z__cone_a48d7c02f9e40a6585a2f18731f2bf3ff}} 
+\index{projector::z\_cone@{projector::z\_cone}!point\_inside@{point\_inside}}
+\index{point\_inside@{point\_inside}!projector::z\_cone@{projector::z\_cone}}
+\doxysubsubsection{\texorpdfstring{point\_inside()}{point\_inside()}}
+{\footnotesize\ttfamily bool projector\+::z\+\_\+cone\+::point\+\_\+inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Determine whether a point is inside a surface.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point to determine. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if point is inside the surface, otherwise false 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_af1b6e4fc811c202d334b1e0303d51c16}{projector\+::surface}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{surface_8hpp}{surface.\+hpp}}\item 
+core/src/\mbox{\hyperlink{surface_8cpp}{surface.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,114 @@
+\hypertarget{structprojector_1_1tally}{}\doxysection{projector\+::tally Struct Reference}
+\label{structprojector_1_1tally}\index{projector::tally@{projector::tally}}
+
+
+Abstract class representing the interface for different tally types.  
+
+
+
+
+{\ttfamily \#include $<$tally.\+hpp$>$}
+
+
+
+Inheritance diagram for projector\+::tally\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=184pt]{structprojector_1_1tally__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{structprojector_1_1tally_a3bc6bc102bc14481e625a13db754ce7c}{$\sim$tally}} ()=default
+\item 
+virtual void \mbox{\hyperlink{structprojector_1_1tally_aead5eff8ddf8e024016471db9a911c98}{init\+\_\+tally}} ()=0
+\begin{DoxyCompactList}\small\item\em Initialize the tally, should be called only once at the beginning. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{structprojector_1_1tally_af0703f71a30cba4bb1661728ad23708f}{add\+\_\+particle}} (const \mbox{\hyperlink{structprojector_1_1particle}{particle}} \&p)=0
+\item 
+virtual void \mbox{\hyperlink{structprojector_1_1tally_a63cb52b48487e16fa8b992c78416eda4}{finalize\+\_\+data}} ()=0
+\item 
+virtual void \mbox{\hyperlink{structprojector_1_1tally_ab0366f3295ba09b7626876c1434eba2e}{save\+\_\+tally}} (const std\+::filesystem\+::path path) const =0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract class representing the interface for different tally types. 
+
+This class acts as an interface for different tallies and as such has no implementation whatsoever. Any derived class should only have the public methods that are virtual in this class, no other public methods. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structprojector_1_1tally_a3bc6bc102bc14481e625a13db754ce7c}\label{structprojector_1_1tally_a3bc6bc102bc14481e625a13db754ce7c}} 
+\index{projector::tally@{projector::tally}!````~tally@{$\sim$tally}}
+\index{````~tally@{$\sim$tally}!projector::tally@{projector::tally}}
+\doxysubsubsection{\texorpdfstring{$\sim$tally()}{~tally()}}
+{\footnotesize\ttfamily virtual projector\+::tally\+::$\sim$tally (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structprojector_1_1tally_af0703f71a30cba4bb1661728ad23708f}\label{structprojector_1_1tally_af0703f71a30cba4bb1661728ad23708f}} 
+\index{projector::tally@{projector::tally}!add\_particle@{add\_particle}}
+\index{add\_particle@{add\_particle}!projector::tally@{projector::tally}}
+\doxysubsubsection{\texorpdfstring{add\_particle()}{add\_particle()}}
+{\footnotesize\ttfamily virtual void projector\+::tally\+::add\+\_\+particle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structprojector_1_1particle}{particle}} \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Add single particle data to the tally results.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The particle to add \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_a8ae78075591decb128130d647a560a8b}{projector\+::uniform\+\_\+mesh\+\_\+tally}}.
+
+\mbox{\Hypertarget{structprojector_1_1tally_a63cb52b48487e16fa8b992c78416eda4}\label{structprojector_1_1tally_a63cb52b48487e16fa8b992c78416eda4}} 
+\index{projector::tally@{projector::tally}!finalize\_data@{finalize\_data}}
+\index{finalize\_data@{finalize\_data}!projector::tally@{projector::tally}}
+\doxysubsubsection{\texorpdfstring{finalize\_data()}{finalize\_data()}}
+{\footnotesize\ttfamily virtual void projector\+::tally\+::finalize\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Finalize the resulting data. Should be called only once at the end. 
+
+Implemented in \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_aaf7b22e9b6db53d7b9974a08f4c366cb}{projector\+::uniform\+\_\+mesh\+\_\+tally}}.
+
+\mbox{\Hypertarget{structprojector_1_1tally_aead5eff8ddf8e024016471db9a911c98}\label{structprojector_1_1tally_aead5eff8ddf8e024016471db9a911c98}} 
+\index{projector::tally@{projector::tally}!init\_tally@{init\_tally}}
+\index{init\_tally@{init\_tally}!projector::tally@{projector::tally}}
+\doxysubsubsection{\texorpdfstring{init\_tally()}{init\_tally()}}
+{\footnotesize\ttfamily virtual void projector\+::tally\+::init\+\_\+tally (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Initialize the tally, should be called only once at the beginning. 
+
+
+
+Implemented in \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_ac8be325ee8a8c29c7fd41c3ac9b84fb1}{projector\+::uniform\+\_\+mesh\+\_\+tally}}.
+
+\mbox{\Hypertarget{structprojector_1_1tally_ab0366f3295ba09b7626876c1434eba2e}\label{structprojector_1_1tally_ab0366f3295ba09b7626876c1434eba2e}} 
+\index{projector::tally@{projector::tally}!save\_tally@{save\_tally}}
+\index{save\_tally@{save\_tally}!projector::tally@{projector::tally}}
+\doxysubsubsection{\texorpdfstring{save\_tally()}{save\_tally()}}
+{\footnotesize\ttfamily virtual void projector\+::tally\+::save\+\_\+tally (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path}]{path }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Save tally results to filesystem.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path for the tally. Should not include the filename! \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally_a57ea2983619ffd6915a91900af386b91}{projector\+::uniform\+\_\+mesh\+\_\+tally}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{tally_8hpp}{tally.\+hpp}}\end{DoxyCompactItemize}

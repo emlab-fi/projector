@@ -1,0 +1,71 @@
+\hypertarget{utils_8hpp}{}\doxysection{core/include/utils.hpp File Reference}
+\label{utils_8hpp}\index{core/include/utils.hpp@{core/include/utils.hpp}}
+{\ttfamily \#include \char`\"{}material.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$exception$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$nlohmann/json.\+hpp$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+Include dependency graph for utils.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::size\+\_\+t \mbox{\hyperlink{utils_8hpp_ae463595a298f286530ed338083d310b6}{symbol\+\_\+to\+\_\+atomic\+\_\+number}} (const std\+::string\+\_\+view \&symbol)
+\item 
+void \mbox{\hyperlink{utils_8hpp_ace2191b67fa71378d939e0ea3fadeea3}{print\+\_\+nested\+\_\+exception}} (const std\+::exception \&e, int level=0)
+\item 
+nlohmann\+::json \mbox{\hyperlink{utils_8hpp_a171b5c5a3e54437a23869ac514c2340a}{load\+\_\+json\+\_\+file}} (std\+::filesystem\+::path)
+\item 
+void \mbox{\hyperlink{utils_8hpp_a94b2ba19a3b794242618c289dbe31159}{print\+\_\+material}} (const \mbox{\hyperlink{structprojector_1_1material__data}{projector\+::material\+\_\+data}} \&mat, const std\+::string \&name)
+\item 
+{\footnotesize template$<$typename T $>$ }\\Eigen\+::\+Matrix$<$ T, 1, 3 $>$ \mbox{\hyperlink{utils_8hpp_aaa63275ee881d09f0f15e3567c5ecf72}{vector\+\_\+from\+\_\+json}} (nlohmann\+::json \&j)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{utils_8hpp_a171b5c5a3e54437a23869ac514c2340a}\label{utils_8hpp_a171b5c5a3e54437a23869ac514c2340a}} 
+\index{utils.hpp@{utils.hpp}!load\_json\_file@{load\_json\_file}}
+\index{load\_json\_file@{load\_json\_file}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{load\_json\_file()}{load\_json\_file()}}
+{\footnotesize\ttfamily nlohmann\+::json load\+\_\+json\+\_\+file (\begin{DoxyParamCaption}\item[{std\+::filesystem\+::path}]{filepath }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8hpp_a94b2ba19a3b794242618c289dbe31159}\label{utils_8hpp_a94b2ba19a3b794242618c289dbe31159}} 
+\index{utils.hpp@{utils.hpp}!print\_material@{print\_material}}
+\index{print\_material@{print\_material}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{print\_material()}{print\_material()}}
+{\footnotesize\ttfamily void print\+\_\+material (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structprojector_1_1material__data}{projector\+::material\+\_\+data}} \&}]{mat,  }\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8hpp_ace2191b67fa71378d939e0ea3fadeea3}\label{utils_8hpp_ace2191b67fa71378d939e0ea3fadeea3}} 
+\index{utils.hpp@{utils.hpp}!print\_nested\_exception@{print\_nested\_exception}}
+\index{print\_nested\_exception@{print\_nested\_exception}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{print\_nested\_exception()}{print\_nested\_exception()}}
+{\footnotesize\ttfamily void print\+\_\+nested\+\_\+exception (\begin{DoxyParamCaption}\item[{const std\+::exception \&}]{e,  }\item[{int}]{level = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8hpp_ae463595a298f286530ed338083d310b6}\label{utils_8hpp_ae463595a298f286530ed338083d310b6}} 
+\index{utils.hpp@{utils.hpp}!symbol\_to\_atomic\_number@{symbol\_to\_atomic\_number}}
+\index{symbol\_to\_atomic\_number@{symbol\_to\_atomic\_number}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{symbol\_to\_atomic\_number()}{symbol\_to\_atomic\_number()}}
+{\footnotesize\ttfamily std\+::size\+\_\+t symbol\+\_\+to\+\_\+atomic\+\_\+number (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view \&}]{symbol }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{utils_8hpp_aaa63275ee881d09f0f15e3567c5ecf72}\label{utils_8hpp_aaa63275ee881d09f0f15e3567c5ecf72}} 
+\index{utils.hpp@{utils.hpp}!vector\_from\_json@{vector\_from\_json}}
+\index{vector\_from\_json@{vector\_from\_json}!utils.hpp@{utils.hpp}}
+\doxysubsubsection{\texorpdfstring{vector\_from\_json()}{vector\_from\_json()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+Eigen\+::\+Matrix$<$T, 1, 3$>$ vector\+\_\+from\+\_\+json (\begin{DoxyParamCaption}\item[{nlohmann\+::json \&}]{j }\end{DoxyParamCaption})}
+

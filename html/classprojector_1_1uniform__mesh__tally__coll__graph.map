@@ -1,0 +1,4 @@
+<map id="projector::uniform_mesh_tally" name="projector::uniform_mesh_tally">
+<area shape="rect" id="node1" title="Basic uniform mesh tally. Divides space into uniform grid." alt="" coords="5,80,144,121"/>
+<area shape="rect" id="node2" href="$structprojector_1_1tally.html" title="Abstract class representing the interface for different tally types." alt="" coords="16,5,133,32"/>
+</map>

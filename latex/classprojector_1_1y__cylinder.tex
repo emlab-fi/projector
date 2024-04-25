@@ -1,0 +1,120 @@
+\hypertarget{classprojector_1_1y__cylinder}{}\doxysection{projector\+::y\+\_\+cylinder Class Reference}
+\label{classprojector_1_1y__cylinder}\index{projector::y\_cylinder@{projector::y\_cylinder}}
+
+
+Y axis aligned elliptic cylinder, defined by center point and 2 radii a, b.  
+
+
+
+
+{\ttfamily \#include $<$surface.\+hpp$>$}
+
+
+
+Inheritance diagram for projector\+::y\+\_\+cylinder\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classprojector_1_1y__cylinder__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for projector\+::y\+\_\+cylinder\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classprojector_1_1y__cylinder__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classprojector_1_1y__cylinder_a466788b3b7a3bbfb45318c83444d348e}{y\+\_\+cylinder}} (\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} center, double a, double b)
+\item 
+double \mbox{\hyperlink{classprojector_1_1y__cylinder_a577acec35d3d98f0ee443fcc7cee9e2e}{distance\+\_\+along\+\_\+line}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&dir) const final
+\item 
+bool \mbox{\hyperlink{classprojector_1_1y__cylinder_abaccec1df5aa066fa9346a3c245eb1ce}{point\+\_\+inside}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p) const final
+\item 
+std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ \mbox{\hyperlink{classprojector_1_1y__cylinder_a115f97e01a9d07457c4c60671d8795b8}{bounding\+\_\+box}} () const final
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Y axis aligned elliptic cylinder, defined by center point and 2 radii a, b. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classprojector_1_1y__cylinder_a466788b3b7a3bbfb45318c83444d348e}\label{classprojector_1_1y__cylinder_a466788b3b7a3bbfb45318c83444d348e}} 
+\index{projector::y\_cylinder@{projector::y\_cylinder}!y\_cylinder@{y\_cylinder}}
+\index{y\_cylinder@{y\_cylinder}!projector::y\_cylinder@{projector::y\_cylinder}}
+\doxysubsubsection{\texorpdfstring{y\_cylinder()}{y\_cylinder()}}
+{\footnotesize\ttfamily projector\+::y\+\_\+cylinder\+::y\+\_\+cylinder (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}}]{center,  }\item[{double}]{a,  }\item[{double}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classprojector_1_1y__cylinder_a115f97e01a9d07457c4c60671d8795b8}\label{classprojector_1_1y__cylinder_a115f97e01a9d07457c4c60671d8795b8}} 
+\index{projector::y\_cylinder@{projector::y\_cylinder}!bounding\_box@{bounding\_box}}
+\index{bounding\_box@{bounding\_box}!projector::y\_cylinder@{projector::y\_cylinder}}
+\doxysubsubsection{\texorpdfstring{bounding\_box()}{bounding\_box()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ projector\+::y\+\_\+cylinder\+::bounding\+\_\+box (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate the bounding box of the surface.
+
+\begin{DoxyReturn}{Returns}
+pair of min and max points of the bounding box. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_a8e8cc49d1a3e48a7195571ae0ffcae96}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1y__cylinder_a577acec35d3d98f0ee443fcc7cee9e2e}\label{classprojector_1_1y__cylinder_a577acec35d3d98f0ee443fcc7cee9e2e}} 
+\index{projector::y\_cylinder@{projector::y\_cylinder}!distance\_along\_line@{distance\_along\_line}}
+\index{distance\_along\_line@{distance\_along\_line}!projector::y\_cylinder@{projector::y\_cylinder}}
+\doxysubsubsection{\texorpdfstring{distance\_along\_line()}{distance\_along\_line()}}
+{\footnotesize\ttfamily double projector\+::y\+\_\+cylinder\+::distance\+\_\+along\+\_\+line (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{dir }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate distance from point to the surface along a line.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point from which to calculate distance \\
+\hline
+{\em dir} & The vector defining the direction of the line, normalized\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Distance to the surface. Negative distance is inside the surface. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_acdc631f84b6bf343d915354778635ca5}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1y__cylinder_abaccec1df5aa066fa9346a3c245eb1ce}\label{classprojector_1_1y__cylinder_abaccec1df5aa066fa9346a3c245eb1ce}} 
+\index{projector::y\_cylinder@{projector::y\_cylinder}!point\_inside@{point\_inside}}
+\index{point\_inside@{point\_inside}!projector::y\_cylinder@{projector::y\_cylinder}}
+\doxysubsubsection{\texorpdfstring{point\_inside()}{point\_inside()}}
+{\footnotesize\ttfamily bool projector\+::y\+\_\+cylinder\+::point\+\_\+inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Determine whether a point is inside a surface.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point to determine. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if point is inside the surface, otherwise false 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_af1b6e4fc811c202d334b1e0303d51c16}{projector\+::surface}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{surface_8hpp}{surface.\+hpp}}\item 
+core/src/\mbox{\hyperlink{surface_8cpp}{surface.\+cpp}}\end{DoxyCompactItemize}

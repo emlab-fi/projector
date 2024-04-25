@@ -1,0 +1,4 @@
+<map id="projector::y_cylinder" name="projector::y_cylinder">
+<area shape="rect" id="node1" title="Y axis aligned elliptic cylinder, defined by center point and 2 radii a, b." alt="" coords="5,80,160,107"/>
+<area shape="rect" id="node2" href="$structprojector_1_1surface.html" title="Abstract interface class representing a quadric surface." alt="" coords="15,5,151,32"/>
+</map>

@@ -1,0 +1,68 @@
+\hypertarget{material_8hpp}{}\doxysection{core/include/material.hpp File Reference}
+\label{material_8hpp}\index{core/include/material.hpp@{core/include/material.hpp}}
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for material.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{material_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{material_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structprojector_1_1sampled__xs}{projector\+::sampled\+\_\+xs}}
+\item 
+class \mbox{\hyperlink{classprojector_1_1element}{projector\+::element}}
+\item 
+struct \mbox{\hyperlink{structprojector_1_1material__data}{projector\+::material\+\_\+data}}
+\item 
+class \mbox{\hyperlink{classprojector_1_1data__library}{projector\+::data\+\_\+library}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceprojector}{projector}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespaceprojector_a8ca4e482c354b1bf23340152dacb37dc}{projector\+::parsed\+\_\+material}} = std\+::vector$<$ std\+::pair$<$ std\+::string\+\_\+view, int $>$ $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bb}{projector\+::cross\+\_\+section}} \{ \newline
+\mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bbacd98a14b44232a1e1d3aa95ccda36b67}{projector\+::no\+\_\+interaction}} = 0
+, \mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bbab45881722a5a20905631236c929bc6cb}{projector\+::coherent}} = 1
+, \mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bba817c99f619bc18fbcc8987eecc62f798}{projector\+::incoherent}} = 2
+, \mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bba2ce34f12d3401a4f13a0abf9fdce544c}{projector\+::photoelectric}} = 3
+, \newline
+\mbox{\hyperlink{namespaceprojector_aecbc21f2c0acc66e6eb84dcd253652bba49990820b52a321c5deeaec5e663d0d1}{projector\+::pair\+\_\+production}} = 4
+ \}
+\item 
+enum class \mbox{\hyperlink{namespaceprojector_aa666d26a96b57eea36f444f761d9c308}{projector\+::form\+\_\+factor}} \{ \mbox{\hyperlink{namespaceprojector_aa666d26a96b57eea36f444f761d9c308a844b3b624b2c6002a103dc8642a8bfa8}{projector\+::no\+\_\+form\+\_\+factor}} = 0
+, \mbox{\hyperlink{namespaceprojector_aa666d26a96b57eea36f444f761d9c308a817c99f619bc18fbcc8987eecc62f798}{projector\+::incoherent}} = 1
+, \mbox{\hyperlink{namespaceprojector_aa666d26a96b57eea36f444f761d9c308ac8cf83b59e3f4a4694a8aa6691006a0d}{projector\+::differential\+\_\+coherent}} = 2
+, \mbox{\hyperlink{namespaceprojector_aa666d26a96b57eea36f444f761d9c308a4eea5a6b3beeb3349357198f796b4f98}{projector\+::cumulative\+\_\+coherent}} = 3
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+parsed\+\_\+material \mbox{\hyperlink{namespaceprojector_a18c8a0a42e99347718a30aca68371d27}{projector\+::parse\+\_\+material\+\_\+string}} (const std\+::string\+\_\+view \&material)
+\end{DoxyCompactItemize}

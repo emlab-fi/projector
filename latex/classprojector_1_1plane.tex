@@ -1,0 +1,120 @@
+\hypertarget{classprojector_1_1plane}{}\doxysection{projector\+::plane Class Reference}
+\label{classprojector_1_1plane}\index{projector::plane@{projector::plane}}
+
+
+A generic surface defined by a point and a normal vector.  
+
+
+
+
+{\ttfamily \#include $<$surface.\+hpp$>$}
+
+
+
+Inheritance diagram for projector\+::plane\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=182pt]{classprojector_1_1plane__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for projector\+::plane\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=182pt]{classprojector_1_1plane__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classprojector_1_1plane_ac87db86a1fb9752ad4116500b8187abc}{plane}} (\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} center, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} norm)
+\item 
+double \mbox{\hyperlink{classprojector_1_1plane_a41b7f34eb6f636c664e56aa6c7b3cf14}{distance\+\_\+along\+\_\+line}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p, const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&dir) const final
+\item 
+bool \mbox{\hyperlink{classprojector_1_1plane_a3ec43f739dc7895ccca8c1173d310845}{point\+\_\+inside}} (const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&p) const final
+\item 
+std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ \mbox{\hyperlink{classprojector_1_1plane_af6a9924d8020dec142581256d569f7ea}{bounding\+\_\+box}} () const final
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A generic surface defined by a point and a normal vector. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classprojector_1_1plane_ac87db86a1fb9752ad4116500b8187abc}\label{classprojector_1_1plane_ac87db86a1fb9752ad4116500b8187abc}} 
+\index{projector::plane@{projector::plane}!plane@{plane}}
+\index{plane@{plane}!projector::plane@{projector::plane}}
+\doxysubsubsection{\texorpdfstring{plane()}{plane()}}
+{\footnotesize\ttfamily projector\+::plane\+::plane (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}}]{center,  }\item[{\mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}}]{norm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classprojector_1_1plane_af6a9924d8020dec142581256d569f7ea}\label{classprojector_1_1plane_af6a9924d8020dec142581256d569f7ea}} 
+\index{projector::plane@{projector::plane}!bounding\_box@{bounding\_box}}
+\index{bounding\_box@{bounding\_box}!projector::plane@{projector::plane}}
+\doxysubsubsection{\texorpdfstring{bounding\_box()}{bounding\_box()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}}, \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} $>$ projector\+::plane\+::bounding\+\_\+box (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate the bounding box of the surface.
+
+\begin{DoxyReturn}{Returns}
+pair of min and max points of the bounding box. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_a8e8cc49d1a3e48a7195571ae0ffcae96}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1plane_a41b7f34eb6f636c664e56aa6c7b3cf14}\label{classprojector_1_1plane_a41b7f34eb6f636c664e56aa6c7b3cf14}} 
+\index{projector::plane@{projector::plane}!distance\_along\_line@{distance\_along\_line}}
+\index{distance\_along\_line@{distance\_along\_line}!projector::plane@{projector::plane}}
+\doxysubsubsection{\texorpdfstring{distance\_along\_line()}{distance\_along\_line()}}
+{\footnotesize\ttfamily double projector\+::plane\+::distance\+\_\+along\+\_\+line (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p,  }\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{dir }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Calculate distance from point to the surface along a line.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point from which to calculate distance \\
+\hline
+{\em dir} & The vector defining the direction of the line, normalized\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Distance to the surface. Negative distance is inside the surface. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_acdc631f84b6bf343d915354778635ca5}{projector\+::surface}}.
+
+\mbox{\Hypertarget{classprojector_1_1plane_a3ec43f739dc7895ccca8c1173d310845}\label{classprojector_1_1plane_a3ec43f739dc7895ccca8c1173d310845}} 
+\index{projector::plane@{projector::plane}!point\_inside@{point\_inside}}
+\index{point\_inside@{point\_inside}!projector::plane@{projector::plane}}
+\doxysubsubsection{\texorpdfstring{point\_inside()}{point\_inside()}}
+{\footnotesize\ttfamily bool projector\+::plane\+::point\+\_\+inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceprojector_afef84c34575db60f2549328ff1691d0e}{vec3}} \&}]{p }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [final]}, {\ttfamily [virtual]}}
+
+Determine whether a point is inside a surface.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The point to determine. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if point is inside the surface, otherwise false 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{structprojector_1_1surface_af1b6e4fc811c202d334b1e0303d51c16}{projector\+::surface}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+core/include/\mbox{\hyperlink{surface_8hpp}{surface.\+hpp}}\item 
+core/src/\mbox{\hyperlink{surface_8cpp}{surface.\+cpp}}\end{DoxyCompactItemize}

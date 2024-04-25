@@ -1,0 +1,44 @@
+\hypertarget{tally_8hpp}{}\doxysection{core/include/tally.hpp File Reference}
+\label{tally_8hpp}\index{core/include/tally.hpp@{core/include/tally.hpp}}
+{\ttfamily \#include \char`\"{}particle.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for tally.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tally_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tally_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structprojector_1_1tally}{projector\+::tally}}
+\begin{DoxyCompactList}\small\item\em Abstract class representing the interface for different tally types. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classprojector_1_1uniform__mesh__tally}{projector\+::uniform\+\_\+mesh\+\_\+tally}}
+\begin{DoxyCompactList}\small\item\em Basic uniform mesh tally. Divides space into uniform grid. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceprojector}{projector}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71}{projector\+::tally\+\_\+score}} \{ \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71aab18b3e58a3b1bb5106ced208a8bd460}{projector\+::flux}}
+, \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71a2fa39553fad67f457ef0c930c6738ce7}{projector\+::average\+\_\+energy}}
+, \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71a836c8632a403082c29c4a2ed4bc61cb4}{projector\+::interaction\+\_\+counts}}
+, \mbox{\hyperlink{namespaceprojector_a9412759427ee13f676760fd7f40c6e71a075e6b094871e301b89db99a959308f6}{projector\+::deposited\+\_\+energy}}
+ \}
+\begin{DoxyCompactList}\small\item\em The various scores (physical quantities) that can be evaluated. \end{DoxyCompactList}\end{DoxyCompactItemize}
