@@ -8,11 +8,11 @@ Algorithmically similar to common standard simulators (MCNP, OpenMC, PENELOPE, S
 
 Currently uses [eprdata14](https://nucleardata.lanl.gov/ace/eprdata14/) ACE as cross section source.
 
-## Structure
+### Structure
 - `core` - the main compute core of the simulator
 - `docs` - documentation
 - `tooling` - python tooling for running the simulator and data visualization
 
-## License
+### License
 
 MIT license, see LICENSE file.
