@@ -25,6 +25,7 @@ The main file contains configuration of the simulator itself and the paths to ot
 |`bounding_box`| `[[float]]` | Array of min and max coordinates of the simulation (example bellow) |
 |`material_file`| `string` | Path to the material JSON file |
 |`object_file`| `string` | Path to the objects JSON file |
+|`sources_file`| `string` | Path to the sources JSON file |
 |`tallies_file`| `string` | Path to the tallies JSON file |
 |`output_path` | `string` | Output path (where to save output data) |
 
@@ -145,6 +146,28 @@ The fields for the `source` are the following:
 |`photon_count`|`uint`| how many photons originate from this source |
 |`direction` |`[x, y, z]`| direction of the photons |
 |`spread`|`float`|cosine of angle of maximum spread away from the direction |
+
+## Sources file
+
+This file describes the particle sources for the simulation.
+The file is organized similar to the material file, an array `sources` containing the source objects with the parameters.
+
+### Source fields
+
+|field|type|description|
+|:----|:--:|:----------|
+|`id`|`string`| user defined source ID |
+|`energy`|`float`| photon energy in MEv |
+|`count`|`uint`| number of photons |
+|`direction` |`[x, y, z]`| direction of the photons |
+|`spread`|`float`|cosine of angle of maximum spread away from the direction |
+|`location`|`json object`| definition for source location |
+
+### location fields
+|field|type|description|
+|:----|:--:|:----------|
+|`object_id`|`string`| ID of the geometry object as a source |
+|`rectangle` | `[[x1,y1,z1], [x2,y2,z2]]` | Rectangle lower and upper bound |
 
 ## Tally file
 

@@ -25,7 +25,7 @@ They are a mix of actual features and development targets.
 - [ ] fix/improve unit testing
 - [ ] separate sources from geometry objects (still can use objects as volume)
 - [ ] object instancing/grids
-- [ ] add timestamp for events
+- [x] add timestamp for events
 - [ ] switch to eV from MeV, cm2 from barns
     - [ ] investigate why it fails at some instances
 - [ ] simulate more interactions (bremstrahhlung, proper compton?)
