@@ -7,6 +7,7 @@ namespace {} // namespace
 
 namespace projector {
 
+double &particle::time() { return history.times.back(); }
 
 double &particle::energy() { return history.energies.back(); }
 
@@ -68,10 +69,14 @@ void particle::photon_interaction(const element &element) {
 void particle::advance(double distance) {
 
     history.energies.push_back(energy());
+    history.times.push_back(time());
     history.interactions.push_back(cross_section::no_interaction);
     history.elements.push_back(0);
 
     vec3 new_position = position() + distance * direction;
+
+    // distance is in cm, we need to convert to meters
+    time() += (distance / 100) / constants::light_speed;
 
     history.points.push_back(new_position);
 }

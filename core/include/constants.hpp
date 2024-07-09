@@ -10,6 +10,9 @@ constexpr double pi = std::numbers::pi_v<double>;
 // these constants are taken from openmc and
 // https://physics.nist.gov/cuu/Constants/
 
+/// speed of light in m/s
+constexpr double light_speed = 299'792'458.0;
+
 /// electron mass in mev/c^2
 constexpr double electron_mass_ev = 0.51099895000;
 
