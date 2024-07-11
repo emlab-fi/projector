@@ -64,7 +64,8 @@ void env_slice_plot(const environment &env, const char plane, double center,
             for (int i = env.objects.size() - 1; i >= 0; --i) {
                 if (env.objects[i].geom.point_inside(position)) {
                     object = env.objects[i].id;
-                    material = env.material_ids[env.objects[i].material_id];
+                    auto mat_id = env.objects[i].material_id;
+                    material = env.materials[mat_id].id;
                     break;
                 }
             }

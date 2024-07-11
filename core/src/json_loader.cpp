@@ -6,15 +6,17 @@
 
 namespace {
 
-std::size_t find_mat_id(const std::string &str, const std::vector<std::string> &ids) {
+template <typename T> std::size_t find_id(const std::string &str, const std::vector<T> &objs) {
 
-    for (std::size_t index = 0; index < ids.size(); ++index) {
-        if (ids[index] == str) {
+    static_assert(std::same_as<decltype(std::declval<T>().id), std::string>);
+
+    for (std::size_t index = 0; index < objs.size(); ++index) {
+        if (objs[index].id == str) {
             return index;
         }
     }
 
-    throw std::runtime_error(std::string("material ID not found:").append(str));
+    throw std::runtime_error(std::string("ID not found:").append(str));
 }
 
 
@@ -271,11 +273,9 @@ void load_material_data(std::filesystem::path path, environment &env) {
             throw std::runtime_error("Material def is not a JSON object");
         }
 
-        std::string id_string;
-        material.at("id").get_to(id_string);
-        env.material_ids.push_back(id_string);
-
         material_data temp;
+
+        material.at("id").get_to(temp.id);
 
         material.at("density").get_to(temp.density);
 
@@ -299,10 +299,6 @@ void load_material_data(std::filesystem::path path, environment &env) {
 
         env.materials.push_back(temp);
     }
-
-    if (env.materials.size() != env.material_ids.size()) {
-        throw std::runtime_error("Error while loading material data, length mismatch");
-    }
 }
 
 void load_object_data(std::filesystem::path path, environment &env) {
@@ -322,26 +318,10 @@ void load_object_data(std::filesystem::path path, environment &env) {
 
         obj_json.at("id").get_to(new_obj.id);
 
-        new_obj.photons_activity = 0;
-        new_obj.photons_energy = 0.0;
-
-        if (obj_json.contains("source")) {
-
-            obj_json.at("source").at("photon_count").get_to(new_obj.photons_activity);
-
-            obj_json.at("source").at("photon_energy").get_to(new_obj.photons_energy);
-
-            new_obj.photons_dir = vector_from_json<double>(obj_json.at("source").at("direction"));
-
-            new_obj.photons_dir.normalize();
-
-            obj_json.at("source").at("spread").get_to(new_obj.photons_spread);
-        }
-
         std::string material_string;
         obj_json.at("material_id").get_to(material_string);
 
-        new_obj.material_id = find_mat_id(material_string, env.material_ids);
+        new_obj.material_id = find_id(material_string, env.materials);
 
         std::string geom_key;
         obj_json.at("geometry").get_to(geom_key);
@@ -361,6 +341,51 @@ void load_object_data(std::filesystem::path path, environment &env) {
         new_obj.geom.update_bounding_box(min_bb, max_bb);
 
         env.objects.push_back(std::move(new_obj));
+    }
+}
+
+void load_source_data(std::filesystem::path path, environment &env) {
+    nlohmann::json file = load_json_file(path);
+
+    if (!file.is_object()) {
+        throw std::runtime_error("The top level is not a JSON object");
+    }
+
+    for (auto &src_json : file.at("sources")) {
+        source new_src;
+
+        src_json.at("id").get_to(new_src.id);
+
+        src_json.at("energy").get_to(new_src.energy);
+
+        src_json.at("activity").get_to(new_src.activity);
+
+        new_src.dir = vector_from_json<double>(src_json.at("direction"));
+        new_src.dir.normalize();
+
+        src_json.at("spread").get_to(new_src.spread);
+
+        if (src_json.at("location").contains("object_id")) {
+            std::string object_id;
+
+            src_json.at("location/object_id").at("object_id").get_to(object_id);
+
+            new_src.object_id = find_id(object_id, env.objects);
+
+        } else if (src_json.at("location").contains("box")) {
+
+            vec3 min_bb = vector_from_json<double>(src_json.at("location").at("box").at(0));
+            vec3 max_bb = vector_from_json<double>(src_json.at("location").at("box").at(1));
+
+            new_src.bound_box = {min_bb, max_bb};
+
+        } else {
+
+            throw std::runtime_error(
+                std::string("Source has no location! Source id: ").append(new_src.id));
+        }
+
+        env.sources.push_back(new_src);
     }
 }
 

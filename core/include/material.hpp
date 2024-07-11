@@ -60,6 +60,8 @@ public:
 };
 
 struct material_data {
+    std::string id;
+
     double density;
     double total_atomic_density;
     double molar_mass;

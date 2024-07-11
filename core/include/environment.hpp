@@ -47,8 +47,6 @@ struct environment {
 
     data_library cross_section_data;
 
-    std::vector<std::string> material_ids;
-
     std::vector<material_data> materials;
 
     std::vector<object> objects;
