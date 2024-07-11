@@ -12,13 +12,20 @@ namespace projector {
 
 struct object {
     std::string id;
-    std::size_t photons_activity;
-    double photons_energy;
-    vec3 photons_dir;
-    double photons_spread;
 
     std::size_t material_id;
     geometry geom;
+};
+
+struct source {
+    std::string id;
+    std::size_t activity;
+    double energy;
+    vec3 dir;
+    double spread;
+
+    std::optional<std::size_t> object_id;
+    std::optional<bounding_box> bound_box;
 };
 
 struct environment {
@@ -34,6 +41,7 @@ struct environment {
 
     std::filesystem::path material_path;
     std::filesystem::path objects_path;
+    std::filesystem::path source_path;
     std::filesystem::path tally_path;
     std::filesystem::path output_path;
 
@@ -44,6 +52,8 @@ struct environment {
     std::vector<material_data> materials;
 
     std::vector<object> objects;
+
+    std::vector<source> sources;
 
     std::vector<std::unique_ptr<tally>> tallies;
 

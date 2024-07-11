@@ -91,6 +91,11 @@ int main(int argc, char *argv[]) {
         std::cout << "Loading objects file: " << object_path << std::endl;
         projector::load_object_data(object_path, sim_env);
 
+        std::filesystem::path source_path = config_path;
+        source_path.replace_filename(sim_env.source_path);
+
+        std::cout << "Loading sources file: " << source_path << std::endl;
+
         std::filesystem::path tally_path = config_path;
         tally_path.replace_filename(sim_env.tally_path);
 

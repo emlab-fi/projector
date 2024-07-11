@@ -65,26 +65,31 @@ void initialize_runtime(environment &env, int max_threads) {
 
     seed_master_prng(env.seed);
 
-    // sample objects and create particles
-    for (object &obj : env.objects) {
+    // sample sources and create particles
+    for (source &src : env.sources) {
 
         uint64_t prng_local = generate_prng_seed();
 
-        for (std::size_t i = 0; i < obj.photons_activity; ++i) {
+        for (std::size_t i = 0; i < src.activity; ++i) {
 
-            double mu = obj.photons_spread + prng_double(prng_local) * (1.0 - obj.photons_spread);
+            double mu = src.spread + prng_double(prng_local) * (1.0 - src.spread);
             double phi = prng_double(prng_local) * 2.0 * constants::pi;
-            vec3 direction = rotate_direction(obj.photons_dir, mu, phi);
+            vec3 direction = rotate_direction(src.dir, mu, phi);
 
 
             particle p = {.particle_type = particle::type::photon,
                           .direction = direction,
                           .prng_state = generate_prng_seed()};
             p.history.elements.push_back(0);
-            p.history.energies.push_back(obj.photons_energy);
+            p.history.energies.push_back(src.energy);
             p.history.interactions.push_back(cross_section::no_interaction);
-            p.history.points.push_back(obj.geom.sample_point(prng_local));
 
+            if (src.object_id) {
+                p.history.points.push_back(
+                    env.objects[*src.object_id].geom.sample_point(prng_local));
+            } else {
+                p.history.points.push_back(src.bound_box->random_sample(prng_local));
+            }
             env.particles.push_back(p);
         }
     }
@@ -98,8 +103,8 @@ void calculate_particle_histories(environment &env) {
 
     std::size_t counter = 0;
 
-    // simulate each particle separately
-    #pragma omp parallel for
+// simulate each particle separately
+#pragma omp parallel for
     for (particle &p : env.particles) {
 
         object *current_obj = get_current_obj(env.objects, p.position());
@@ -158,7 +163,7 @@ void calculate_particle_histories(environment &env) {
 void process_tallies(environment &env) {
 
     for (auto &tally : env.tallies) {
-        #pragma omp parallel for
+#pragma omp parallel for
         for (auto &particle : env.particles) {
             tally->add_particle(particle);
         }
