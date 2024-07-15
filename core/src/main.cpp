@@ -95,6 +95,7 @@ int main(int argc, char *argv[]) {
         source_path.replace_filename(sim_env.source_path);
 
         std::cout << "Loading sources file: " << source_path << std::endl;
+        projector::load_source_data(source_path, sim_env);
 
         std::filesystem::path tally_path = config_path;
         tally_path.replace_filename(sim_env.tally_path);
@@ -148,6 +149,7 @@ int main(int argc, char *argv[]) {
 
         std::cout << "Saving data to: " << sim_env.output_path << std::endl;
         projector::save_data(sim_env);
+        return EXIT_SUCCESS;
     }
 
     std::cout << "Invalid subcommand, exiting" << std::endl;

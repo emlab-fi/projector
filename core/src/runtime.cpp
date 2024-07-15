@@ -81,6 +81,7 @@ void initialize_runtime(environment &env, int max_threads) {
                           .direction = direction,
                           .prng_state = generate_prng_seed()};
             p.history.elements.push_back(0);
+            p.history.times.push_back(0.0);
             p.history.energies.push_back(src.energy);
             p.history.interactions.push_back(cross_section::no_interaction);
 

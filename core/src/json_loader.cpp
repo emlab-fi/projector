@@ -246,6 +246,7 @@ void load_simulation_data(std::filesystem::path path, environment &env) {
 
     conf.at("material_file").get_to(env.material_path);
     conf.at("object_file").get_to(env.objects_path);
+    conf.at("source_file").get_to(env.source_path);
     conf.at("tally_file").get_to(env.tally_path);
     conf.at("output_path").get_to(env.output_path);
 

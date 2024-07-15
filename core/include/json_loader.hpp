@@ -34,6 +34,8 @@ void load_material_data(std::filesystem::path path, environment &env);
 
 void load_object_data(std::filesystem::path path, environment &env);
 
+void load_source_data(std::filesystem::path path, environment &env);
+
 void load_tally_data(std::filesystem::path path, environment &env);
 
 } // namespace projector
