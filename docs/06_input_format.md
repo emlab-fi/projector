@@ -135,17 +135,6 @@ It is best to see an example at the end of this page.
 |`geometry`|`string`| the name of the geometry for the object, must be a key in `geometries` |
 |`material`|`string`| the object material ID, must be a valid material in the materials JSON file |
 |`bounding_box`|`[[float]]`| optional bounding box of the object, if not present it's approximated automatically from the geometry (for an example see main file docs) |
-|`source`|`json object`| optional object defining the particle source properties of the object |
-
-When the `source` field is present, the object is considered as a source of particles.
-The fields for the `source` are the following:
-
-|field|type|description|
-|:----|:--:|:----------|
-|`photon_energy`|`float`| photon energy in MEv |
-|`photon_count`|`uint`| how many photons originate from this source |
-|`direction` |`[x, y, z]`| direction of the photons |
-|`spread`|`float`|cosine of angle of maximum spread away from the direction |
 
 ## Sources file
 
@@ -158,16 +147,16 @@ The file is organized similar to the material file, an array `sources` containin
 |:----|:--:|:----------|
 |`id`|`string`| user defined source ID |
 |`energy`|`float`| photon energy in MEv |
-|`count`|`uint`| number of photons |
+|`activity`|`uint`| number of photons |
 |`direction` |`[x, y, z]`| direction of the photons |
-|`spread`|`float`|cosine of angle of maximum spread away from the direction |
+|`spread`|`float`| cosine of angle of maximum spread away from the direction |
 |`location`|`json object`| definition for source location |
 
 ### location fields
 |field|type|description|
 |:----|:--:|:----------|
 |`object_id`|`string`| ID of the geometry object as a source |
-|`rectangle` | `[[x1,y1,z1], [x2,y2,z2]]` | Rectangle lower and upper bound |
+|`box`|`[[float]]`| location box of the source,  (for an example see main file docs) |
 
 ## Tally file
 
@@ -182,14 +171,26 @@ More details on tallies are here: [tallies](03_tallies.md).
 |:----|:--:|:----------|
 |`id`|`string` |user supplied ID for easy identification |
 |`type`| `string` | type of the tally, currently only `uniform_mesh` is supported |
-|`score`| `string` | the physical quantity to evaluate |
 |`parameters`| `object` | parameters for the tally, depend on the type |
+|`filters`|`object`| filters for the tally |
 
 The `parameters` entry is an object of more key-value pairs.
 The keys depend on the type of the tally, short overview of required keys for tallies is bellow.
 
 |tally type|required parameters|supported scores|
 |:---------|:------------------|:---------------|
-|`uniform_mesh`|`start`, `end`, `resolution`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
-|`volume`|`object_id`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
-|`scintillator`|`object_id`, `energy_range_bins`, `energy_max`||
+|`uniform_mesh`|`start`, `end`, `resolution`, `score`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
+|`volume`|`score`|`flux`, `average_energy`, `interaction_counts`, `deposited_energy`|
+|`energy_histogram`|`energy_range_bins`, `energy_max`||
+
+The `filters` entry is an optional object of key-value pairs.
+Each key is a filter and you can compose several filters together.
+
+|field|type|description|
+|:----|:--:|:----------|
+|`energy_range`|`[min, max]`| energy range of the particle |
+|`element`|`int`| Interaction element atomic number |
+|`interaction_type`|`string`| interaction type |
+|`geometry_id`|`string`| user ID of geometry |
+|`material_id`|`string`| user ID of material |
+|`source_id`|`string`| user ID of the particle source |

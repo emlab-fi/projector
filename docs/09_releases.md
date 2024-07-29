@@ -20,10 +20,11 @@ They are a mix of actual features and development targets.
 - [ ] rewrite talies
     - [ ] filters
     - [ ] various quantities
-    - [ ] approximators?
     - [ ] statistical calculations
+    - [ ] batch support
+    - [ ] normalization per source strength
 - [ ] fix/improve unit testing
-- [ ] separate sources from geometry objects (still can use objects as volume)
+- [x] separate sources from geometry objects (still can use objects as volume)
 - [ ] object instancing/grids
 - [x] add timestamp for events
 - [ ] switch to eV from MeV, cm2 from barns
