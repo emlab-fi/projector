@@ -20,9 +20,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(tally_score,
                                  {tally_score::average_energy, "average_energy"},
                                  {tally_score::interaction_counts, "interaction_counts"},
                                  {tally_score::deposited_energy, "deposited_energy"}
-                             }
-
-)
+                             })
 
 std::unique_ptr<surface> parse_surface(nlohmann::json &j);
 
