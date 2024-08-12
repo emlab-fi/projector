@@ -65,6 +65,7 @@ set(PROJECTOR_LIB_SRC
 	src/runtime.cpp
 	src/surface.cpp
 	src/uniform_mesh_tally.cpp
+	src/filter.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

@@ -53,7 +53,7 @@ struct environment {
 
     std::vector<source> sources;
 
-    std::vector<std::unique_ptr<tally>> tallies;
+    std::vector<tally_manager> tallies;
 
     std::vector<particle> particles;
 };

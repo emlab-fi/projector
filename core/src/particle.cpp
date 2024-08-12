@@ -9,9 +9,15 @@ namespace projector {
 
 double &particle::time() { return history.times.back(); }
 
+const double &particle::time() const { return history.times.back(); }
+
 double &particle::energy() { return history.energies.back(); }
 
+const double &particle::energy() const { return history.energies.back(); }
+
 vec3 &particle::position() { return history.points.back(); }
+
+const vec3 &particle::position() const { return history.points.back(); }
 
 void particle::photon_interaction(const element &element) {
 

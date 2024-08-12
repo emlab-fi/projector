@@ -10,6 +10,8 @@ They are a mix of actual features and development targets.
     - [ ] do not load all elements?
 - [ ] look into mesh support (STL? OBJ?)
 - [ ] non-x86 runtimes
+- [ ] switch to eV from MeV, cm2 from barns
+    - [ ] investigate why it fails at some instances
 - [ ] benchmarks
 - [ ] verification, validation
 - [ ] more generic ACE data parsing
@@ -18,8 +20,7 @@ They are a mix of actual features and development targets.
 ## v0.2
 
 - [ ] rewrite talies
-    - [ ] filters
-    - [ ] various quantities
+    - [x] filters
     - [ ] statistical calculations
     - [ ] batch support
     - [ ] normalization per source strength
@@ -27,8 +28,6 @@ They are a mix of actual features and development targets.
 - [x] separate sources from geometry objects (still can use objects as volume)
 - [ ] object instancing/grids
 - [x] add timestamp for events
-- [ ] switch to eV from MeV, cm2 from barns
-    - [ ] investigate why it fails at some instances
 - [ ] simulate more interactions (bremstrahhlung, proper compton?)
 - [ ] batches, confidence/statistics calculation
 - [ ] better python tooling

@@ -20,8 +20,10 @@ The main file contains configuration of the simulator itself and the paths to ot
 |`description`| `string` | user description of the simulation |
 |`save_particle_paths`| `bool` | Whether to save particle paths |
 |`seed`| `uint` | PRNG seed |
-|`energy_cutoff`| `float` | Energy cutoff value in kEv |
+|`energy_cutoff`| `float` | Energy cutoff value in MEv |
 |`stack_size`| `uint` | The maximum history length for single particle |
+|`batches`| `uint` | The number of batches to run |
+|`particles_per_batch`| `uint` | How many particles per batch |
 |`bounding_box`| `[[float]]` | Array of min and max coordinates of the simulation (example bellow) |
 |`material_file`| `string` | Path to the material JSON file |
 |`object_file`| `string` | Path to the objects JSON file |
@@ -170,7 +172,7 @@ More details on tallies are here: [tallies](03_tallies.md).
 |field|type|description|
 |:----|:--:|:----------|
 |`id`|`string` |user supplied ID for easy identification |
-|`type`| `string` | type of the tally, currently only `uniform_mesh` is supported |
+|`type`| `string` | type of the tally |
 |`parameters`| `object` | parameters for the tally, depend on the type |
 |`filters`|`object`| filters for the tally |
 

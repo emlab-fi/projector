@@ -35,12 +35,15 @@ struct particle {
 
     /// get current particle time
     double &time();
+    const double &time() const;
 
     /// get current particle energy
     double &energy();
+    const double &energy() const;
 
     /// get current particle position
     vec3 &position();
+    const vec3 &position() const;
 
     /// Save particle history to file
     /// @param path path to the output file
