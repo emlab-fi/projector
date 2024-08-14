@@ -2,9 +2,7 @@
 #include "filter.hpp"
 #include "particle.hpp"
 
-#include <filesystem>
-#include <optional>
-#include <variant>
+#include <fstream>
 #include <vector>
 
 namespace projector {
@@ -47,11 +45,12 @@ struct tally {
     /// Finalize the resulting data. Should be called only once at the end.
     virtual void finalize_data() = 0;
 
-    /// Save tally results to filesystem.
-    ///
-    /// @param path Path for output file, including filename.
-    ///
-    virtual void save_tally(const std::filesystem::path path) const = 0;
+    /// Save the final tally data. Expects filename and the final data from manager.
+    /// @param output The file output stream to save to
+    /// @param final_mean The final calculated mean values
+    /// @param final_variance The final calculated variance values
+    virtual void save_tally(std::fstream &output, std::vector<double> &mean,
+                            std::vector<double> &variance) = 0;
 };
 
 /// @brief Basic volume tally. Counts score on the whole simulation volume.
@@ -73,7 +72,8 @@ public:
 
     void finalize_data() final;
 
-    void save_tally(const std::filesystem::path path) const final;
+    void save_tally(std::fstream &output, std::vector<double> &mean,
+                    std::vector<double> &variance) final;
 };
 
 /// @brief Uniform mesh tally. Divides space into uniform grid.
@@ -147,7 +147,8 @@ public:
 
     void finalize_data() final;
 
-    void save_tally(const std::filesystem::path path) const final;
+    void save_tally(std::fstream &output, std::vector<double> &mean,
+                    std::vector<double> &variance) final;
 };
 
 /// @brief Energy histogram tally.
@@ -159,7 +160,7 @@ class histogram_tally : public tally {
 
     std::size_t bins; /// number of bins to divide particles into
 
-    double max_energy; /// largest 
+    double max_energy; /// largest
 
     std::vector<double> *data_storage; /// pointer to current storage
 
@@ -175,7 +176,8 @@ public:
 
     void finalize_data() final;
 
-    void save_tally(const std::filesystem::path path) const final;
+    void save_tally(std::fstream &output, std::vector<double> &mean,
+                    std::vector<double> &variance) final;
 };
 
 /// @brief Tally manager for multiple batches of a single tally.
@@ -187,7 +189,7 @@ class tally_manager {
     std::string id;
 
     std::vector<std::vector<double>> data;
-    std::vector<double> final_data;
+    std::vector<double> final_mean;
     std::vector<double> final_variance;
 
     std::unique_ptr<tally> tally_type;
@@ -197,27 +199,17 @@ public:
     tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type,
                   std::vector<std::unique_ptr<filter>> filters);
 
-    /// Initialize the tally, should be called only once at the beginning.
-    void init_tally();
-
     /// Initialize a new batch, should be called after previous batch was finalized.
-    ///
-    /// @param index Index of batch to initialize.
-    ///
     void init_batch();
 
-    /// Add single particle data to the tally results.
+    /// Add single particle data to the tally results of current batch.
     ///
     /// @param p The particle to add
-    /// @param batch The index of the batch to add the particle to
     ///
-    void add_particle(const particle &p, std::size_t batch);
+    void add_particle(const particle &p);
 
     /// Finalize the batch, should be called only once per batch
-    ///
-    /// @param index Index of batch to finalize
-    ///
-    void finalize_batch(std::size_t index);
+    void finalize_batch();
 
     /// Finalize the resulting data. Should be called only once at the end.
     ///

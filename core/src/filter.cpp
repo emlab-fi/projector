@@ -28,7 +28,12 @@ bool interaction_filter::check_particle_segment(const particle& p, const std::si
 }
 
 bool geometry_filter::check_particle(const particle& p) {
-    return geom.point_inside(p.position());
+    for (std::size_t i = 0; i < p.history.points.size(); ++i) {
+        if (check_particle_segment(p, i)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool geometry_filter::check_particle_segment(const particle& p, const std::size_t index) {
