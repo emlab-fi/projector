@@ -132,13 +132,12 @@ class uniform_mesh_tally : public tally {
 public:
 
     /// Default and only constructor for uniform_mesh_tally
-    /// @param user_id User supplied ID
     /// @param start The start point of the tally space
     /// @param end  The end point of the tally space
     /// @param res Resolution (number of cells) per axis
     /// @param sc  The score to evaluate
     ///
-    uniform_mesh_tally(std::string user_id, const vec3 &start, const vec3 &end, const coord3 &res,
+    uniform_mesh_tally(const vec3 &start, const vec3 &end, const coord3 &res,
                        tally_score sc);
 
     void init_tally(std::vector<double> *data) final;
@@ -186,14 +185,14 @@ public:
 /// It manages the data storage for the tally for each batch run.
 /// The tally calculation itself is delegated to an external tally class.
 class tally_manager {
-    std::string id;
+    std::string id; /// user supplied ID
 
-    std::vector<std::vector<double>> data;
-    std::vector<double> final_mean;
-    std::vector<double> final_variance;
+    std::vector<std::vector<double>> data; /// main data storage
+    std::vector<double> final_mean; /// final calculated mean values
+    std::vector<double> final_variance; /// final calculated variance values
 
-    std::unique_ptr<tally> tally_type;
-    std::vector<std::unique_ptr<filter>> filters;
+    std::unique_ptr<tally> tally_type; /// the managed tally
+    std::vector<std::unique_ptr<filter>> filters; /// the filters to use with the tally
 public:
 
     tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type,

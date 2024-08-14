@@ -70,31 +70,13 @@ std::vector<double> uniform_mesh_tally::calculate_intersections(const vec3 &star
 }
 
 void uniform_mesh_tally::increment_index(std::size_t index) {
-
-    auto increment_visit = [](auto &&arg) {
-        using T = std::decay_t<decltype(arg)>;
-
-        if constexpr (std::is_arithmetic_v<T>) {
 #pragma omp atomic
-            arg += 1;
-        }
-    };
-
-    { std::visit(increment_visit, data[index]); }
+    (*data_storage)[index] += 1;
 }
 
 void uniform_mesh_tally::add_index(std::size_t index, double value) {
-
-    auto add_visit = [&value](auto &&arg) {
-        using T = std::decay_t<decltype(arg)>;
-
-        if constexpr (std::is_arithmetic_v<T>) {
 #pragma omp atomic
-            arg += value;
-        }
-    };
-
-    { std::visit(add_visit, data[index]); }
+    (*data_storage)[index] += value;
 }
 
 void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
@@ -172,9 +154,9 @@ void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
     }
 }
 
-uniform_mesh_tally::uniform_mesh_tally(std::string user_id, const vec3 &start, const vec3 &end,
+uniform_mesh_tally::uniform_mesh_tally(const vec3 &start, const vec3 &end,
                                        const coord3 &res, tally_score sc)
-    : id(user_id), resolution(res), score(sc) {
+    : resolution(res), score(sc) {
 
     bounds.min = start;
     bounds.max = end;
@@ -196,27 +178,17 @@ uniform_mesh_tally::uniform_mesh_tally(std::string user_id, const vec3 &start, c
     }
 }
 
-void uniform_mesh_tally::init_tally() {
+void uniform_mesh_tally::init_tally(std::vector<double> *data) {
 
     std::size_t total = resolution.x() * resolution.y() * resolution.z() * stride;
 
-    // init to proper type depending on score
-    switch (score) {
-    case tally_score::average_energy:
-    case tally_score::deposited_energy:
-        data.resize(total, double(0.0));
-        break;
-    case tally_score::flux:
-    case tally_score::interaction_counts:
-        data.resize(total, int(0));
-        break;
-    default:
-        break;
-    }
+    data_storage = data;
+    data_storage->resize(total, double(0.0));
 }
 
-void uniform_mesh_tally::add_particle(const particle &p) {
+void uniform_mesh_tally::add_particle(const particle &p, const std::vector<std::unique_ptr<filter>> &filters) {
 
+    // TODO ADD FILTERING
     switch (score) {
     case tally_score::interaction_counts:
     case tally_score::deposited_energy:
@@ -234,47 +206,42 @@ void uniform_mesh_tally::add_particle(const particle &p) {
 void uniform_mesh_tally::finalize_data() {
     // calculate the average
     if (score == tally_score::average_energy) {
-        for (std::size_t i = 0; i < data.size(); i += 2) {
-            double sum = std::get<double>(data[i]);
-            double count = std::get<double>(data[i + 1]);
-            data[i] = sum / count;
+        for (std::size_t i = 0; i < data_storage->size(); i += 2) {
+            double sum = (*data_storage)[i];
+            double count = (*data_storage)[i+1];
+            (*data_storage)[i] = sum / count;
         }
     }
 }
 
-void uniform_mesh_tally::save_tally(const std::filesystem::path path) const {
+void uniform_mesh_tally::save_tally(std::fstream &output, std::vector<double> &mean,
+                                    std::vector<double> &variance) {
 
-    std::string filename = id + ".csv";
+    output << "x,y,z";
 
-    std::fstream output_file(path / filename, output_file.trunc | output_file.out);
-
-    if (!output_file.is_open()) {
-        throw std::runtime_error("failed to open file: " + path.string());
-    }
-
-    output_file << "x,y,z";
     for (std::size_t i = 0; i < stride; ++i) {
-        output_file << ",data" << i;
+        output << ",mean" << i << ",variance" << i;
     }
-    output_file << "\n";
 
-    output_file << std::setprecision(10) << std::scientific;
+    output << "\n";
 
-    auto print_variant = [&output_file]<typename T>(T &&arg) { output_file << "," << arg; };
+    output << std::setprecision(10) << std::scientific;
 
     for (int z = 0; z < resolution.z(); ++z) {
         for (int y = 0; y < resolution.y(); ++y) {
             for (int x = 0; x < resolution.x(); ++x) {
 
-                output_file << x << "," << y << "," << z;
+                output << x << "," << y << "," << z;
 
                 std::size_t base = calculate_index({x, y, z});
 
                 for (std::size_t i = 0; i < stride; ++i) {
-                    std::visit(print_variant, data[base + i]);
+                    output << "," << mean[base + i] << "," << variance[base+i];
                 }
 
-                output_file << "\n";
+                //TODO
+
+                output << "\n";
             }
         }
     }
