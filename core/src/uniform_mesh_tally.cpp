@@ -239,8 +239,6 @@ void uniform_mesh_tally::save_tally(std::fstream &output, std::vector<double> &m
                     output << "," << mean[base + i] << "," << variance[base+i];
                 }
 
-                //TODO
-
                 output << "\n";
             }
         }

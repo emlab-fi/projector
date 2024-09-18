@@ -37,10 +37,9 @@ struct tally {
     /// Add single particle data to the tally results.
     ///
     /// @param p The particle to add
-    /// @param filters The particle filters to use
+    /// @param filters The filters to use
     ///
-    virtual void add_particle(const particle &p,
-                              const std::vector<std::unique_ptr<filter>> &filters) = 0;
+    virtual void add_particle(const particle &p, const filter& filters) = 0;
 
     /// Finalize the resulting data. Should be called only once at the end.
     virtual void finalize_data() = 0;
@@ -68,7 +67,7 @@ public:
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const std::vector<std::unique_ptr<filter>> &filters) final;
+    void add_particle(const particle &p, const filter& filters) final;
 
     void finalize_data() final;
 
@@ -142,7 +141,7 @@ public:
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const std::vector<std::unique_ptr<filter>> &filters) final;
+    void add_particle(const particle &p, const filter& filters) final;
 
     void finalize_data() final;
 
@@ -159,7 +158,9 @@ class histogram_tally : public tally {
 
     std::size_t bins; /// number of bins to divide particles into
 
-    double max_energy; /// largest
+    double max_energy; /// highest energy
+
+    filter filters; /// The filters associated with this tally
 
     std::vector<double> *data_storage; /// pointer to current storage
 
@@ -171,7 +172,7 @@ public:
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const std::vector<std::unique_ptr<filter>> &filters) final;
+    void add_particle(const particle &p, const filter& filters) final;
 
     void finalize_data() final;
 

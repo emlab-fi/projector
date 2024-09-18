@@ -194,5 +194,4 @@ Each key is a filter and you can compose several filters together.
 |`element`|`int`| Interaction element atomic number |
 |`interaction_type`|`string`| interaction type |
 |`geometry_id`|`string`| user ID of geometry |
-|`material_id`|`string`| user ID of material |
 |`source_id`|`string`| user ID of the particle source |

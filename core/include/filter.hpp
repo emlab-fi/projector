@@ -3,100 +3,42 @@
 #include "material.hpp"
 #include "particle.hpp"
 
+#include <optional>
+
 namespace projector {
 
-/// @brief Abstract class representing the interface of different filter types
+/// @brief Tally filter class. Holds all possible filters and does the evaluation in correct order.
 ///
-/// This class is an interface to the filters used by the tallies and has no implementation.
-/// Any derived class should only have the  methods derived from this interface public. Other
-/// methods should be private.
+/// Holds all possible filters and does the evaluation in correct order.
+/// Correct order is:
+///    1. particle source ID
+///    2. geometry ID
+///    3. interaction type
+///    4. interaction element
+///    5. particle energy range
+/// Can evaluate the whole particle (for volume and scintillator tally) or a single segment (for
+/// uniform mesh tally). If the geometry is not specified, the whole simulation volume is counted
+/// as the geometry.
 struct filter {
 
-    virtual ~filter() = default;
+    std::optional<std::size_t> source_id;
+    const geometry *const geom;
+    std::optional<cross_section> interaction;
+    std::optional<std::size_t> element;
+    std::optional<std::pair<double, double>> energy_range;
 
-    /// Check the particle whether it passes the filter. Behaviour depends on implementation class.
-    ///
-    /// @param p the particle to check
-    /// @return true if particle passed, false otherwise
-    ///
-    virtual bool check_particle(const particle &p) = 0;
+    /// Check whether particle passes through the filters.
+    /// @param p The particle to check
+    /// @return Whether the particle passed (true) or not (false)
+    bool check_particle(const particle &p) const;
 
-    /// Check whether specific segment of particle path passes the filter.
-    /// Behaviour depends on implementation class.
-    ///
-    /// @param p the particle to check
-    /// @param segment_index index of the particle's segment to check
-    /// @return true if segment passed, false otherwise
-    ///
-    virtual bool check_particle_segment(const particle &p, const std::size_t segment_index) = 0;
-};
-
-
-class energy_range_filter : public filter {
-    const double energy_low;
-    const double energy_high;
-
-public:
-    energy_range_filter(double low, double high) : energy_low(low), energy_high(high) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
-};
-
-class element_filter : public filter {
-    const std::size_t element;
-
-public:
-    element_filter(std::size_t element) : element(element) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
-};
-
-class interaction_filter : public filter {
-    const cross_section interaction;
-
-public:
-    interaction_filter(cross_section interaction) : interaction(interaction) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
-};
-
-class geometry_filter : public filter {
-    const geometry &geom;
-
-public:
-    geometry_filter(const geometry &geom) : geom(geom) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
-};
-
-class material_filter : public filter {
-    const material_data &material;
-
-public:
-    material_filter(const material_data &material) : material(material) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
-};
-
-class source_filter : public filter {
-    const std::string src_id;
-
-public:
-    source_filter(std::string src_id) : src_id(src_id) {}
-
-    bool check_particle(const particle &p) final;
-
-    bool check_particle_segment(const particle &p, const std::size_t segment_index) final;
+    /// Check whether particle segment passes through the filters.
+    /// @param p particle to check
+    /// @param segment index of segment to check
+    /// @param position detailed position inside the index
+    /// @return whether the segment passed (true) or not (false)
+    bool check_particle_segment(const particle &p, const std::size_t segment,
+                                const vec3 position) const;
 };
 
 } // namespace projector

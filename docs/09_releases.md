@@ -16,15 +16,16 @@ They are a mix of actual features and development targets.
 - [ ] verification, validation
 - [ ] more generic ACE data parsing
 - [ ] better output format
+- [ ] fix/improve unit testing
 
 ## v0.2
 
 - [ ] rewrite talies
     - [x] filters
-    - [ ] statistical calculations
-    - [ ] batch support
+    - [ ] more tally types
+    - [x] statistical calculations
+    - [x] batch support
     - [ ] normalization per source strength
-- [ ] fix/improve unit testing
 - [x] separate sources from geometry objects (still can use objects as volume)
 - [ ] object instancing/grids
 - [x] add timestamp for events
