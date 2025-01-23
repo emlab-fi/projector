@@ -79,10 +79,12 @@ void initialize_runtime(environment &env, int max_threads) {
 
             particle p = {.particle_type = particle::type::photon,
                           .direction = direction,
-                          .prng_state = generate_prng_seed()};
+                          .prng_state = generate_prng_seed(),
+                          .source = &src};
             p.history.elements.push_back(0);
             p.history.times.push_back(0.0);
             p.history.energies.push_back(src.energy);
+            p.history.objects.push_back(nullptr);
             p.history.interactions.push_back(cross_section::no_interaction);
 
             if (src.object_id) {
@@ -130,7 +132,7 @@ void calculate_particle_histories(environment &env) {
             }
 
             auto [material_total_macro_xs, elem] = env.cross_section_data.sample_material(
-                env.materials[current_obj->material_id], p.energy(), p.prng_state);
+                current_obj->material, p.energy(), p.prng_state);
 
             double surface_distance =
                 current_obj->geom.nearest_surface_distance(p.position(), p.direction);

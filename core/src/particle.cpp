@@ -19,9 +19,9 @@ vec3 &particle::position() { return history.points.back(); }
 
 const vec3 &particle::position() const { return history.points.back(); }
 
-object *particle::current_object() {return history.objects.back(); }
+object *particle::current_object() { return history.objects.back(); }
 
-void particle::update_object(object * new_object) { history.objects.back() = new_object; }
+void particle::update_object(object *new_object) { history.objects.back() = new_object; }
 
 void particle::photon_interaction(const element &element) {
 

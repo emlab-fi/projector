@@ -1,7 +1,7 @@
 #pragma once
+#include "environment.hpp"
 #include "geometry.hpp"
 #include "material.hpp"
-#include "environment.hpp"
 
 #include <vector>
 
@@ -17,7 +17,7 @@ struct particle_history {
     std::vector<double> energies;
     std::vector<cross_section> interactions;
     std::vector<std::size_t> elements;
-    std::vector<object*> objects;
+    std::vector<object *> objects;
 };
 
 /// @brief Single particle representation
@@ -33,7 +33,7 @@ struct particle {
 
     particle_history history;
 
-    source const * const source;
+    source const *const source;
 
     /// get current particle time
     double &time();
@@ -52,7 +52,7 @@ struct particle {
 
     /// update the current object of particle
     /// @param new_object pointer ot the new object
-    void update_object(object * new_object);
+    void update_object(object *new_object);
 
     /// Save particle history to file
     /// @param path path to the output file

@@ -22,7 +22,6 @@ double distance_to_aligned_plane(double x, double x_0, double u) {
     double distance = (x_0 - x) / u;
 
     return distance < 0.0 ? projector::constants::infinity : distance;
-
 }
 
 } // namespace
@@ -40,9 +39,9 @@ bool bounding_box::point_inside(const vec3 &point) const {
     return true;
 }
 
-bool bounding_box::point_inside_2d(const vec3& point, std::size_t in1, std::size_t in2) const {
+bool bounding_box::point_inside_2d(const vec3 &point, std::size_t in1, std::size_t in2) const {
 
-    for (auto& index : {in1, in2}) {
+    for (auto &index : {in1, in2}) {
         if (point[index] < min[index] || point[index] > max[index]) {
             return false;
         }
@@ -78,11 +77,10 @@ double bounding_box::distance_along_line(const vec3 &point, const vec3 &dir) con
     double distance = constants::infinity;
     double temp_distance;
 
-    constexpr std::array<std::array<std::size_t, 3>, 3> index_order = {{
-        {0, 1, 2}, {1, 0, 2}, {2, 0, 1}
-    }};
+    constexpr std::array<std::array<std::size_t, 3>, 3> index_order = {
+        {{0, 1, 2}, {1, 0, 2}, {2, 0, 1}}};
 
-    for (auto& index : index_order) {
+    for (auto &index : index_order) {
         temp_distance = distance_to_aligned_plane(point[index[0]], min[index[0]], dir[index[0]]);
         if (point_inside_2d(point + temp_distance * dir, index[1], index[2])) {
             distance = std::min(distance, temp_distance);
@@ -130,15 +128,36 @@ double geometry::nearest_surface_distance(const vec3 &point, const vec3 &dir) co
         return constants::infinity;
     };
 
-    // this currently produces false positives, we need to solve that maybe?
-    double distance = constants::infinity;
+    // we need to start at negative infinity to make this work
+    double distance = -constants::infinity;
+
+    // check whether we are inside the geometry, to properly go through CSG
+    bool inside = point_inside(point);
 
     for (std::size_t i = 0; i < surfaces.size(); ++i) {
-        double dist_to_surface = std::visit(visitor, surfaces[i]);
-        if (dist_to_surface < 0.0) {
+        double surf_dist = std::visit(visitor, surfaces[i]);
+        // ignore the surface if it is behind us
+        if (surf_dist < 0.0) {
             continue;
         }
-        distance = std::min(distance, dist_to_surface);
+
+        // this still might have some edge cases where it does wonky stuff
+        switch (ops[i]) {
+        case csg_operation::no_op:
+            break;
+        case csg_operation::join:
+            distance = inside ? std::max(surf_dist, distance) : std::min(surf_dist, distance);
+            break;
+        case csg_operation::intersect:
+            distance = inside ? std::min(surf_dist, distance) : std::max(surf_dist, distance);
+            break;
+        case csg_operation::substract:
+            // this will give false positives for sure
+            distance = inside ? std::min(surf_dist, distance) : std::max(surf_dist, distance);
+            break;
+        default:
+            return constants::infinity;
+        }
     }
 
     return distance;
@@ -279,8 +298,7 @@ vec3 random_unit_vector(uint64_t &prng_state) {
     double theta = 2.0 * projector::constants::pi * u;
     double phi = std::acos(2.0 * v - 1);
 
-    vec3 vector = {std::sin(theta) * std::cos(phi),
-                   std::sin(theta) * std::sin(phi),
+    vec3 vector = {std::sin(theta) * std::cos(phi), std::sin(theta) * std::sin(phi),
                    std::cos(theta)};
 
     vector.normalize();
