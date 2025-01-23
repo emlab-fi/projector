@@ -19,6 +19,10 @@ vec3 &particle::position() { return history.points.back(); }
 
 const vec3 &particle::position() const { return history.points.back(); }
 
+object *particle::current_object() {return history.objects.back(); }
+
+void particle::update_object(object * new_object) { history.objects.back() = new_object; }
+
 void particle::photon_interaction(const element &element) {
 
     sampled_xs xs_data = element.get_all_cross_sections(energy());
@@ -77,6 +81,7 @@ void particle::advance(double distance) {
     history.energies.push_back(energy());
     history.times.push_back(time());
     history.interactions.push_back(cross_section::no_interaction);
+    history.objects.push_back(current_object());
     history.elements.push_back(0);
 
     vec3 new_position = position() + distance * direction;

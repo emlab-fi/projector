@@ -13,7 +13,7 @@ namespace projector {
 struct object {
     std::string id;
 
-    std::size_t material_id;
+    material_data &material;
     geometry geom;
 };
 
