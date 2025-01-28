@@ -41,7 +41,8 @@ Some steps are not yet fully implemented and can change between releases.
     1. Main configuration file
     2. Materials
     3. Geometry
-    4. Tallies
+    4. Sources
+    5. Tallies
 2. Launch projector_core executable - this step can take a long time!
 3. Examine results using tooling - most tooling is currently missing and is not implemented well.
 

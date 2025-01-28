@@ -21,7 +21,7 @@ They are a mix of actual features and development targets.
 ## v0.2
 
 - [ ] rewrite talies
-    - [x] filters
+    - [ ] filters
     - [ ] more tally types
     - [x] statistical calculations
     - [x] batch support

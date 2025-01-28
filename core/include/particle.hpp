@@ -49,6 +49,7 @@ struct particle {
 
     /// get pointer to object the particle is in
     object *current_object();
+    const object *const current_object() const;
 
     /// update the current object of particle
     /// @param new_object pointer ot the new object

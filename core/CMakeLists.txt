@@ -67,6 +67,8 @@ set(PROJECTOR_LIB_SRC
 	src/uniform_mesh_tally.cpp
 	src/filter.cpp
 	src/tally.cpp
+	src/volume_tally.cpp
+	src/histogram_tally.cpp
 )
 
 set(PROJECTOR_TESTS_SRC

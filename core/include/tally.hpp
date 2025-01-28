@@ -37,9 +37,8 @@ struct tally {
     /// Add single particle data to the tally results.
     ///
     /// @param p The particle to add
-    /// @param filters The filters to use
     ///
-    virtual void add_particle(const particle &p, const filter& filters) = 0;
+    virtual void add_particle(const particle &p, const filter &filters) = 0;
 
     /// Finalize the resulting data. Should be called only once at the end.
     virtual void finalize_data() = 0;
@@ -67,7 +66,7 @@ public:
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const filter& filters) final;
+    void add_particle(const particle &p, const filter &filters) final;
 
     void finalize_data() final;
 
@@ -136,12 +135,11 @@ public:
     /// @param res Resolution (number of cells) per axis
     /// @param sc  The score to evaluate
     ///
-    uniform_mesh_tally(const vec3 &start, const vec3 &end, const coord3 &res,
-                       tally_score sc);
+    uniform_mesh_tally(const vec3 &start, const vec3 &end, const coord3 &res, tally_score sc);
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const filter& filters) final;
+    void add_particle(const particle &p, const filter &filters) final;
 
     void finalize_data() final;
 
@@ -172,7 +170,7 @@ public:
 
     void init_tally(std::vector<double> *data) final;
 
-    void add_particle(const particle &p, const filter& filters) final;
+    void add_particle(const particle &p, const filter &filters) final;
 
     void finalize_data() final;
 
@@ -189,15 +187,14 @@ class tally_manager {
     std::string id; /// user supplied ID
 
     std::vector<std::vector<double>> data; /// main data storage
-    std::vector<double> final_mean; /// final calculated mean values
-    std::vector<double> final_variance; /// final calculated variance values
+    std::vector<double> final_mean;        /// final calculated mean values
+    std::vector<double> final_variance;    /// final calculated variance values
 
     std::unique_ptr<tally> tally_type; /// the managed tally
-    std::vector<std::unique_ptr<filter>> filters; /// the filters to use with the tally
+    filter filters;                    /// filters to use with the tally
 public:
 
-    tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type,
-                  std::vector<std::unique_ptr<filter>> filters);
+    tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type, filter filters);
 
     /// Initialize a new batch, should be called after previous batch was finalized.
     void init_batch();
