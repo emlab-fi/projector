@@ -11,7 +11,7 @@ They are used to create tallies of specific variables/quantities in the simulati
 Currently supported filters are:
 
 - particle source ID
-- geometry ID
+- object ID
 - interaction type
 - interacted element
 - particle energy range
@@ -29,7 +29,7 @@ Filter behaviour table (filters are evaluated top to bottom):
 |Filter|Behaviour|
 |:-----|:--------|
 | particle source ID | Particle is ignored if it does not originate from specified source |
-| geometry ID | Particle is ignored if it does not pass through specified geometry |
+| object ID | Particle is ignored if it does not pass through specified object |
 | interaction type | Particle is ignored if it does not have any interaction of this type in the specified geometry |
 | interacted element | Particle is ignored if it does not interact with specified element inside the specified geometry |
 | particle energy range | Particle is ignored if it does not fall into specified range when entering the specified geometry |
@@ -43,7 +43,7 @@ Filter behaviour table (filters are evaluated top to bottom):
 |Filter|Behaviour|
 |:-----|:--------|
 | particle source ID | Particle is ignored if it does not originate from specified source |
-| geometry ID | Particle is ignored if the cell is not in specified geometry |
+| object ID | Particle is ignored if the cell is not in specified object |
 | interaction type | Particle is ignored if the track segment through the cell did not go through this interaction |
 | interacted element | Particle is ignored if track segment through the cell did interact with this element |
 | particle energy range | Particle is ignored if track segment through the cell is outside the energy range |
@@ -58,7 +58,7 @@ Filter behaviour table (filters are evaluated top to bottom):
 |Filter|Behaviour|
 |:-----|:--------|
 | particle source ID | Particle is ignored if it does not originate from specified source |
-| geometry ID | Particle is ignored if it does not pass through specified geometry |
+| object ID | Particle is ignored if it does not pass through specified object |
 | interaction type | Particle is ignored if it does not have any interaction of this type in the specified geometry |
 | interacted element | Particle is ignored if it does not interact with specified element inside the specified geometry |
 | particle energy range | Particle is ignored if it does not fall into specified range when entering the specified geometry |

@@ -4,7 +4,8 @@
 
 namespace projector {
 
-tally_manager::tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type, filter filters)
+tally_manager::tally_manager(std::string usr_id, std::unique_ptr<tally> tally_type,
+                             filter filters)
     : id(usr_id), tally_type(std::move(tally_type)), filters(filters) {}
 
 void tally_manager::init_batch() {

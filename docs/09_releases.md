@@ -12,16 +12,18 @@ They are a mix of actual features and development targets.
 - [ ] non-x86 runtimes
 - [ ] switch to eV from MeV, cm2 from barns
     - [ ] investigate why it fails at some instances
+- [ ] simulate more interactions (bremstrahhlung, proper compton?)
 - [ ] benchmarks
 - [ ] verification, validation
 - [ ] more generic ACE data parsing
 - [ ] better output format
 - [ ] fix/improve unit testing
+- [ ] better interface for different runtimes (CUDA etc.)
 
 ## v0.2
 
 - [ ] rewrite talies
-    - [ ] filters
+    - [x] filters
     - [ ] more tally types
     - [x] statistical calculations
     - [x] batch support
@@ -29,12 +31,10 @@ They are a mix of actual features and development targets.
 - [x] separate sources from geometry objects (still can use objects as volume)
 - [ ] object instancing/grids
 - [x] add timestamp for events
-- [ ] simulate more interactions (bremstrahhlung, proper compton?)
 - [ ] batches, confidence/statistics calculation
 - [ ] better python tooling
     - [ ] unified visualization tool
     - [ ] loading from input files rather than direct output
-- [ ] better interface for different runtimes (CUDA etc.)
 
 ## v0.1 - Released 26/4/2024
 
