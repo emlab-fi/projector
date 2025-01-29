@@ -3,6 +3,10 @@
 namespace projector {
 
 bool filter::check_particle(const particle &p) const {
+    return check_particle_index(p, p.history.interactions.size() - 1);
+}
+
+bool filter::check_particle_index(const particle &p, std::size_t index) const {
 
     // check source
     if (source_id) {
@@ -13,28 +17,29 @@ bool filter::check_particle(const particle &p) const {
 
     // check object
     if (object_id) {
-        if (p.current_object() == nullptr || p.current_object()->id != *object_id) {
+        if (p.history.objects[index] == nullptr || p.history.objects[index]->id != *object_id) {
             return false;
         }
     }
 
     // check interaction
     if (interaction) {
-        if (p.history.interactions.back() != *interaction) {
+        if (p.history.interactions[index] != *interaction) {
             return false;
         }
     }
 
     // check element
     if (element) {
-        if (p.history.elements.back() != *element) {
+        if (p.history.elements[index] != *element) {
             return false;
         }
     }
 
     // check range
     if (energy_range) {
-        if (p.energy() < energy_range->first || p.energy() > energy_range->second) {
+        if (p.history.energies[index] < energy_range->first ||
+            p.history.energies[index] > energy_range->second) {
             return false;
         }
     }

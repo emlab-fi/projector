@@ -112,13 +112,11 @@ void uniform_mesh_tally::add_particle_interactionwise(const particle &p, const f
 
 void uniform_mesh_tally::add_particle_segmentwise(const particle &p, const filter& f) {
 
-    //TODO PROPER FILTERING HERE
-    //we need to filer by previous state
-    if (!f.check_particle(p)) {
+    std::size_t prev_index = p.history.interactions.size() - 2;
+
+    if (!f.check_particle_index(p, prev_index)) {
         return;
     }
-
-    std::size_t prev_index = p.history.interactions.size() - 2;
 
     const vec3 &start = p.history.points[prev_index];
     const vec3 &end = p.history.points.back();

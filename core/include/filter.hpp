@@ -27,10 +27,16 @@ struct filter {
     std::optional<std::size_t> element;
     std::optional<std::pair<double, double>> energy_range;
 
-    /// Check whether particle passes through the filters.
+    /// Check whether particle passes through the filters at the newest point.
     /// @param p The particle to check
     /// @return Whether the particle passed (true) or not (false)
     bool check_particle(const particle &p) const;
+
+    /// Check whether particles passes through the filters at defined older point.
+    /// @param p The particle to check
+    /// @param index The index of particle history to check
+    /// @return Whether the particle passed (true) or not (false)
+    bool check_particle_index(const particle &p, std::size_t index) const;
 };
 
 } // namespace projector
