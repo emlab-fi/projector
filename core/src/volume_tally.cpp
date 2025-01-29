@@ -97,6 +97,8 @@ void volume_tally::save_tally(std::fstream &output, std::vector<double> &mean,
         return;
     }
 
+    output << std::setprecision(10) << std::scientific;
+
     for (std::size_t i = 0; i < mean.size(); ++i) {
         output << mean[i] << "," << variance[i] << "\n";
     }

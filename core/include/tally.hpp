@@ -34,7 +34,7 @@ struct tally {
     ///
     virtual void init_tally(std::vector<double> *data) = 0;
 
-    /// Add single particle data to the tally results.
+    /// Add latest particle segment/interaction to the tally results.
     ///
     /// @param p The particle to add
     ///
@@ -119,13 +119,15 @@ class uniform_mesh_tally : public tally {
     /// @param value value to add to index
     void add_index(std::size_t index, double value);
 
-    /// Add particle interactions to tally (tally must be have interaction count score setup)
+    /// Add particle interaction to tally (tally must be have interaction count score setup)
     /// @param p particle to add
-    void add_particle_interactionwise(const particle &p);
+    /// @param f filters to use
+    void add_particle_interactionwise(const particle &p, const filter &f);
 
-    /// Add particle segments to tally
+    /// Add particle segment to tally
     /// @param p particle to add
-    void add_particle_segmentwise(const particle &p);
+    /// @param f filters to use
+    void add_particle_segmentwise(const particle &p, const filter &f);
 
 public:
 
@@ -207,7 +209,6 @@ public:
     void finalize_batch();
 
     /// Finalize the resulting data. Should be called only once at the end.
-    ///
     void finalize_data();
 
     /// Save tally results to filesystem.

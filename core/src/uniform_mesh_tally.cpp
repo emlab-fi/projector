@@ -79,77 +79,86 @@ void uniform_mesh_tally::add_index(std::size_t index, double value) {
     (*data_storage)[index] += value;
 }
 
-void uniform_mesh_tally::add_particle_interactionwise(const particle &p) {
-    std::size_t amount = p.history.points.size();
+void uniform_mesh_tally::add_particle_interactionwise(const particle &p, const filter &f) {
 
-    // start at index 1, as index 0 is always initial particle state and that does not do anything
-    for (std::size_t i = 1; i < amount; ++i) {
+    if (!f.check_particle(p)) {
+        return;
+    }
 
-        auto coord = determine_cell(p.history.points[i]);
+    auto coord = determine_cell(p.history.points.back());
 
-        if (!coord) {
-            continue;
+    if (!coord) {
+        return;
+    }
+
+    std::size_t data_index = calculate_index(*coord);
+
+    if (score == tally_score::interaction_counts) {
+        if (p.history.interactions.back() != cross_section::no_interaction) {
+
+            increment_index(data_index);
+
+            data_index += static_cast<std::size_t>(p.history.interactions.back());
+
+            increment_index(data_index);
         }
+    }
 
-        std::size_t data_index = calculate_index(*coord);
-
-        if (score == tally_score::interaction_counts) {
-            if (p.history.interactions[i] != cross_section::no_interaction) {
-
-                increment_index(data_index);
-
-                data_index += static_cast<std::size_t>(p.history.interactions[i]);
-
-                increment_index(data_index);
-            }
-        }
-
-        else if (score == tally_score::deposited_energy) {
-            double energy_diff = p.history.energies[i - 1] - p.history.energies[i];
-            add_index(data_index, energy_diff);
-        }
+    else if (score == tally_score::deposited_energy) {
+        double energy_diff = p.history.energies[p.history.energies.size() - 2] - p.energy();
+        add_index(data_index, energy_diff);
     }
 }
 
-void uniform_mesh_tally::add_particle_segmentwise(const particle &p) {
+void uniform_mesh_tally::add_particle_segmentwise(const particle &p, const filter& f) {
 
-    std::size_t amount = p.history.points.size() - 1;
+    //TODO PROPER FILTERING HERE
+    //we need to filer by previous state
+    if (!f.check_particle(p)) {
+        return;
+    }
 
-    // change to DDA algorithm!
-    for (std::size_t i = 0; i < amount; ++i) {
+    std::size_t prev_index = p.history.interactions.size() - 2;
 
-        const vec3 &start = p.history.points[i];
-        const vec3 &end = p.history.points[i + 1];
+    const vec3 &start = p.history.points[prev_index];
+    const vec3 &end = p.history.points.back();
 
-        if (!bounds.segment_intersect(start, end)) {
+    if (!bounds.segment_intersect(start, end)) {
+        return;
+    }
+
+    std::vector<double> intersects = calculate_intersections(start, end);
+
+    for (double &t : intersects) {
+        // get a point a tiny bit behind the intersection
+        vec3 point = start + (t + 50 * constants::epsilon) * (end - start);
+
+        // if we have object filter, check whether we need to count this point of a segment
+        if (f.object_id) {
+            object* obj = p.history.objects[prev_index];
+            if (*f.object_id != obj->id && obj->geom.point_inside(point)) {
+                return;
+            }
+        }
+
+        auto coordinates = determine_cell(point);
+
+        if (!coordinates) {
             continue;
         }
 
-        std::vector<double> intersects = calculate_intersections(start, end);
+        std::size_t data_index = calculate_index(*coordinates);
 
-        for (double &t : intersects) {
-            // get a point a tiny bit behind the intersection
-            vec3 point = start + (t + 50 * constants::epsilon) * (end - start);
-
-            auto coordinates = determine_cell(point);
-
-            if (!coordinates) {
-                continue;
-            }
-
-            std::size_t data_index = calculate_index(*coordinates);
-
-            switch (score) {
-            case tally_score::flux:
-                increment_index(data_index);
-                break;
-            case tally_score::average_energy:
-                add_index(data_index, p.history.energies[i]);
-                increment_index(data_index + 1);
-                break;
-            default:
-                break;
-            }
+        switch (score) {
+        case tally_score::flux:
+            increment_index(data_index);
+            break;
+        case tally_score::average_energy:
+            add_index(data_index, p.history.energies[prev_index]);
+            increment_index(data_index + 1);
+            break;
+        default:
+            break;
         }
     }
 }
@@ -186,19 +195,23 @@ void uniform_mesh_tally::init_tally(std::vector<double> *data) {
     data_storage->resize(total, double(0.0));
 }
 
-void uniform_mesh_tally::add_particle(const particle &p, const std::vector<std::unique_ptr<filter>> &filters) {
+void uniform_mesh_tally::add_particle(const particle &p, const filter &filters) {
 
-    // TODO ADD FILTERING
+    if (!filters.check_particle(p)) {
+        return;
+    }
+
     switch (score) {
     case tally_score::interaction_counts:
     case tally_score::deposited_energy:
-        add_particle_interactionwise(p);
+        add_particle_interactionwise(p, filters);
         break;
     case tally_score::flux:
     case tally_score::average_energy:
-        add_particle_segmentwise(p);
+        add_particle_segmentwise(p, filters);
         break;
     default:
+        throw std::runtime_error("Unsupported tally score for uniform mesh tally");
         break;
     }
 }
@@ -217,10 +230,24 @@ void uniform_mesh_tally::finalize_data() {
 void uniform_mesh_tally::save_tally(std::fstream &output, std::vector<double> &mean,
                                     std::vector<double> &variance) {
 
-    output << "x,y,z";
+    output << "x,y,z,";
 
-    for (std::size_t i = 0; i < stride; ++i) {
-        output << ",mean" << i << ",variance" << i;
+    switch(score) {
+    case tally_score::average_energy:
+        output << "avg_energy mean, avg_energy var, p_count mean, p_count var\n";
+        break;
+    case tally_score::deposited_energy:
+        output << "dep_energy mean, dep_energy var\n";
+        break;
+    case tally_score::flux:
+        output << "flux mean, flux var\n";
+        break;
+    case tally_score::interaction_counts:
+        output << "total mean, total var, coh mean, coh var, incoh mean, incoh var, photoel mean, photoel var, pair_prod mean, pair_prod var\n";
+        break;
+    default:
+        throw std::runtime_error("unsupported tally score for uniform mesh tally");
+        return;
     }
 
     output << "\n";

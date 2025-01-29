@@ -55,8 +55,12 @@ void histogram_tally::finalize_data() {
 
 void histogram_tally::save_tally(std::fstream &output, std::vector<double> &mean,
                                  std::vector<double> &variance) {
+
     output << "bin, ratio mean, ratio var\n";
+
     double step = max_energy / bins;
+
+    output << std::setprecision(10) << std::scientific;
     for (std::size_t i = 0; i < bins; ++i) {
         output << (i + 1) * step << "," << mean[i] << "," << variance[i] << "\n";
     }
