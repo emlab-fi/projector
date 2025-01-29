@@ -158,8 +158,6 @@ class histogram_tally : public tally {
 
     double max_energy; /// highest energy
 
-    filter filters; /// The filters associated with this tally
-
     std::vector<double> *data_storage; /// pointer to current storage
 
 public:
