@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
         projector::initialize_runtime(sim_env, thread_count);
 
         std::cout << "Running particle simulation" << std::endl;
-        projector::calculate_particle_histories(sim_env);
+        projector::main_run(sim_env);
 
         std::cout << "Processing tallies" << std::endl;
         projector::process_tallies(sim_env);

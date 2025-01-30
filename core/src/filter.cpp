@@ -1,4 +1,5 @@
 #include "filter.hpp"
+#include "environment.hpp"
 
 namespace projector {
 
@@ -10,7 +11,7 @@ bool filter::check_particle_index(const particle &p, std::size_t index) const {
 
     // check source
     if (source_id) {
-        if (p.source->id != *source_id) {
+        if (p.src->id != *source_id) {
             return false;
         }
     }

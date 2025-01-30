@@ -13,7 +13,7 @@ namespace projector {
 struct object {
     std::string id;
 
-    material_data &material;
+    std::string material_id;
     geometry geom;
 };
 
@@ -33,11 +33,11 @@ struct environment {
     std::string description;
     uint64_t seed;
     bool save_particle_paths;
+    std::size_t batches;
 
     double energy_cutoff;
     std::size_t stack_size;
     bounding_box bounds;
-
 
     std::filesystem::path material_path;
     std::filesystem::path objects_path;

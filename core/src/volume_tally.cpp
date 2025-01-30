@@ -37,6 +37,9 @@ void volume_tally::add_particle(const particle &p, const filter &filters) {
         }
     }
 
+    double deposited = 0.0;
+    std::size_t offset = 0;
+
     switch(score) {
     case tally_score::average_energy:
         (*data_storage)[0] += p.energy();
@@ -49,7 +52,7 @@ void volume_tally::add_particle(const particle &p, const filter &filters) {
         if (p.history.energies.size() < 2) {
             break;
         }
-        double deposited = p.history.energies[p.history.energies.size() - 2] - p.energy();
+        deposited = p.history.energies[p.history.energies.size() - 2] - p.energy();
         (*data_storage)[0] += deposited;
         break;
     case tally_score::flux:
@@ -60,7 +63,7 @@ void volume_tally::add_particle(const particle &p, const filter &filters) {
             break;
         }
         (*data_storage)[0] += 1.0;
-        std::size_t offset = static_cast<std::size_t>(p.history.interactions.back());
+        offset = static_cast<std::size_t>(p.history.interactions.back());
         (*data_storage)[offset] += 1.0;
         break;
     default:

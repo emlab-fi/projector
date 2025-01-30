@@ -64,7 +64,9 @@ void initialize_runtime(environment &env, int max_threads) {
     omp_set_num_threads(thread_count);
 
     seed_master_prng(env.seed);
+}
 
+void init_batch(environment &env) {
     // sample sources and create particles
     for (source &src : env.sources) {
 
@@ -80,7 +82,7 @@ void initialize_runtime(environment &env, int max_threads) {
             particle p = {.particle_type = particle::type::photon,
                           .direction = direction,
                           .prng_state = generate_prng_seed(),
-                          .source = &src};
+                          .src = &src};
             p.history.elements.push_back(0);
             p.history.times.push_back(0.0);
             p.history.energies.push_back(src.energy);
@@ -97,17 +99,24 @@ void initialize_runtime(environment &env, int max_threads) {
         }
     }
 
-    for (auto &tally : env.tallies) {
-        tally->init_tally();
+    // init tally batch
+    for (tally_manager& tally : env.tallies) {
+        tally.init_batch();
     }
+}
+
+void finish_batch(environment &env) {
+    // finish tally batch
+    for (tally_manager& tally : env.tallies) {
+        tally.finalize_batch();
+    }
+
+    // clean particle histories
+    env.particles.clear();
 }
 
 void calculate_particle_histories(environment &env) {
 
-    std::size_t counter = 0;
-
-// simulate each particle separately
-#pragma omp parallel for
     for (particle &p : env.particles) {
 
         object *current_obj = get_current_obj(env.objects, p.position());
@@ -157,30 +166,37 @@ void calculate_particle_histories(environment &env) {
                 p.advance(surface_distance + 5 * constants::epsilon);
                 current_obj = get_current_obj(env.objects, p.position());
             }
-        }
 
-        counter++;
+            for (auto& tally : env.tallies) {
+                tally.add_particle(p);
+            }
+        }
     }
 }
 
 void process_tallies(environment &env) {
-
     for (auto &tally : env.tallies) {
-#pragma omp parallel for
-        for (auto &particle : env.particles) {
-            tally->add_particle(particle);
-        }
-
-        tally->finalize_data();
+        tally.finalize_data();
     }
 }
+
+
+void main_run(environment &env) {
+    for (std::size_t current_batch = 0; current_batch < env.batches; ++current_batch) {
+        std::cout << "running batch " << current_batch << "/" << env.batches << std::endl;
+        init_batch(env);
+        calculate_particle_histories(env);
+        finish_batch(env);
+    }
+}
+
 
 void save_data(environment &env) {
 
     std::filesystem::create_directories(env.output_path / "tallies");
 
     for (auto &tally : env.tallies) {
-        tally->save_tally(env.output_path / "tallies");
+        tally.save_tally(env.output_path / "tallies");
     }
 
     // check if we can skip saving particle data

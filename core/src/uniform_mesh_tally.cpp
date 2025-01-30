@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "tally.hpp"
+#include "environment.hpp"
 
 #include <fstream>
 #include <type_traits>

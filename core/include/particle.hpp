@@ -1,11 +1,13 @@
 #pragma once
-#include "environment.hpp"
 #include "geometry.hpp"
 #include "material.hpp"
 
 #include <vector>
 
 namespace projector {
+
+struct object;
+struct source;
 
 /// @brief struct storing the history of a single particle
 ///
@@ -33,7 +35,7 @@ struct particle {
 
     particle_history history;
 
-    source const *const source;
+    source const *const src;
 
     /// get current particle time
     double &time();
